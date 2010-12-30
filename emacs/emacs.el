@@ -22,7 +22,7 @@
  '(line-number-mode t)
  '(column-number-mode t)
 ;; '(show-trailing-whitespace t)
-)
+ '(x-select-enable-clipboard t))
 
 ;;(setq blink-cursor-mode 0)
 (blink-cursor-mode 0)
@@ -138,8 +138,8 @@
 ;;(define-key ctl-x-map "\C-c" 'silent-save-buffers-kill-emacs)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
 
-(global-set-key [C-prior] 'cyclebuffer-backward)
-(global-set-key [C-next] 'cyclebuffer-forward)
+;;(global-set-key [C-prior] 'cyclebuffer-backward)
+;;(global-set-key [C-next] 'cyclebuffer-forward)
 
 
 (setq compilation-environment '("LC_ALL=C"))
