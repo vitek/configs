@@ -1,17 +1,17 @@
 [user]
-	name = MaximBublis
-	email = b@codemonkey.ru
+    name = Vitja Makarov
+    email = vitja.makarov@gmail.com
 
 [color]
-	ui = auto
+    ui = auto
 
 [color "diff"]
-	whitespace = yellow reverse
+    whitespace = yellow reverse
 
 [core]
-	excludesfile = ~/.git/gitignore
-	whitespace = trailing-space
+    excludesfile = ~/.gitignore
+    whitespace = trailing-space
 
 [gui]
-	commitmsgwidth = 85
+    commitmsgwidth = 85
 
