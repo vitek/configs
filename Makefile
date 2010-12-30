@@ -12,6 +12,9 @@ install-hg:
 install-emacs:
 	install emacs/emacs.el ~/.emacs
 
+install-screen:
+	install screenrc ~/.screenrc
+
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
 	$(GCONFTOOL) --set /apps/nautilus/preferences/show_desktop --type boolean 0
