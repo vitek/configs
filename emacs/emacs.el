@@ -127,7 +127,16 @@
   (save-some-buffers arg t)
   (kill-emacs))
 
-(define-key ctl-x-map "\C-c" 'silent-save-buffers-kill-emacs)
+(defun delete-frame-or-kill-emacs (&optional arg)
+  (interactive "P")
+  (if (> (length (frame-list)) 1)
+      (delete-frame)
+    (progn
+      (save-some-buffers arg t)
+      (kill-emacs))))
+
+;;(define-key ctl-x-map "\C-c" 'silent-save-buffers-kill-emacs)
+(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
 
 (global-set-key [C-prior] 'cyclebuffer-backward)
 (global-set-key [C-next] 'cyclebuffer-forward)
