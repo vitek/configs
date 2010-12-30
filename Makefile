@@ -1,4 +1,6 @@
-install: install-git install-hg install-emacs
+GCONFTOOL = gconftool-2
+
+install: install-git install-hg install-emacs install-gconf
 
 install-git:
 	install git/gitconfig ~/.gitconfig
@@ -9,3 +11,7 @@ install-hg:
 
 install-emacs:
 	install emacs/emacs.el ~/.emacs
+
+install-gconf:
+	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
+	$(GCONFTOOL) --set /apps/nautilus/preferences/show_desktop --type boolean 0
