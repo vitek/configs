@@ -94,8 +94,6 @@
   (setq c-basic-offset 4)
   (setq truncate-lines nil))
 
-
-
 (defun linux-c-mode ()
   "C mode with adjusted defaults for use with the Linux kernel."
   (interactive)
@@ -124,7 +122,7 @@
 
 (defun silent-save-buffers-kill-emacs (&optional arg)
   "Offer to save each buffer, then kill this Emacs process.
-With prefix arg, silently save all file-visiting buffers, then kill."
+   With prefix arg, silently save all file-visiting buffers, then kill."
   (interactive "P")
   (save-some-buffers arg t)
   (kill-emacs))
@@ -158,38 +156,37 @@ With prefix arg, silently save all file-visiting buffers, then kill."
 (setq delims " \t\n")
 (setq specials "^A-Za-z0-9 \t\n")
 
-
 (defun mc-forward-word (count)
-        (cond
-            ((not (= 0 (skip-chars-forward delims))) 1)
-            ((not (= 0 (skip-chars-forward word))) (skip-chars-forward delims))
-            ((skip-chars-forward specials) (skip-chars-forward delims))))
+  (cond
+   ((not (= 0 (skip-chars-forward delims))) 1)
+   ((not (= 0 (skip-chars-forward word))) (skip-chars-forward delims))
+   ((skip-chars-forward specials) (skip-chars-forward delims))))
 
 (defun mc-backward-word (count)
-        (skip-chars-backward delims)
-        (cond
-            ((not (= 0 (skip-chars-backward word))) 2)
-            ((skip-chars-backward specials) 0)))
-            
+  (skip-chars-backward delims)
+  (cond
+   ((not (= 0 (skip-chars-backward word))) 2)
+   ((skip-chars-backward specials) 0)))
+
 (defun forward-word (count)
-    (interactive "p")
-    (if (> count 0)
-            (mc-forward-word count)
-            (mc-backward-word count)))
-            
- (defun backward-word (arg)
-   "Move backward until encountering the beginning of a word.
-     With argument, do this that many times."
-   (interactive "p")
-   (forward-word (- arg)))
+  (interactive "p")
+  (if (> count 0)
+      (mc-forward-word count)
+    (mc-backward-word count)))
+
+(defun backward-word (arg)
+  "Move backward until encountering the beginning of a word.
+   With argument, do this that many times."
+  (interactive "p")
+  (forward-word (- arg)))
 
 (defun kill-word (arg)
-   (interactive "p")
-   (kill-region (point) (progn (forward-word arg) (point))))
-   
+  (interactive "p")
+  (kill-region (point) (progn (forward-word arg) (point))))
+
 (defun backward-kill-word (arg)
-   (interactive "p")
-   (kill-word (- arg)))
+  (interactive "p")
+  (kill-word (- arg)))
 
 
 (custom-set-faces
