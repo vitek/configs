@@ -1,7 +1,6 @@
 " no compatibility with vi
 set nocompatible
 
-" syntax highlighting
 syntax on
 
 if has("gui_running")
@@ -30,87 +29,8 @@ set list
 set enc=utf-8
 
 " show line numbers
-set number
+"set number
 
 " read file again, if it was changed outside of vim
 set autoread
-
-" use wildmenu
-set wildmenu
-
-" selection, cut/copy/paste
-so $VIMRUNTIME/mswin.vim
-
-" open/close NERDTree
-nmap <silent><C-n> :NERDTreeToggle<CR>
-imap <silent><C-n> <C-o>:NERDTreeToggle<CR>
-
-" ignore some files in NERDTree
-let NERDTreeIgnore = ['\~$', '\.pyc$', '\.pyo$']
-let NERDTreeQuitOnOpen = 1
-
-" NERDCommenter settings
-let NERDComMappings = 0
-map <M-/> <plug>NERDCommenterToggle
-imap <M-/> <plug>NERDCommenterToggle
-
-" close file
-ino <C-q> <C-o>:q<CR>
-nno <C-q> :q<CR>
-
-" some usefull hotkeys from my Eclipse
-ino <C-d> <C-o>dd
-nno <C-d> dd
-
-" move lines in normal, insert and visual modes
-nno <A-Down> :m+<CR>==
-ino <A-Down> <Esc>:m+<CR>==gi
-vno <A-Down> :m'>+<CR>gv=gv
-nno <A-Up> :m-2<CR>==
-ino <A-Up> <Esc>:m-2<CR>==gi
-vno <A-Up> :m-2<CR>gv=gv
-
-" tabulate/untabulate text
-smap <Tab> <C-o>>
-smap <S-Tab> <C-o><
-ino <S-Tab> <C-o><<CR>
-
-" tab management
-ino <silent><C-t> <C-o>:tabnew<CR>
-nno <silent><C-t> :tabnew<CR>
-
-" don't bell or blink
-set noeb
-set vb t_vb=
-
-" window maximization
-if has('gui')
-	au GUIEnter * :set lines=99999 columns=99999
-endif
-
-" filetype specific options
-let ropevim_enable_shortcuts = 0
-let ropevim_vim_completion = 1
-
-" don't let sql completion ruin insert-mode.
-" annoying completions on <Left>/<Right> keys.
-let g:ftplugin_sql_omni_key_right = 'stub'
-let g:ftplugin_sql_omni_key_left = 'stub'
-
-augroup python
-	au!
-	au BufEnter,BufWinEnter *.py ino <buffer><silent> <C-Space> <C-r>=RopeCodeAssistInsertMode()<CR>
-	au BufEnter,BufWinEnter *.py setlocal expandtab
-	au BufWritePre *.py :%s/\s\+$//e
-augroup END
-
-augroup html
-	au!
-	au BufEnter,BufWinEnter *.html setlocal expandtab
-augroup END
-
-augroup css
-	au!
-	au BufEnter,BufWinEnter *.css setlocal expandtab
-augroup END
 

@@ -1,6 +1,6 @@
 GCONFTOOL = gconftool-2
 
-install: install-git install-hg install-emacs install-gconf
+install: install-git install-hg install-emacs install-vim install-gconf
 
 install-git:
 	install -m 0644 git/gitconfig ~/.gitconfig
@@ -11,6 +11,9 @@ install-hg:
 
 install-emacs:
 	install -m 0644 emacs/emacs.el ~/.emacs
+
+install-vim:
+	install -m 0644 vim/vimrc ~/.vimrc
 
 install-screen:
 	install -m 0644 screenrc ~/.screenrc
