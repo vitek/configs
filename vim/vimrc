@@ -16,7 +16,7 @@ filetype indent on
 
 set ttyfast
 
-set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent
+set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent expandtab
 
 " prefer unix over windows over mac formats
 set ffs=unix,dos,mac
