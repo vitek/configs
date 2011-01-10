@@ -9,6 +9,7 @@
   ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
  '(case-fold-search t)
+ '(column-number-mode t)
  '(compile-command "make ")
  '(current-language-environment "UTF-8")
  '(default-input-method "rfc1345")
@@ -16,12 +17,12 @@
  '(global-font-lock-mode t nil (font-lock))
  '(inhibit-startup-screen t)
  '(load-home-init-file t t)
+ '(menu-bar-mode nil)
  '(safe-local-variable-values (quote ((indent-tabs-mode . f) (sgml-indent-step . 1) (sgml-indent-data . 1))))
+ '(save-place t nil (saveplace))
  '(setq font-lock-maximum-decoration t)
  '(show-paren-mode t nil (paren))
  '(line-number-mode t)
- '(column-number-mode t)
-;; '(show-trailing-whitespace t)
  '(x-select-enable-clipboard t))
 
 ;;(setq blink-cursor-mode 0)
