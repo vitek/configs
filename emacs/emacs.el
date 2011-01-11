@@ -43,7 +43,8 @@
 (show-paren-mode 1)
 
 (require 'color-theme)
-(color-theme-initialize)
+(if (fboundp 'color-theme-initialize)
+    (color-theme-initialize))
 (color-theme-dark-laptop)
 
 (global-set-key [f9] (quote compile))
