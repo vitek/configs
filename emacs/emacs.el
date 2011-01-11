@@ -25,6 +25,10 @@
  '(line-number-mode t)
  '(x-select-enable-clipboard t))
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
+(require 'cython-mode)
+
 ;;(setq blink-cursor-mode 0)
 (blink-cursor-mode 0)
 ;; (transient-mark-mode)
@@ -206,4 +210,3 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  )
-

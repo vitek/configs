@@ -17,6 +17,8 @@ install-bzr:
 
 install-emacs:
 	install -m 0644 emacs/emacs.el ~/.emacs
+	install -d ~/.emacs.d/site-lisp
+	install -m 0644 emacs/site-lisp/cython-mode.el ~/.emacs.d/site-lisp
 
 install-vim:
 	install -m 0644 vim/vimrc ~/.vimrc
