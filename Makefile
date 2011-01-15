@@ -1,31 +1,35 @@
 GCONFTOOL = gconftool-2
+INSTALL   = install
 
-install: install-git install-hg install-bzr install-emacs install-vim install-misc install-gconf
+install: install-vc install-editor install-misc install-gconf
+
+install-vc: install-git install-hg install-bzr
+install-editor: install-emacs install-vim
 
 install-git:
-	install -m 0644 git/gitconfig ~/.gitconfig
-	install -m 0644 git/gitignore ~/.gitignore
+	$(INSTALL) -m 0644 git/gitconfig ~/.gitconfig
+	$(INSTALL) -m 0644 git/gitignore ~/.gitignore
 
 install-hg:
-	install -m 0644 hgrc ~/.hgrc
+	$(INSTALL) -m 0644 hgrc ~/.hgrc
 
 install-bzr:
-	install -d ~/.bazaar
-	for i in authentication.conf bazaar.conf ignore; do \
-	    install -m 0644 bzr/$$i ~/.bazaar/;                 \
-	done;
+	$(INSTALL) -d ~/.bazaar
+	$(INSTALL) -m 0644 bzr/bazaar.conf ~/.bazaar/
+	$(INSTALL) -m 0644 bzr/authentication.conf ~/.bazaar/
+	$(INSTALL) -m 0644 bzr/ignore ~/.bazaar/
 
 install-emacs:
-	install -m 0644 emacs/emacs.el ~/.emacs
-	install -d ~/.emacs.d/site-lisp
-	install -m 0644 emacs/site-lisp/cython-mode.el ~/.emacs.d/site-lisp
+	$(INSTALL) -d ~/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/emacs.el ~/.emacs
+	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el ~/.emacs.d/site-lisp
 
 install-vim:
-	install -m 0644 vim/vimrc ~/.vimrc
+	$(INSTALL) -m 0644 vim/vimrc ~/.vimrc
 
 install-misc:
-	install -m 0644 screenrc ~/.screenrc
-	install -m 0644 pylintrc ~/.pylintrc
+	$(INSTALL) -m 0644 screenrc ~/.screenrc
+	$(INSTALL) -m 0644 pylintrc ~/.pylintrc
 
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
