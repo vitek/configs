@@ -1,6 +1,6 @@
 GCONFTOOL = gconftool-2
 
-install: install-git install-hg install-bzr install-emacs install-vim install-gconf
+install: install-git install-hg install-bzr install-emacs install-vim install-misc install-gconf
 
 install-git:
 	install -m 0644 git/gitconfig ~/.gitconfig
@@ -23,8 +23,9 @@ install-emacs:
 install-vim:
 	install -m 0644 vim/vimrc ~/.vimrc
 
-install-screen:
+install-misc:
 	install -m 0644 screenrc ~/.screenrc
+	install -m 0644 pylintrc ~/.pylintrc
 
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
