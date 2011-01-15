@@ -151,7 +151,7 @@
 (setq compilation-environment '("LC_ALL=C"))
 
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
+(setq-default tab-width 8)
 (setq-default py-indent-offset 4)
 
 (require 'whitespace)
