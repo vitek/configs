@@ -32,7 +32,7 @@ vbell on
 vbell_msg "   Wuff  ----  Wuff!!  "
 
 # define a bigger scrollback, default is 100 lines
-defscrollback 1024
+defscrollback 4096
 
 # ------------------------------------------------------------------------------
 # SCREEN KEYBINDINGS
@@ -107,12 +107,10 @@ defnonblock 5
 # screen -t daemon 9 tail -f /var/log/daemon.log
 
 defutf8 on
-caption always "%n %w"
-
+caption always "%{wk}%-w%{+b}[%n %t]%{-b}%+w%=%c"
 
 altscreen on
 autodetach on
 bell_msg "beep"
-
 
 escape ^Tt
