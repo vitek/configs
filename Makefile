@@ -1,7 +1,7 @@
 GCONFTOOL = gconftool-2
 INSTALL   = install
 
-install: install-vc install-editor install-misc install-gconf
+install: install-vc install-editor install-misc
 
 install-vc: install-git install-hg install-bzr
 install-editor: install-emacs install-vim
