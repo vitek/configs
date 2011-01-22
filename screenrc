@@ -107,7 +107,9 @@ defnonblock 5
 # screen -t daemon 9 tail -f /var/log/daemon.log
 
 defutf8 on
-caption always "%{wk}%-w%{+b}[%n %t]%{-b}%+w%=%c"
+caption always "%{wk}%w%=%c"
+hardstatus lastline "screen%n at %H"
+shelltitle "sh"
 
 altscreen on
 autodetach on
