@@ -1,7 +1,3 @@
-(scroll-bar-mode 0)
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -20,6 +16,8 @@
  '(line-number-mode t)
  '(load-home-init-file t t)
  '(menu-bar-mode nil)
+ '(scroll-bar-mode nil)
+ '(tool-bar-mode nil)
  '(safe-local-variable-values (quote ((indent-tabs-mode . f) (sgml-indent-step . 1) (sgml-indent-data . 1))))
  '(save-place t nil (saveplace))
  '(setq font-lock-maximum-decoration t)
