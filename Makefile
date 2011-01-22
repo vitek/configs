@@ -1,6 +1,8 @@
 GCONFTOOL = gconftool-2
 INSTALL   = install
 
+default:
+
 install: install-vc install-editor install-misc
 
 install-vc: install-git install-hg install-bzr
