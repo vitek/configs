@@ -143,9 +143,8 @@
 ;;(define-key ctl-x-map "\C-c" 'silent-save-buffers-kill-emacs)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
 
-(global-set-key [C-prior] 'cyclebuffer-backward)
-(global-set-key [C-next] 'cyclebuffer-forward)
-
+(global-set-key [C-prior] 'previous-buffer)
+(global-set-key [C-next] 'next-buffer)
 
 (setq compilation-environment '("LC_ALL=C"))
 
