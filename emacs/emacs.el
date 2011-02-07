@@ -26,7 +26,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
-(require 'cython-mode)
+(require 'cython-mode nil t)
 
 ;;(setq blink-cursor-mode 0)
 (blink-cursor-mode 0)
@@ -45,10 +45,10 @@
 
 (show-paren-mode 1)
 
-(require 'color-theme)
-(if (fboundp 'color-theme-initialize)
-    (color-theme-initialize))
-(color-theme-dark-laptop)
+(when (require 'color-theme nil t)
+  (progn (when (fboundp 'color-theme-initialize)
+           (color-theme-initialize))
+         (color-theme-dark-laptop)))
 
 (global-set-key [f9] (quote compile))
 (global-set-key (quote [f2]) (quote save-buffer))
