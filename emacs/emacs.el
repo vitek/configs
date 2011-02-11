@@ -169,20 +169,29 @@
 ;;(global-linum-mode)
 
 ;; mcedit-alike word movements functions
-(setq word "A-Za-z0-9")
+(setq word "[:alnum:]")
 (setq delims " \t\n")
-(setq specials "^A-Za-z0-9 \t\n")
+(setq spaces "\t ")
+(setq specials "^[:alnum:] \t\n")
+
+(setq upper-words "[:upper:][:digit:]")
+(setq lower-words "[:lower:][:digit:]")
 
 (defun mc-forward-word (count)
   (cond
-   ((not (= 0 (skip-chars-forward delims))) 1)
-   ((not (= 0 (skip-chars-forward word))) (skip-chars-forward delims))
-   ((skip-chars-forward specials) (skip-chars-forward delims))))
+   ((> (skip-chars-forward delims) 0) 1)
+   ((> (+ (skip-chars-forward upper-words)
+          (skip-chars-forward lower-words)) 0)
+       (skip-chars-forward spaces))
+   ((skip-chars-forward specials)
+    (skip-chars-forward delims))))
 
 (defun mc-backward-word (count)
-  (skip-chars-backward delims)
+  (skip-chars-backward spaces)
   (cond
-   ((not (= 0 (skip-chars-backward word))) 2)
+   ((< (skip-chars-backward "\n") 0) 1)
+   ((< (+ (skip-chars-backward lower-words)
+          (skip-chars-backward upper-words)) 0) 2)
    ((skip-chars-backward specials) 0)))
 
 (defun forward-word (count)
