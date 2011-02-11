@@ -166,7 +166,7 @@
 
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t)
 (setq linum-format (if window-system "%4d" "%4d "))
-(global-linum-mode)
+;;(global-linum-mode)
 
 ;; mcedit-alike word movements functions
 (setq word "A-Za-z0-9")
