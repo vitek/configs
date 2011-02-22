@@ -32,8 +32,8 @@
 (blink-cursor-mode 0)
 ;; (transient-mark-mode)
 
-(if window-system
-    (global-hl-line-mode))
+;;(if window-system
+;;    (global-hl-line-mode))
 
 (setq scroll-conservatively 50)
 (setq scroll-up-agressively 0)
