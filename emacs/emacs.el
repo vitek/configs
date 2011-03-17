@@ -184,40 +184,43 @@
 (setq upper-words "[:upper:][:digit:]")
 (setq lower-words "[:lower:][:digit:]")
 
-(defun mc-forward-word (count)
-  (cond
-   ((> (skip-chars-forward delims) 0) 1)
-   ((> (+ (skip-chars-forward upper-words)
-          (skip-chars-forward lower-words)) 0)
-       (skip-chars-forward spaces))
-   ((skip-chars-forward specials)
-    (skip-chars-forward delims))))
-
-(defun mc-backward-word (count)
-  (skip-chars-backward spaces)
-  (cond
-   ((< (skip-chars-backward "\n") 0) 1)
-   ((< (+ (skip-chars-backward lower-words)
-          (skip-chars-backward upper-words)) 0) 2)
-   ((skip-chars-backward specials) 0)))
-
-(defun forward-word (count)
-  (interactive "p")
+(defun move-by-word (count)
   (if (> count 0)
-      (mc-forward-word count)
-    (mc-backward-word count)))
+      (dotimes (i count)
+        (progn
+          (cond
+           ((> (skip-chars-forward delims) 0) 1)
+           ((> (+ (skip-chars-forward upper-words)
+                  (skip-chars-forward lower-words)) 0)
+            (skip-chars-forward spaces))
+           ((skip-chars-forward specials)
+            (skip-chars-forward delims))))))
+  (dotimes (i (- count))
+    (progn
+      (skip-chars-backward spaces)
+      (cond
+       ((< (skip-chars-backward "\n") 0) 1)
+       ((< (+ (skip-chars-backward lower-words)
+              (skip-chars-backward upper-words)) 0) 2)
+       ((skip-chars-backward specials) 0)))))
 
-(defun backward-word (arg)
-  "Move backward until encountering the beginning of a word.
-   With argument, do this that many times."
+(defun forward-word (&optional arg)
   (interactive "p")
-  (forward-word (- arg)))
+  (if arg
+      (move-by-word arg)
+    (move-by-word 1)))
 
-(defun kill-word (arg)
+(defun backward-word (&optional arg)
+  (interactive "p")
+  (if arg
+      (move-by-word (- arg))
+    (move-by-word -1)))
+
+(defun kill-word (&optional arg)
   (interactive "p")
   (kill-region (point) (progn (forward-word arg) (point))))
 
-(defun backward-kill-word (arg)
+(defun backward-kill-word (&optional arg)
   (interactive "p")
   (kill-word (- arg)))
 
