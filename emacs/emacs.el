@@ -50,6 +50,13 @@
            (color-theme-initialize))
          (color-theme-dark-laptop)))
 
+
+(when (require 'semantic nil t)
+  (progn
+    (global-semanticdb-minor-mode 1)
+    (semantic-mode 1)
+    (global-set-key "\M-n" 'semantic-complete-jump-local)))
+
 (global-set-key [f9] (quote compile))
 (global-set-key (quote [f2]) (quote save-buffer))
 (global-set-key (quote [f3]) (quote find-file))
