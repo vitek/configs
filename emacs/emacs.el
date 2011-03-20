@@ -118,8 +118,6 @@
 (setq auto-mode-alist (cons '(".[ch]$" . default-c-mode)
                 auto-mode-alist))
 
-(set-default-font "DejaVu Sans Mono")
-
 ;;(set-default-font "koi9x15")
 ;;(set-face-font "9x15")
 ;;;(x-handle-switch "-font" "9x15")
