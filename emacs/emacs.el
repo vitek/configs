@@ -28,6 +28,9 @@
 
 (require 'cython-mode nil t)
 
+(global-auto-revert-mode)
+
+
 ;;(setq blink-cursor-mode 0)
 (blink-cursor-mode 0)
 ;; (transient-mark-mode)
