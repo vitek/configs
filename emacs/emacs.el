@@ -166,11 +166,20 @@
 (setq-default tab-width 8)
 (setq-default py-indent-offset 4)
 
-(require 'whitespace)
+(when
+    (require 'show-wspace nil t)
+  (progn
+    (defun highlight-whitespaces ()
+      (show-ws-highlight-tabs)
+      (show-ws-highlight-trailing-whitespace))
+    (add-hook 'font-lock-mode-hook 'highlight-whitespaces)))
 
-(setq whitespace-style (quote
-                        (tabs tab-mark trailing)))
-(global-whitespace-mode)
+
+;;(require 'whitespace)
+;;
+;;(setq whitespace-style (quote
+;;                        (tabs tab-mark trailing)))
+;;(global-whitespace-mode)
 ;;(autoload 'whitespace-mode           "whitespace" "Toggle whitespace visualization."        t)
 ;;(autoload 'whitespace-toggle-options "whitespace" "Toggle local `whitespace-mode' options." t)
 
@@ -235,4 +244,6 @@
   ;; If there is more than one, they won't work right.
  '(diff-added ((t (:foreground "Green"))) 'now)
  '(diff-removed ((t (:foreground "Red"))) 'now)
- )
+
+ '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
+ '(show-ws-tab ((t (:background "Darkred"))) 'now))
