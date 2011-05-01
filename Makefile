@@ -36,3 +36,8 @@ install-misc:
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
 	$(GCONFTOOL) --set /apps/nautilus/preferences/show_desktop --type boolean 0
+
+install-awesome:
+	$(INSTALL) -d ~/.config/awesome
+	$(INSTALL) -m 0644 awesome/rc.lua ~/.config/awesome/rc.lua
+	$(INSTALL) -m 0644 awesome/gnomerc ~/.gnomerc
