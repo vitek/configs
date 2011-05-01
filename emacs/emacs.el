@@ -170,10 +170,11 @@
     (require 'show-wspace nil t)
   (progn
     (defun highlight-whitespaces ()
-      (show-ws-highlight-tabs)
-      (show-ws-highlight-trailing-whitespace))
+      (if (not (member major-mode '(help-mode fundamental-mode
+                                              completion-list-mode tetris-mode)))
+          (progn (show-ws-highlight-trailing-whitespace)
+                 (show-ws-highlight-tabs))))
     (add-hook 'font-lock-mode-hook 'highlight-whitespaces)))
-
 
 ;;(require 'whitespace)
 ;;
@@ -246,4 +247,4 @@
  '(diff-removed ((t (:foreground "Red"))) 'now)
 
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
- '(show-ws-tab ((t (:background "Darkred"))) 'now))
+ '(show-ws-tab ((t (:background "cyan"))) 'now))
