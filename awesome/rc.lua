@@ -76,8 +76,8 @@ end
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-   awful.key({ modkey,           }, "Left",   function () changeview(-1) end),
-   awful.key({ modkey,           }, "Right",  function () changeview(1) end),
+   awful.key({ modkey,           }, "Left",   awful.tag.viewprev),
+   awful.key({ modkey,           }, "Right",  awful.tag.viewnext),
    awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
 
     awful.key({ modkey,           }, "j",
@@ -122,8 +122,8 @@ globalkeys = awful.util.table.join(
 
     -- GNOME-alike bindings
     --- Workspace control
-    awful.key({ "Mod1", "Control" }, "Left",   function () changeview(-1) end),
-    awful.key({ "Mod1", "Control" }, "Right",  function () changeview(1) end),
+    awful.key({ "Mod1", "Control" }, "Left",   awful.tag.viewprev),
+    awful.key({ "Mod1", "Control" }, "Right",  awful.tag.viewnext),
 
     --- Run program
     awful.key({ "Mod1" }, "F1", function () awful.util.spawn_with_shell("sleep .2; /usr/bin/gnome-panel-control --main-menu") end),
@@ -221,7 +221,7 @@ awful.rules.rules = {
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
-      properties = { floating = true } },
+      properties = { floating = true } callback = awful.titlebar.add},
     { rule = { class = "Git-gui" },
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
