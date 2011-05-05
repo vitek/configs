@@ -1,0 +1,60 @@
+# WM
+awesome
+openbox
+
+# Web
+chromium-browser
+chromium-browser-l10n
+chromium-browser-inspector
+pidgin
+
+# EMU
+wine
+
+
+# Media
+audacity
+flashplugin-nonfree
+gimp
+gqview
+inkscape
+sox
+vlc
+
+# Emacs
+emacs
+emacs-goodies-el
+python-mode
+
+
+# Vim
+vim
+
+# VC
+cvs
+git-core
+git-gui
+git-svn
+gitk
+mercurial
+subversion
+
+# AVR stuff
+gcc-avr
+avr-libc
+
+# Python
+ipython
+python-coverage
+python-dev
+python-lxml
+python-pip
+python-setuptools
+
+# Misc
+pwgen
+stardict
+sshfs
+minicom
+graphviz
+gnuplot
