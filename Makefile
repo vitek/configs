@@ -41,3 +41,6 @@ install-awesome:
 	$(INSTALL) -d ~/.config/awesome
 	$(INSTALL) -m 0644 awesome/rc.lua ~/.config/awesome/rc.lua
 	$(INSTALL) -m 0644 awesome/gnomerc ~/.gnomerc
+
+install-bashrc:
+	$(INSTALL) -m 0644 bashrc ~/.bashrc
