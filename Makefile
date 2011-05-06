@@ -44,3 +44,6 @@ install-awesome:
 
 install-bashrc:
 	$(INSTALL) -m 0644 bashrc ~/.bashrc
+
+install-ubuntu-extra:
+	python installpkgs.py ubuntu-packages
