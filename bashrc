@@ -99,3 +99,5 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 PATH=~/bin:$PATH
+EDITOR=vim
+
