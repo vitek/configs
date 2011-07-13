@@ -50,6 +50,7 @@ python-dev
 python-lxml
 python-pip
 python-setuptools
+g++
 
 # Misc
 pwgen
@@ -58,3 +59,4 @@ sshfs
 minicom
 graphviz
 gnuplot
+lua-mode

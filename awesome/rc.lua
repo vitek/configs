@@ -60,10 +60,10 @@ end
 -- }}}
 
 -- {{{ Mouse bindings
-root.buttons(awful.util.table.join(
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
-))
+-- root.buttons(awful.util.table.join(
+--     awful.button({ }, 4, awful.tag.viewnext),
+--     awful.button({ }, 5, awful.tag.viewprev)
+-- ))
 -- }}}
 
 
@@ -222,8 +222,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
-    { rule = { class = "gimp" },
-      properties = { floating = true } callback = awful.titlebar.add},
+    -- { rule = { class = "gimp" },
+    -- properties = { floating = true }, callback = awful.titlebar.add},
     { rule = { class = "Git-gui" },
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
@@ -245,6 +245,8 @@ client.add_signal("manage", function (c, startup)
             client.focus = c
         end
     end)
+
+    c.size_hints_honor = false
 
     if not startup then
         -- Set the windows at the slave,
