@@ -176,6 +176,11 @@
                  (show-ws-highlight-tabs))))
     (add-hook 'font-lock-mode-hook 'highlight-whitespaces)))
 
+(when
+    (require 'column-marker nil t)
+  (progn
+    (add-hook 'font-lock-mode-hook '(lambda () (column-marker-1 80)))))
+
 ;;(require 'whitespace)
 ;;
 ;;(setq whitespace-style (quote

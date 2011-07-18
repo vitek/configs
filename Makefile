@@ -25,6 +25,7 @@ install-emacs:
 	$(INSTALL) -d ~/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/emacs.el ~/.emacs
 	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el ~/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/site-lisp/column-marker.el ~/.emacs.d/site-lisp
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc ~/.vimrc
