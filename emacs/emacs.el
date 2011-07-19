@@ -48,10 +48,10 @@
 
 (show-paren-mode 1)
 
-;; (when (require 'color-theme nil t)
-;;   (progn (when (fboundp 'color-theme-initialize)
-;;            (color-theme-initialize))
-;;          (color-theme-dark-laptop)))
+(when (require 'color-theme nil t)
+  (progn (when (fboundp 'color-theme-initialize)
+           (color-theme-initialize))
+         (color-theme-dark-laptop)))
 
 
 ;; (when (require 'semantic nil t)
