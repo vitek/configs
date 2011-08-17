@@ -99,4 +99,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 PATH=~/bin:$PATH
+
+# Nice editor for small configs and commit messages
 export EDITOR=vim
