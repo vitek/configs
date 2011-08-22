@@ -234,19 +234,18 @@ awful.rules.rules = {
 
 -- Add or remove title bar
 function update_titlebar(c)
-   local is_floating = (
+   local enable_titlebar = (
       awful.layout.get(c.screen) == awful.layout.suit.floating or
       awful.client.floating.get(c))
 
-   -- Remove the titlebar if fullscreen
-   if c.fullscreen then
+   if c.fullscreen or c.maximized_vertical or c.maximized_horizontal then
+      enable_titlebar = false
+   end
+
+   if c.titlebar and not enable_titlebar then
       awful.titlebar.remove(c)
-   else
-      if is_floating then
-         awful.titlebar.add(c, { modkey = modkey })
-      else
-         awful.titlebar.remove(c)
-      end
+   elseif not c.titlebar and enable_titlebar then
+      awful.titlebar.add(c, { modkey = modkey })
    end
 end
 
@@ -257,6 +256,8 @@ client.add_signal("manage", function (c, startup)
     -- awful.titlebar.add(c, { modkey = modkey })
     update_titlebar(c)
     c:add_signal("property::floating", update_titlebar)
+    c:add_signal("property::maximized_vertical", update_titlebar)
+    c:add_signal("property::maximized_horizontal", update_titlebar)
 
     -- Enable sloppy focus
     c:add_signal("mouse::enter", function(c)
@@ -294,4 +295,3 @@ for s = 1, screen.count() do
          end
       end)
 end
-
