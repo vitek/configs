@@ -232,11 +232,31 @@ awful.rules.rules = {
 }
 -- }}}
 
+-- Add or remove title bar
+function update_titlebar(c)
+   local is_floating = (
+      awful.layout.get(c.screen) == awful.layout.suit.floating or
+      awful.client.floating.get(c))
+
+   -- Remove the titlebar if fullscreen
+   if c.fullscreen then
+      awful.titlebar.remove(c)
+   else
+      if is_floating then
+         awful.titlebar.add(c, { modkey = modkey })
+      else
+         awful.titlebar.remove(c)
+      end
+   end
+end
+
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.add_signal("manage", function (c, startup)
     -- Add a titlebar
     -- awful.titlebar.add(c, { modkey = modkey })
+    update_titlebar(c)
+    c:add_signal("property::floating", update_titlebar)
 
     -- Enable sloppy focus
     c:add_signal("mouse::enter", function(c)
@@ -264,3 +284,14 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+for s = 1, screen.count() do
+   awful.tag.attached_add_signal(
+      s, "property::layout",
+      function (tag)
+         for _, c in pairs(tag:clients()) do
+            update_titlebar(c)
+         end
+      end)
+end
+
