@@ -148,8 +148,9 @@ clientkeys = awful.util.table.join(
 
     awful.key({ "Mod1" }, "F10",
         function (c)
-            c.maximized_horizontal = not c.maximized_horizontal
-            c.maximized_vertical   = not c.maximized_vertical
+           local new_state = not c.maximized_horizontal
+           c.maximized_horizontal = new_state
+           c.maximized_vertical   = new_state
         end),
     awful.key({ "Mod1" }, "F4", function (c) c:kill() end)
 )
