@@ -242,6 +242,10 @@
   (interactive "p")
   (kill-word (- arg)))
 
+(defun ipdb()
+  (interactive)
+  (insert "from ipdb import set_trace; set_trace()"))
+(global-set-key (kbd "C-c b") 'ipdb)
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
