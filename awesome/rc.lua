@@ -227,6 +227,15 @@ awful.rules.rules = {
     -- properties = { floating = true }, callback = awful.titlebar.add},
     { rule = { class = "Git-gui" },
       properties = { floating = true } },
+
+    -- Unity2d hints
+    { rule = { class = "Unity-2d-panel"},
+      properties =  { ontop = true }},
+    { rule = { class = "Unity-2d-launcher"},
+      properties =  { ontop = true, sticky=true }},
+    { rule = { class = "Unity-2d-places"},
+      properties =  { ontop = true }},
+
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
