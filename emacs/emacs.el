@@ -166,6 +166,8 @@
 (setq-default tab-width 8)
 (setq-default py-indent-offset 4)
 
+(setq-default sgml-basic-offset 4)
+
 (when
     (require 'show-wspace nil t)
   (progn
