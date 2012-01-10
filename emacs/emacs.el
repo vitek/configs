@@ -60,6 +60,10 @@
 ;;     (semantic-mode 1)
 ;;     (global-set-key "\M-n" 'semantic-complete-jump)))
 
+
+(global-set-key "\C-s" 'isearch-forward-regexp)
+(global-set-key "\C-r" 'isearch-backward-regexp)
+
 (global-set-key [f9] (quote compile))
 (global-set-key (quote [f2]) (quote save-buffer))
 (global-set-key (quote [f3]) (quote find-file))
@@ -71,6 +75,7 @@
 
 (global-set-key (quote [f12]) (quote grep))
 (setq grep-command "grep -Eni ")
+
 (setq kill-whole-line t)
 
 ;;(define-key ctl-x-map "p" 'previous-error)
