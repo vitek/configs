@@ -61,8 +61,9 @@
 ;;     (global-set-key "\M-n" 'semantic-complete-jump)))
 
 
-(global-set-key "\C-s" 'isearch-forward-regexp)
-(global-set-key "\C-r" 'isearch-backward-regexp)
+;;(global-set-key "\C-s" 'isearch-forward-regexp)
+;;(global-set-key "\C-r" 'isearch-backward-regexp)
+
 
 (global-set-key [f9] (quote compile))
 (global-set-key (quote [f2]) (quote save-buffer))
