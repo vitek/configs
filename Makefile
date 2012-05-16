@@ -44,6 +44,7 @@ install-awesome:
 	$(INSTALL) -m 0644 awesome/gnomerc ~/.gnomerc
 
 install-bashrc:
+	$(INSTALL) -m 0644 profile ~/.profile
 	$(INSTALL) -m 0644 bashrc ~/.bashrc
 
 install-ubuntu-extra:
