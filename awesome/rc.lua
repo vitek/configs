@@ -242,40 +242,40 @@ awful.rules.rules = {
 }
 -- }}}
 
--- Add or remove title bar
-function update_titlebar(c)
-   local enable_titlebar = (
-      awful.layout.get(c.screen) == awful.layout.suit.floating or
-      awful.client.floating.get(c))
+-- -- Add or remove title bar
+-- function update_titlebar(c)
+--    local enable_titlebar = (
+--       awful.layout.get(c.screen) == awful.layout.suit.floating or
+--       awful.client.floating.get(c))
 
-   if c.fullscreen or c.maximized_vertical or c.maximized_horizontal then
-      enable_titlebar = false
-   end
+--    if c.fullscreen or c.maximized_vertical or c.maximized_horizontal then
+--       enable_titlebar = false
+--    end
 
-   if c.titlebar and not enable_titlebar then
-      awful.titlebar.remove(c)
-   elseif not c.titlebar and enable_titlebar then
-      awful.titlebar.add(c, { modkey = modkey })
-   end
-end
+--    if c.titlebar and not enable_titlebar then
+--       awful.titlebar.remove(c)
+--    elseif not c.titlebar and enable_titlebar then
+--       awful.titlebar.add(c, { modkey = modkey })
+--    end
+-- end
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.add_signal("manage", function (c, startup)
     -- Add a titlebar
     -- awful.titlebar.add(c, { modkey = modkey })
-    update_titlebar(c)
-    c:add_signal("property::floating", update_titlebar)
-    c:add_signal("property::maximized_vertical", update_titlebar)
-    c:add_signal("property::maximized_horizontal", update_titlebar)
+    -- update_titlebar(c)
+    -- c:add_signal("property::floating", update_titlebar)
+    -- c:add_signal("property::maximized_vertical", update_titlebar)
+    -- c:add_signal("property::maximized_horizontal", update_titlebar)
 
     -- Enable sloppy focus
-    -- c:add_signal("mouse::enter", function(c)
-    --     if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-    --         and awful.client.focus.filter(c) then
-    --         client.focus = c
-    --     end
-    -- end)
+    c:add_signal("mouse::enter", function(c)
+        if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+            and awful.client.focus.filter(c) then
+            client.focus = c
+        end
+    end)
 
     c.size_hints_honor = false
 
@@ -296,12 +296,12 @@ client.add_signal("focus", function(c) c.border_color = beautiful.border_focus e
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-for s = 1, screen.count() do
-   awful.tag.attached_add_signal(
-      s, "property::layout",
-      function (tag)
-         for _, c in pairs(tag:clients()) do
-            update_titlebar(c)
-         end
-      end)
-end
+-- for s = 1, screen.count() do
+--    awful.tag.attached_add_signal(
+--       s, "property::layout",
+--       function (tag)
+--          for _, c in pairs(tag:clients()) do
+--             update_titlebar(c)
+--          end
+--       end)
+-- end
