@@ -49,3 +49,6 @@ install-bashrc:
 
 install-ubuntu-extra:
 	python installpkgs.py ubuntu-packages
+
+install-dconf:
+	dconf load / < dconf-settings

@@ -1,0 +1,21 @@
+[org/gnome/desktop/interface]
+cursor-blink=false
+enable-animations=false
+show-input-method-menu=false
+show-unicode-menu=false
+ubuntu-overlay-scrollbars=true
+
+[org/gnome/libgnomekbd/desktop]
+default-group=0
+group-per-window=true
+
+[org/gnome/libgnomekbd/keyboard]
+layouts=['us', 'ru']
+options=['grp\tgrp:shift_caps_toggle']
+
+[apps/indicators/datetime]
+custom-time-format='%l:%M %p'
+show-date=true
+show-day=true
+show-seconds=false
+time-format='locale-default'
