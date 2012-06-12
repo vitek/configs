@@ -3,7 +3,7 @@ cursor-blink=false
 enable-animations=false
 show-input-method-menu=false
 show-unicode-menu=false
-ubuntu-overlay-scrollbars=true
+ubuntu-overlay-scrollbars=false
 
 [org/gnome/libgnomekbd/desktop]
 default-group=0
