@@ -19,3 +19,7 @@ show-date=true
 show-day=true
 show-seconds=false
 time-format='locale-default'
+
+[org/gnome/settings-daemon/plugins/power]
+button-sleep='nothing'
+button-suspend='nothing'
