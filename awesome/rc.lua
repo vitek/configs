@@ -25,6 +25,10 @@ awful.util.spawn = function (s)
   oldspawn(s, false)
 end
 
+-- start apps
+awful.util.spawn("/usr/bin/gnome-panel")
+awful.util.spawn("/usr/bin/xcompmgr")
+
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
 -- If you do not like this or do not have such a key,
