@@ -11,7 +11,7 @@ group-per-window=true
 
 [org/gnome/libgnomekbd/keyboard]
 layouts=['us', 'ru']
-options=['grp\tgrp:shift_caps_toggle']
+options=['grp\tgrp:shift_caps_toggle', 'grp\tgrp:alt_space_toggle']
 
 [apps/indicators/datetime]
 custom-time-format='%l:%M %p'
