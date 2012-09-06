@@ -53,6 +53,7 @@ install-misc:
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
 	$(GCONFTOOL) --set /apps/nautilus/preferences/show_desktop --type boolean 0
+	$(GCONFTOOL) --set /apps/gnome-terminal/profiles/Default/scrollbar_position --type string hidden
 
 install-awesome:
 	$(INSTALL) -d $(DESTDIR)/.config/awesome
