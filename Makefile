@@ -79,3 +79,25 @@ diff:
 	done
 	@rm -rf test-config
 
+TARBALL_TARGETS = \
+	install-editor \
+	install-vc \
+	install-misc \
+	install-bashrc
+
+.PHONY: configs.tar.gz ssh-deploy
+configs.tar.gz:
+	rm -rf .tarball
+	$(MAKE) $(TARBALL_TARGETS) DESTDIR=.tarball
+	tar -zcf $@ -C .tarball .
+	rm -rf .tarball
+
+ssh-deploy: configs.tar.gz
+	@if [ "x$(SSH_HOSTNAME)" = "x" ]; then \
+		echo "Please set SSH_HOSTNAME variable"; \
+		exit 1; \
+	fi
+	@for hostname in $(SSH_HOSTNAME); do \
+		echo "Installing configs to $$hostname..."; \
+		cat $< | ssh $$hostname tar -zxf - -C ~ || exit 1; \
+	done
