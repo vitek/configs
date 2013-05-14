@@ -53,13 +53,12 @@
            (color-theme-initialize))
          (color-theme-dark-laptop)))
 
-
-;; (when (require 'semantic nil t)
-;;   (progn
-;;     (global-semanticdb-minor-mode 1)
-;;     (semantic-mode 1)
-;;     (global-set-key "\M-n" 'semantic-complete-jump)))
-
+(when (require 'semantic nil t)
+  (progn
+    (global-semanticdb-minor-mode 1)
+    (semantic-mode 1)
+    (global-set-key "\M-n" 'semantic-complete-jump)
+    (global-set-key (kbd "C-c r") 'semantic-symref)))
 
 ;;(global-set-key "\C-s" 'isearch-forward-regexp)
 ;;(global-set-key "\C-r" 'isearch-backward-regexp)
