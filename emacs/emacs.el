@@ -263,4 +263,4 @@
  '(diff-removed ((t (:foreground "Red"))) 'now)
 
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
- '(show-ws-tab ((t (:background "cyan"))) 'now))
+ '(show-ws-tab ((t (:background "#222"))) 'now))
