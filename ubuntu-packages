@@ -1,6 +1,9 @@
 # WM
 awesome
-openbox
+
+# gnome-classic
+gnome-panel
+gnome-panel-control
 
 # Web
 chromium-browser
@@ -9,26 +12,26 @@ chromium-browser-inspector
 pidgin
 
 # EMU
-wine
+#wine
 
 
 # Media
-audacity
+#audacity
 flashplugin-nonfree
 gimp
-gqview
-inkscape
-sox
+#gqview
+#inkscape
+#sox
 vlc
 
 # Emacs
 emacs
 emacs-goodies-el
 python-mode
-
+lua-mode
 
 # Vim
-vim
+vim-nox
 
 # VC
 cvs
@@ -39,9 +42,9 @@ gitk
 mercurial
 subversion
 
-# AVR stuff
-gcc-avr
-avr-libc
+## AVR stuff
+#gcc-avr
+#avr-libc
 
 # Python
 ipython
@@ -54,9 +57,8 @@ g++
 
 # Misc
 pwgen
-stardict
+#stardict
 sshfs
 minicom
 graphviz
 gnuplot
-lua-mode
