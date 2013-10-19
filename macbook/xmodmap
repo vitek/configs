@@ -1,0 +1,15 @@
+clear control
+clear mod4
+clear mod1
+
+! Swap Super_L and Alt_L
+keycode 133 = Alt_L
+keycode 134 = Alt_R
+keycode 108 = Control_R
+keycode 64 = Super_L
+
+add mod4 = Super_L
+add mod1 = Alt_L Meta_L
+add mod1 = Alt_R Meta_R
+add control = Control_L
+add control = Control_R
