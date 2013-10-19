@@ -73,6 +73,14 @@ install-dconf:
 install-macbook:
 	sudo cp macbook/modprobe.d/macbook-fixes.conf /etc/modprobe.d/macbook-fixes.conf
 
+install-awesome-session:
+	sudo cp awesome/session/gnome-awesome.session \
+		/usr/share/gnome-session/sessions/gnome-awesome.session
+	sudo cp awesome/session/awesome.desktop \
+		/usr/share/applications/awesome.desktop
+	sudo cp awesome/session/gnome-awesome.desktop \
+		/usr/share/xsessions/gnome-awesome.desktop
+
 
 .PHONY: diff
 diff:

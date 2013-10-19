@@ -1,0 +1,4 @@
+[GNOME Session]
+Name=GNOME + Awesome
+RequiredComponents=gnome-panel;gnome-settings-daemon;gnome-screensaver;awesome;
+DesktopName=GNOME
