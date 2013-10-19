@@ -5,6 +5,9 @@ show-input-method-menu=false
 show-unicode-menu=false
 ubuntu-overlay-scrollbars=false
 
+[org/gnome/desktop/background]
+show-desktop-icons=false
+
 [org/gnome/libgnomekbd/desktop]
 default-group=0
 group-per-window=true
