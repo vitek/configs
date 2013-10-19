@@ -70,6 +70,10 @@ install-ubuntu-extra:
 install-dconf:
 	dconf load / < dconf-settings
 
+install-macbook:
+	sudo cp macbook/modprobe.d/macbook-fixes.conf /etc/modprobe.d/macbook-fixes.conf
+
+
 .PHONY: diff
 diff:
 	@rm -rf test-config
