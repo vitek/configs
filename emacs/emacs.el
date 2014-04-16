@@ -22,7 +22,8 @@
  '(save-place t nil (saveplace))
  '(setq font-lock-maximum-decoration t)
  '(show-paren-mode t nil (paren))
- '(x-select-enable-clipboard t))
+ '(x-select-enable-clipboard t)
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
