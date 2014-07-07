@@ -14,6 +14,8 @@ bind I login on
 bind O login off
 bind } history
 
+bind ^x
+
 defnonblock 5
 
 defutf8 on
