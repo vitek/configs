@@ -25,6 +25,9 @@ awful.util.spawn = function (s)
   oldspawn(s, false)
 end
 
+awful.util.spawn_with_shell(
+   "test -e ~/.touchpad-init.sh && ~/.touchpad-init.sh")
+
 -- start apps
 awful.util.spawn("/usr/bin/gnome-panel")
 awful.util.spawn("/usr/bin/xcompmgr")
