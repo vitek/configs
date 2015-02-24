@@ -31,6 +31,8 @@ awful.util.spawn_with_shell(
 -- start apps
 awful.util.spawn("/usr/bin/gnome-panel")
 awful.util.spawn("/usr/bin/xcompmgr")
+awful.util.spawn("/usr/bin/kbdd")
+awful.util.spawn("setxkbmap -layout \"us,ru\"")
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -79,6 +81,10 @@ function changeview(delta)
       awful.tag.viewidx(delta, screen[idx])
    end
 end
+
+
+-- Keyboard layout switch
+kbd_dbus_next_cmd = "dbus-send --dest=ru.gentoo.KbddService /ru/gentoo/KbddService ru.gentoo.kbdd.next_layout"
 
 
 -- {{{ Key bindings
@@ -140,7 +146,9 @@ globalkeys = awful.util.table.join(
               function ()
                  awful.menu.menu_keys.down = { "Down", "Alt_L" }
                  local cmenu = awful.menu.clients({width=400}, {keygrabber=true, coords={x=0, y=10}})
-              end)
+              end),
+    awful.key({"Alt", "Mod1"}, "space",
+              function () os.execute(kbd_dbus_next_cmd) end)
 )
 
 clientkeys = awful.util.table.join(
