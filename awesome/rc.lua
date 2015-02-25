@@ -2,11 +2,22 @@
 require("awful")
 require("awful.autofocus")
 require("awful.rules")
+require("awful.dbus")
 -- require("awful.startup_notification")
 -- Theme handling library
 require("beautiful")
 -- Notification library
 --require("naughty")
+
+local home_path = os.getenv("HOME")
+local config_path = home_path .. "/.config/awesome"
+local locker_path = config_path .. '/locker.sh'
+
+
+function lock_screen()
+   awful.util.spawn(locker_path .. " lock")
+end
+
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
@@ -25,14 +36,13 @@ awful.util.spawn = function (s)
   oldspawn(s, false)
 end
 
-awful.util.spawn_with_shell(
-   "test -e ~/.touchpad-init.sh && ~/.touchpad-init.sh")
-
 -- start apps
 awful.util.spawn("/usr/bin/gnome-panel")
 awful.util.spawn("/usr/bin/xcompmgr")
 awful.util.spawn("/usr/bin/kbdd")
 awful.util.spawn("setxkbmap -layout \"us,ru\"")
+awful.util.spawn(locker_path .. " autolocker")
+awful.util.spawn(config_path .. "/touchpad-init.sh")
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -147,6 +157,9 @@ globalkeys = awful.util.table.join(
                  awful.menu.menu_keys.down = { "Down", "Alt_L" }
                  local cmenu = awful.menu.clients({width=400}, {keygrabber=true, coords={x=0, y=10}})
               end),
+    -- Lock screen
+    awful.key({"Mod1", "Control"}, "l", lock_screen),
+    -- Keyboard layout switch
     awful.key({"Alt", "Mod1"}, "space",
               function () os.execute(kbd_dbus_next_cmd) end)
 )
@@ -320,3 +333,16 @@ client.add_signal("unfocus", function(c) c.border_color = beautiful.border_norma
 --          end
 --       end)
 -- end
+
+dbus.request_name("system", "org.freedesktop.login1.Manager")
+dbus.add_match("system", "interface='org.freedesktop.login1.Manager',member='PrepareForSleep'")
+dbus.add_signal("org.freedesktop.login1.Manager",
+                function(...)
+                   local data = {...}
+                   if data[1]['member'] == "PrepareForSleep" then
+                      if data[2] then
+                         lock_screen()
+                         print("GOING TO SLEEP")
+                      end
+                   end
+                end)
