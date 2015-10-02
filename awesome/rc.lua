@@ -11,11 +11,10 @@ require("beautiful")
 
 local home_path = os.getenv("HOME")
 local config_path = home_path .. "/.config/awesome"
-local locker_path = config_path .. '/locker.sh'
 
 
 function lock_screen()
-   awful.util.spawn(locker_path .. " lock")
+   awful.util.spawn("gnome-screensaver-command --lock")
 end
 
 
@@ -41,7 +40,6 @@ awful.util.spawn("/usr/bin/gnome-panel")
 awful.util.spawn("/usr/bin/xcompmgr")
 awful.util.spawn("/usr/bin/kbdd")
 awful.util.spawn("setxkbmap -layout \"us,ru\"")
-awful.util.spawn(locker_path .. " autolocker")
 awful.util.spawn(config_path .. "/touchpad-init.sh")
 
 -- Default modkey.
@@ -334,15 +332,14 @@ client.add_signal("unfocus", function(c) c.border_color = beautiful.border_norma
 --       end)
 -- end
 
-dbus.request_name("system", "org.freedesktop.login1.Manager")
-dbus.add_match("system", "interface='org.freedesktop.login1.Manager',member='PrepareForSleep'")
-dbus.add_signal("org.freedesktop.login1.Manager",
-                function(...)
-                   local data = {...}
-                   if data[1]['member'] == "PrepareForSleep" then
-                      if data[2] then
-                         lock_screen()
-                         print("GOING TO SLEEP")
-                      end
-                   end
-                end)
+-- dbus.add_match("system", "interface='org.freedesktop.login1.Manager',member='PrepareForSleep'")
+-- dbus.add_signal("org.freedesktop.login1.Manager",
+--                 function(...)
+--                    local data = {...}
+--                    if data[1].member == "PrepareForSleep" then
+--                       if data[2] then
+--                          lock_screen()
+--                          print("GOING TO SLEEP")
+--                       end
+--                    end
+--                 end)
