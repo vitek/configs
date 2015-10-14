@@ -93,6 +93,7 @@ end
 
 -- Keyboard layout switch
 kbd_dbus_next_cmd = "dbus-send --dest=ru.gentoo.KbddService /ru/gentoo/KbddService ru.gentoo.kbdd.next_layout"
+kbd_dbus_first_cmd = "dbus-send --dest=ru.gentoo.KbddService /ru/gentoo/KbddService ru.gentoo.kbdd.set_layout uint32:0"
 
 
 -- {{{ Key bindings
@@ -343,3 +344,13 @@ client.add_signal("unfocus", function(c) c.border_color = beautiful.border_norma
 --                       end
 --                    end
 --                 end)
+
+-- Force switch to english on screensaver activation/deactivation
+dbus.add_match("session", "interface='org.gnome.ScreenSaver'")
+dbus.add_signal("org.gnome.ScreenSaver",
+                function(...)
+                   local data = {...}
+                   if data[1].member == "ActiveChanged" then
+                      os.execute(kbd_dbus_first_cmd)
+                   end
+                end)
