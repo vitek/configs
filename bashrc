@@ -68,7 +68,7 @@ export EDITOR=vim
 export PAGER=less
 
 # set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
@@ -93,12 +93,10 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if declare -F __git_ps1 > /dev/null; then
-    if [ "$color_prompt" = yes ]; then
-        PS1='$(__git_ps1 "(%s) ")${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    else
-        PS1='$(__git_ps1 "(%s) ")${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    fi
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -110,3 +108,11 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+if declare -F __git_ps1 > /dev/null; then
+    if [ "$color_prompt" = yes ]; then
+        PS1='$(__git_ps1 "(%s) ")${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    else
+        PS1='$(__git_ps1 "(%s) ")${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    fi
+fi
