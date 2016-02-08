@@ -151,11 +151,6 @@ globalkeys = awful.util.table.join(
     awful.key({ "Mod1" }, "F1", function () awful.util.spawn_with_shell("sleep .2; /usr/bin/gnome-panel-control --main-menu") end),
     awful.key({ "Mod1" }, "F2", function () awful.util.spawn("/usr/bin/gnome-panel-control --run-dialog") end),
 
-    awful.key({ "Mod1", "Alt"     }, "Tab",
-              function ()
-                 awful.menu.menu_keys.down = { "Down", "Alt_L" }
-                 local cmenu = awful.menu.clients({width=400}, {keygrabber=true, coords={x=0, y=10}})
-              end),
     -- Lock screen
     awful.key({"Mod1", "Control"}, "l", lock_screen),
     -- Keyboard layout switch
