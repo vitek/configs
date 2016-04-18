@@ -63,6 +63,10 @@ if  ! shopt -oq posix; then
     fi
 fi
 
+if [ -f ~/bin/git-flow-completion.bash ]; then
+    . ~/bin/git-flow-completion.bash
+fi
+
 # Nice editor for small configs and commit messages
 export EDITOR=vim
 export PAGER=less
