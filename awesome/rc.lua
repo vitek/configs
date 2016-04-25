@@ -38,7 +38,7 @@ end
 -- start apps
 awful.util.spawn("/usr/bin/gnome-panel")
 -- taken from https://bbs.archlinux.org/viewtopic.php?id=161403
-awful.util.spaen("compton -c -r8 -l-12 -t-8  -b  -G  -f -D30 -I0.45 -O0.45"
+awful.util.spawn("compton -c -r8 -l-12 -t-8  -b  -G  -f -D30 -I0.45 -O0.45" ..
                  " --paint-on-overlay --unredir-if-possible" ..
                  " --backend glx --glx-no-stencil --glx-no-rebind-pixmap")
 awful.util.spawn("/usr/bin/kbdd")
