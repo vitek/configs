@@ -42,6 +42,8 @@ install-emacs:
 	$(INSTALL) -m 0644 emacs/emacs.el $(DESTDIR)/.emacs
 	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/column-marker.el $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/site-lisp/github-theme.el $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/site-lisp/git-grep.el $(DESTDIR)/.emacs.d/site-lisp
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
