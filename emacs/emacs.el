@@ -28,6 +28,7 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (require 'cython-mode nil t)
+(require 'git-grep nil t)
 
 (global-auto-revert-mode)
 
@@ -49,10 +50,13 @@
 
 (show-paren-mode 1)
 
-(when (require 'color-theme nil t)
-  (progn (when (fboundp 'color-theme-initialize)
-           (color-theme-initialize))
-         (color-theme-dark-laptop)))
+;;(when (require 'color-theme nil t)
+;;  (progn (when (fboundp 'color-theme-initialize)
+;;           (color-theme-initialize))
+;;         (color-theme-dark-laptop)))
+
+(require 'github-theme)
+
 
 (when (require 'semantic nil t)
   (progn
