@@ -59,9 +59,12 @@ install-gconf:
 
 install-awesome:
 	$(INSTALL) -d $(DESTDIR)/.config/awesome
+	$(INSTALL) -d $(DESTDIR)/.config/awesome/scripts
 	$(INSTALL) -m 0644 awesome/rc.lua $(DESTDIR)/.config/awesome/rc.lua
-	$(INSTALL) -m 0755 awesome/locker.sh $(DESTDIR)/.config/awesome/locker.sh
-	$(INSTALL) -m 0755 awesome/touchpad-init.sh $(DESTDIR)/.config/awesome/touchpad-init.sh
+	$(INSTALL) -m 0755 awesome/scripts/touchpad-init.sh \
+		$(DESTDIR)/.config/awesome/scripts/touchpad-init.sh
+	$(INSTALL) -m 0755 awesome/scripts/keyboard.sh \
+		$(DESTDIR)/.config/awesome/scripts/keyboard.sh
 	$(INSTALL) -m 0644 awesome/gnomerc $(DESTDIR)/.gnomerc
 
 install-bashrc:
