@@ -8,21 +8,16 @@ default:
 
 install: install-vc install-editor install-misc
 
-install-vc: install-git install-hg install-bzr
-install-editor: install-emacs install-vim
+install-vcs: install-git install-hg install-bzr
+install-editors: install-emacs install-vim
 
-
-install-all: install-awesome			\
+install-all: \
 	install-bashrc				\
-	install-bzr				\
+	install-editors				\
+	install-vcs				\
 	install-dconf				\
-	install-editor				\
-	install-emacs				\
-	install-git				\
-	install-hg				\
-	install-misc				\
-	install-vc				\
-	install-vim
+	install-utils				\
+	install-awesome
 
 install-git:
 	$(INSTALL) -m 0644 git/gitconfig $(DESTDIR)/.gitconfig
@@ -48,7 +43,7 @@ install-emacs:
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
 
-install-misc:
+install-utils:
 	$(INSTALL) -m 0644 screenrc $(DESTDIR)/.screenrc
 	$(INSTALL) -m 0644 pylintrc $(DESTDIR)/.pylintrc
 
