@@ -120,3 +120,8 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+function fileat()
+{
+    echo $HOSTNAME:$PWD/$1
+}
