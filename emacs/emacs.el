@@ -259,6 +259,11 @@
   (insert "from ipdb import set_trace; set_trace()"))
 (global-set-key (kbd "C-c b") 'ipdb)
 
+
+(defvar py-flake8-history nil) ; workaround python-mode.el bug
+(setq py-flake8-command-args
+      '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
+
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -269,3 +274,14 @@
 
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
  '(show-ws-tab ((t (:background "#222"))) 'now))
+
+(require 'package) ;; You might already have this line
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+;;(package-initialize)
+;;(package-install 'flycheck)
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (when (boundp 'global-flycheck-mode)
+              (global-flycheck-mode))))
