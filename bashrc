@@ -121,7 +121,12 @@ xterm*|rxvt*)
     ;;
 esac
 
-function fileat()
-{
-    echo $HOSTNAME:$PWD/$1
+function fileat() {
+    for path in $*; do
+        echo $HOSTNAME:`readlink -m $path`
+    done
 }
+
+if [ -f ~/.bash_local ]; then
+    . ~/.bash_local
+fi
