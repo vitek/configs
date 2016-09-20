@@ -50,12 +50,12 @@
 
 (show-paren-mode 1)
 
-;;(when (require 'color-theme nil t)
-;;  (progn (when (fboundp 'color-theme-initialize)
-;;           (color-theme-initialize))
-;;         (color-theme-dark-laptop)))
+(when (require 'color-theme nil t)
+ (progn (when (fboundp 'color-theme-initialize)
+          (color-theme-initialize))
+        (color-theme-dark-laptop)))
 
-(require 'github-theme)
+;;(require 'github-theme)
 
 
 (when (require 'semantic nil t)
@@ -128,8 +128,8 @@
   (setq truncate-lines nil))
 
 
-(setq auto-mode-alist (cons '(".[ch]$" . default-c-mode)
-                auto-mode-alist))
+;;(setq auto-mode-alist (cons '(".[ch]$" . default-c-mode)
+;;                auto-mode-alist))
 
 ;;(set-default-font "koi9x15")
 ;;(set-face-font "9x15")
@@ -285,3 +285,6 @@
           (lambda ()
             (when (boundp 'global-flycheck-mode)
               (global-flycheck-mode))))
+
+(require 'google-c-style)
+(add-hook 'c++-mode-hook 'google-set-c-style)
