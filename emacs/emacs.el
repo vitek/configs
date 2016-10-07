@@ -275,18 +275,61 @@
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
  '(show-ws-tab ((t (:background "#222"))) 'now))
 
-(require 'package) ;; You might already have this line
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-;;(package-initialize)
-;;(package-install 'flycheck)
+
+(defun install-my-packages()
+  (interactive)
+  (progn
+    (require 'package)
+    (add-to-list 'package-archives
+                 '("melpa" . "http://melpa.org/packages/"))
+    (package-refresh-contents)
+    (package-initialize)
+    (package-install 'company)
+    (package-install 'company-irony)
+    (package-install 'flycheck)
+    (package-install 'irony)
+    (package-install 'jedi)
+    ))
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+
+;;(require 'irony)
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+
+
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's function
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
 
 (add-hook 'after-init-hook
           (lambda ()
             (when (boundp 'global-flycheck-mode)
               (global-flycheck-mode))))
 
+
 (require 'google-c-style)
+
+
+;(require 'flycheck-irony)
+;;a
+;;(eval-after-load 'flycheck
+;;  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+;;(flycheck-irony-setup flycheck-mode-set-explicitly)
 
 (add-hook 'c++-mode-hook
           (lambda () (progn
