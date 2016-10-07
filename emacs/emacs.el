@@ -287,4 +287,11 @@
               (global-flycheck-mode))))
 
 (require 'google-c-style)
-(add-hook 'c++-mode-hook 'google-set-c-style)
+
+(add-hook 'c++-mode-hook
+          (lambda () (progn
+                       (setq flycheck-gcc-language-standard "c++11")
+                       (google-set-c-style))))
+
+(provide '.emacs)
+;;; .emacs ends here
