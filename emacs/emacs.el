@@ -25,21 +25,48 @@
  '(x-select-enable-clipboard t)
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(diff-added ((t (:foreground "Green"))) 'now)
+ '(diff-removed ((t (:foreground "Red"))) 'now)
+
+ '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
+ '(show-ws-tab ((t (:background "#222"))) 'now))
+
+(setq custom-file "~/.emacs-custom.el")
+(load custom-file t)
+
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
+(require 'package)
+(add-to-list
+ 'package-archives
+ '("melpa" . "http://melpa.org/packages/"))
+(package-initialize)
+
+(defun install-my-packages()
+  (interactive)
+  (progn
+    (package-refresh-contents)
+    (package-initialize)
+    (package-install 'cmake-ide)
+    (package-install 'company)
+    (package-install 'company-irony)
+    (package-install 'flycheck)
+    (package-install 'irony)
+    (package-install 'jedi)))
 
 (require 'cython-mode nil t)
 (require 'git-grep nil t)
-
-(global-auto-revert-mode)
-
+(require 'jedi)
+(require 'irony)
+(require 'company)
+(require 'google-c-style)
 
 ;;(setq blink-cursor-mode 0)
-(blink-cursor-mode 0)
-;; (transient-mark-mode)
-
-;;(if window-system
-;;    (global-hl-line-mode))
-
 (setq scroll-conservatively 50)
 (setq scroll-up-agressively 0)
 (setq scroll-down-agressively 0)
@@ -47,16 +74,33 @@
 (setq c-basic-offset 4)
 ;;(setq truncate-lines nil)
 (setq use-dialog-box nil)
+(setq kill-whole-line t)
+(setq default-input-method "russian-computer")
+(setq display-time-24hr-format t)
+(setq grep-command "grep -Eni ")
+(setq compilation-environment '("LC_ALL=C"))
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 8)
+(setq-default py-indent-offset 4)
+(setq-default sgml-basic-offset 2)
+(setq py-smart-indentation nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
-(show-paren-mode 1)
+(show-paren-mode t)
+(global-auto-revert-mode)
+(blink-cursor-mode 0)
+(display-time)
+;;(display-battery)
+;;(transient-mark-mode)
+;;(if window-system (global-hl-line-mode))
 
+;; Color theme setup
 (when (require 'color-theme nil t)
- (progn (when (fboundp 'color-theme-initialize)
-          (color-theme-initialize))
-        (color-theme-dark-laptop)))
-
+  (progn (when (fboundp 'color-theme-initialize)
+           (color-theme-initialize))
+         (color-theme-dark-laptop)))
 ;;(require 'github-theme)
-
 
 (when (require 'semantic nil t)
   (progn
@@ -65,11 +109,18 @@
     (global-set-key "\M-n" 'semantic-complete-jump)
     (global-set-key (kbd "C-c r") 'semantic-symref)))
 
+
+(defun my-compile()
+  (interactive)
+  (if (fboundp 'cmake-ide-compile)
+      (call-interactively 'cmake-ide-compile)
+    (call-interactively 'compile)))
+
+
 ;;(global-set-key "\C-s" 'isearch-forward-regexp)
 ;;(global-set-key "\C-r" 'isearch-backward-regexp)
 
-
-(global-set-key [f9] (quote compile))
+(global-set-key [f9] 'my-compile)
 (global-set-key (quote [f2]) (quote save-buffer))
 (global-set-key (quote [f3]) (quote find-file))
 (global-set-key (quote [f4]) (quote gdb))
@@ -79,9 +130,6 @@
 (global-set-key (quote [f5]) (quote goto-line))
 
 (global-set-key (quote [f12]) (quote grep))
-(setq grep-command "grep -Eni ")
-
-(setq kill-whole-line t)
 
 ;;(define-key ctl-x-map "p" 'previous-error)
 ;;(define-key ctl-x-map "n" 'next-error)
@@ -127,24 +175,6 @@
   (setq c-basic-offset 8)
   (setq truncate-lines nil))
 
-
-;;(setq auto-mode-alist (cons '(".[ch]$" . default-c-mode)
-;;                auto-mode-alist))
-
-;;(set-default-font "koi9x15")
-;;(set-face-font "9x15")
-;;;(x-handle-switch "-font" "9x15")
-
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-
-(setq default-input-method "russian-computer")
-(setq display-time-24hr-format t)
-(display-time)
-;;(display-battery)
-
-(setq py-smart-indentation nil)
-
 (defun silent-save-buffers-kill-emacs (&optional arg)
   "Offer to save each buffer, then kill this Emacs process.
    With prefix arg, silently save all file-visiting buffers, then kill."
@@ -170,36 +200,24 @@
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
 
-(setq compilation-environment '("LC_ALL=C"))
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 8)
-(setq-default py-indent-offset 4)
-
-(setq-default sgml-basic-offset 2)
-
+;; Show whitespaces
 (when
     (require 'show-wspace nil t)
   (progn
     (defun highlight-whitespaces ()
-      (if (not (member major-mode '(help-mode fundamental-mode
-                                              completion-list-mode tetris-mode)))
+      (if (not (member major-mode
+                       '(help-mode fundamental-mode
+                                   completion-list-mode tetris-mode)))
           (progn (show-ws-highlight-trailing-whitespace)
                  (show-ws-highlight-tabs))))
     (add-hook 'font-lock-mode-hook 'highlight-whitespaces)))
 
+;; Show marker at 80 column
 (when
     (require 'column-marker nil t)
   (progn
     (add-hook 'font-lock-mode-hook '(lambda () (column-marker-1 80)))))
-
-;;(require 'whitespace)
-;;
-;;(setq whitespace-style (quote
-;;                        (tabs tab-mark trailing)))
-;;(global-whitespace-mode)
-;;(autoload 'whitespace-mode           "whitespace" "Toggle whitespace visualization."        t)
-;;(autoload 'whitespace-toggle-options "whitespace" "Toggle local `whitespace-mode' options." t)
 
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t)
 (setq linum-format (if window-system "%4d" "%4d "))
@@ -254,52 +272,35 @@
   (interactive "p")
   (kill-word (- arg)))
 
+
+;; Python-mode settings
 (defun ipdb()
   (interactive)
   (insert "from ipdb import set_trace; set_trace()"))
 (global-set-key (kbd "C-c b") 'ipdb)
 
-
 (defvar py-flake8-history nil) ; workaround python-mode.el bug
 (setq py-flake8-command-args
       '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
 
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(diff-added ((t (:foreground "Green"))) 'now)
- '(diff-removed ((t (:foreground "Red"))) 'now)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
 
- '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
- '(show-ws-tab ((t (:background "#222"))) 'now))
-
-
-(defun install-my-packages()
-  (interactive)
-  (progn
-    (require 'package)
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.org/packages/"))
-    (package-refresh-contents)
-    (package-initialize)
-    (package-install 'company)
-    (package-install 'company-irony)
-    (package-install 'flycheck)
-    (package-install 'irony)
-    (package-install 'jedi)
-    ))
-
+;; C/C++ mode settings
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 
-;;(require 'irony)
-(require 'company)
+(add-hook
+ 'c++-mode-hook
+ (lambda ()
+   (progn
+     (setq flycheck-gcc-language-standard "c++11")
+     (setq flycheck-clang-language-standard "c++11")
+     (google-set-c-style))))
+
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-irony))
-
 
 ;; replace the `completion-at-point' and `complete-symbol' bindings in
 ;; irony-mode's buffers by irony-mode's function
@@ -312,18 +313,11 @@
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
 
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
-
-
+;; Enable flycheck globally
 (add-hook 'after-init-hook
           (lambda ()
             (when (boundp 'global-flycheck-mode)
               (global-flycheck-mode))))
-
-
-(require 'google-c-style)
-
 
 ;(require 'flycheck-irony)
 ;;a
@@ -331,10 +325,6 @@
 ;;  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 ;;(flycheck-irony-setup flycheck-mode-set-explicitly)
 
-(add-hook 'c++-mode-hook
-          (lambda () (progn
-                       (setq flycheck-gcc-language-standard "c++11")
-                       (google-set-c-style))))
 
 (provide '.emacs)
 ;;; .emacs ends here
