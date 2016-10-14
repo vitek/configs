@@ -207,8 +207,11 @@
   (progn
     (defun highlight-whitespaces ()
       (if (not (member major-mode
-                       '(help-mode fundamental-mode
-                                   completion-list-mode tetris-mode)))
+                       '(completion-list-mode
+                         fundamental-mode
+                         gud-mode
+                         help-mode
+                         tetris-mode)))
           (progn (show-ws-highlight-trailing-whitespace)
                  (show-ws-highlight-tabs))))
     (add-hook 'font-lock-mode-hook 'highlight-whitespaces)))
