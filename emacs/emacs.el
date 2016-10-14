@@ -121,15 +121,15 @@
 ;;(global-set-key "\C-r" 'isearch-backward-regexp)
 
 (global-set-key [f9] 'my-compile)
-(global-set-key (quote [f2]) (quote save-buffer))
-(global-set-key (quote [f3]) (quote find-file))
-(global-set-key (quote [f4]) (quote gdb))
-(global-set-key (quote [f7]) (quote gud-step))
-(global-set-key (quote [f8]) (quote gud-next))
-(global-set-key (quote [C-f8]) (quote gud-break))
-(global-set-key (quote [f5]) (quote goto-line))
+(global-set-key (quote [f2]) 'save-buffer)
+(global-set-key (quote [f3]) 'find-file)
+(global-set-key (quote [f4]) 'gud-gdb)
+(global-set-key (quote [f7]) 'gud-step)
+(global-set-key (quote [f8]) 'gud-next)
+(global-set-key (quote [C-f8]) 'gud-break)
+(global-set-key (quote [f5]) 'goto-line)
 
-(global-set-key (quote [f12]) (quote grep))
+(global-set-key (quote [f12]) 'grep)
 
 ;;(define-key ctl-x-map "p" 'previous-error)
 ;;(define-key ctl-x-map "n" 'next-error)
@@ -138,12 +138,12 @@
 
 (if window-system
     (progn
-      (global-set-key "\C-z" (quote ignore))
-      (global-set-key (quote [mouse-4]) (quote scroll-down))
-      (global-set-key (quote [mouse-5]) (quote scroll-up))
-      (global-set-key (quote [mouse-2]) (quote yank))
-      (global-set-key (quote [mouse-3]) (quote yank))
-      (global-set-key (quote [mouse-1]) '(copy-region-as-kill))
+      (global-set-key "\C-z" 'ignore)
+      (global-set-key '[mouse-4] 'scroll-down)
+      (global-set-key '[mouse-5] 'scroll-up)
+      (global-unset-key '[mouse-2])
+      (global-unset-key '[mouse-3])
+      (global-unset-key '[mouse-1])
       (global-set-key [C-f9] 'recompile)))
 
 (global-set-key (quote [f1] )
