@@ -123,7 +123,7 @@
 (global-set-key [f9] 'my-compile)
 (global-set-key (quote [f2]) 'save-buffer)
 (global-set-key (quote [f3]) 'find-file)
-(global-set-key (quote [f4]) 'gud-gdb)
+(global-set-key (quote [f4]) 'gdb)
 (global-set-key (quote [f7]) 'gud-step)
 (global-set-key (quote [f8]) 'gud-next)
 (global-set-key (quote [C-f8]) 'gud-break)
@@ -207,7 +207,8 @@
   (progn
     (defun highlight-whitespaces ()
       (if (not (member major-mode
-                       '(completion-list-mode
+                       '(compilation-mode
+                         completion-list-mode
                          fundamental-mode
                          gud-mode
                          help-mode
@@ -302,8 +303,8 @@
      (google-set-c-style))))
 
 (add-hook 'after-init-hook 'global-company-mode)
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
+;;(eval-after-load 'company
+;;  '(add-to-list 'company-backends 'company-irony))
 
 ;; replace the `completion-at-point' and `complete-symbol' bindings in
 ;; irony-mode's buffers by irony-mode's function
