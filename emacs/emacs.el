@@ -52,7 +52,9 @@
   (progn
     (package-refresh-contents)
     (package-initialize)
+    (package-install 'clang-format)
     (package-install 'cmake-ide)
+    (package-install 'color-theme)
     (package-install 'company)
     (package-install 'company-irony)
     (package-install 'flycheck)
