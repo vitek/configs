@@ -121,6 +121,10 @@ xterm*|rxvt*)
     ;;
 esac
 
+
+export LIBOVERLAY_SCROLLBAR=0
+export GTK_OVERLAY_SCROLLING=0
+
 function fileat() {
     for path in $*; do
         echo $HOSTNAME:`readlink -m $path`

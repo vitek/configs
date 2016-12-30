@@ -3,6 +3,11 @@ INSTALL   = install
 
 DESTDIR   = $(HOME)
 
+AWESOME_FILES = 			\
+	awesome/rc.lua			\
+	awesome/mywibar.lua		\
+	awesome/keyboard_layout.lua	\
+	awesome/utils.lua
 
 default:
 
@@ -12,7 +17,8 @@ install-vc: install-git install-hg install-bzr
 install-editor: install-emacs install-vim
 
 
-install-all: install-awesome			\
+install-all: 					\
+	install-awesome				\
 	install-bashrc				\
 	install-bzr				\
 	install-dconf				\
@@ -22,7 +28,8 @@ install-all: install-awesome			\
 	install-hg				\
 	install-misc				\
 	install-vc				\
-	install-vim
+	install-vim				\
+	install-xresources
 
 install-git:
 	$(INSTALL) -m 0644 git/gitconfig $(DESTDIR)/.gitconfig
@@ -37,7 +44,10 @@ install-bzr:
 	$(INSTALL) -m 0644 bzr/authentication.conf $(DESTDIR)/.bazaar/
 	$(INSTALL) -m 0644 bzr/ignore $(DESTDIR)/.bazaar/
 
-install-emacs:
+install-xresources:
+	$(INSTALL) -m 0644 Xresources $(DESTDIR)/.Xresources
+
+install-emacs: install-xresources
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/emacs.el $(DESTDIR)/.emacs
 	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el $(DESTDIR)/.emacs.d/site-lisp
@@ -62,9 +72,7 @@ install-gconf:
 
 install-awesome:
 	$(INSTALL) -d $(DESTDIR)/.config/awesome
-	$(INSTALL) -m 0644 awesome/rc.lua $(DESTDIR)/.config/awesome/rc.lua
-	$(INSTALL) -m 0755 awesome/locker.sh $(DESTDIR)/.config/awesome/locker.sh
-	$(INSTALL) -m 0755 awesome/touchpad-init.sh $(DESTDIR)/.config/awesome/touchpad-init.sh
+	$(INSTALL) -m 0644 $(AWESOME_FILES) $(DESTDIR)/.config/awesome/
 	$(INSTALL) -m 0644 awesome/gnomerc $(DESTDIR)/.gnomerc
 
 install-bashrc:

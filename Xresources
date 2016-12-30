@@ -1,0 +1,3 @@
+emacs.menuBar:               off
+emacs.toolBar:               off
+emacs.verticalScrollBars:    off
