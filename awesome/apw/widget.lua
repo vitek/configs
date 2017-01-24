@@ -108,18 +108,15 @@ end
 
 function pulseWidget.Up()
    p:SetVolume(p.Volume + pulseBar.step)
-   _update()
 end
 
 function pulseWidget.Down()
    p:SetVolume(p.Volume - pulseBar.step)
-   _update()
 end
 
 
 function pulseWidget.ToggleMute()
    p:ToggleMute()
-   _update()
 end
 
 function pulseWidget.Update()
@@ -143,7 +140,7 @@ pulseWidget:buttons(
 )
 
 pulseWidget.pulse = p
-
+p:register_callback(_update)
 
 -- initialize
 _update()

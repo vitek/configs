@@ -31,10 +31,16 @@ function pulseaudio:Create()
    o.Volume = 0     -- volume of default sink
    o.Mute = false   -- state of the mute flag of the default sink
 
+   o.update_callbacks = {}
+
    -- retreive current state from Pulseaudio
    pulseaudio.UpdateState(o)
 
    return o
+end
+
+function pulseaudio:register_callback(callback)
+   table.insert(self.update_callbacks, callback)
 end
 
 function pulseaudio:UpdateState()
@@ -72,6 +78,10 @@ function pulseaudio:UpdateState()
    end
 
    self.Mute = m == "yes"
+
+   for i, callback in ipairs(self.update_callbacks) do
+      callback()
+   end
 end
 
 -- Run process and wait for it to end
