@@ -20,6 +20,7 @@ install-editor: install-emacs install-vim
 install-all: 					\
 	install-awesome				\
 	install-bashrc				\
+	install-bin				\
 	install-bzr				\
 	install-dconf				\
 	install-editor				\
@@ -82,6 +83,10 @@ install-awesome:
 install-bashrc:
 	$(INSTALL) -m 0644 profile $(DESTDIR)/.profile
 	$(INSTALL) -m 0644 bashrc $(DESTDIR)/.bashrc
+
+install-bin:
+	$(INSTALL) -d $(DESTDIR)/bin
+	$(INSTALL) -m 0755 bin/xml-pp bin/json-pp $(DESTDIR)/bin/
 
 install-ubuntu-extra:
 	python installpkgs.py ubuntu-packages
