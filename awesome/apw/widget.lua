@@ -15,7 +15,7 @@
 -- along with APW. If not, see <http://www.gnu.org/licenses/>.
 
 -- Configuration variables
-local width         = 40        -- width in pixels of progressbar
+local width         = 25        -- width in pixels of progressbar
 local margin_right  = 0         -- right margin in pixels of progressbar
 local margin_left   = 0         -- left margin in pixels of progressbar
 local margin_top    = 0         -- top margin in pixels of progressbar
@@ -49,7 +49,7 @@ local p = pulseaudio:Create()
 
 local pulseBar = wibox.widget.progressbar()
 
-pulseBar.forced_width = width
+pulseBar.forced_height = width
 pulseBar.step = step
 
 local function make_stack(w1, w2)
@@ -145,4 +145,5 @@ p:register_callback(_update)
 -- initialize
 _update()
 
-return pulseWidget
+widget = wibox.container.rotate(pulseWidget, 'east')
+return widget
