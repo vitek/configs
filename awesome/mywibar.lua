@@ -1,6 +1,7 @@
 local awful = require("awful")
 local wibox = require("wibox")
 local utils = require("utils")
+local APW = require("apw/widget")
 
 local mywibar = {}
 
@@ -40,6 +41,7 @@ function mywibar.create_wibar(s)
    local memwidget = wibox.widget.textbox()
    vicious.register(memwidget, vicious.widgets.mem, " mem: $1% ")
 
+
    -- Create a promptbox for each screen
    s.mypromptbox = awful.widget.prompt()
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
@@ -70,12 +72,13 @@ function mywibar.create_wibar(s)
         },
         nil,
         { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
-            wibox.widget.systray(),
-            mytextclock,
-            mylauncher,
-            --s.mylayoutbox,
+           layout = wibox.layout.fixed.horizontal,
+           APW,
+           mykeyboardlayout,
+           wibox.widget.systray(),
+           mytextclock,
+           mylauncher,
+           --s.mylayoutbox,
         },
     }
 end

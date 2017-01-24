@@ -74,6 +74,10 @@ install-awesome:
 	$(INSTALL) -d $(DESTDIR)/.config/awesome
 	$(INSTALL) -m 0644 $(AWESOME_FILES) $(DESTDIR)/.config/awesome/
 	$(INSTALL) -m 0644 awesome/gnomerc $(DESTDIR)/.gnomerc
+	$(INSTALL) -d $(DESTDIR)/.config/awesome/apw
+	$(INSTALL) -m 0644 awesome/apw/widget.lua awesome/apw/pulseaudio.lua \
+		$(DESTDIR)/.config/awesome/apw
+
 
 install-bashrc:
 	$(INSTALL) -m 0644 profile $(DESTDIR)/.profile

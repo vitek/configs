@@ -14,6 +14,8 @@ local keyboard_layout = require("keyboard_layout")
 local utils = require("utils")
 local mywibar = require("mywibar")
 
+local APW = require('apw/widget')
+
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
 -- Check if awesome encountered an error during startup and fell back to
@@ -297,7 +299,12 @@ globalkeys = awful.util.table.join(
        {description = "run prompt", group = "launcher"}),
     awful.key({ modkey },            "e",
        function () awful.spawn('emacs') end),
-    awful.key({"Mod1", "Control"}, "l", utils.lock_screen)
+    awful.key({"Mod1", "Control"}, "l", utils.lock_screen),
+
+    -- Volume control
+    awful.key({ }, "XF86AudioRaiseVolume",  APW.Up),
+    awful.key({ }, "XF86AudioLowerVolume",  APW.Down),
+    awful.key({ }, "XF86AudioMute",         APW.ToggleMute)
 )
 
 -- @DOC_CLIENT_KEYBINDINGS@
