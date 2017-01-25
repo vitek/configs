@@ -14,7 +14,7 @@ local keyboard_layout = require("keyboard_layout")
 local utils = require("utils")
 local mywibar = require("mywibar")
 
-local APW = require('apw/widget')
+local pulseaudio = require('apw.pulseaudio')
 
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
@@ -302,9 +302,9 @@ globalkeys = awful.util.table.join(
     awful.key({"Mod1", "Control"}, "l", utils.lock_screen),
 
     -- Volume control
-    awful.key({ }, "XF86AudioRaiseVolume",  APW.Up),
-    awful.key({ }, "XF86AudioLowerVolume",  APW.Down),
-    awful.key({ }, "XF86AudioMute",         APW.ToggleMute)
+    awful.key({ }, "XF86AudioRaiseVolume",  pulseaudio.VolumeUp),
+    awful.key({ }, "XF86AudioLowerVolume",  pulseaudio.VolumeDown),
+    awful.key({ }, "XF86AudioMute",         pulseaudio.VolumeToggleMute)
 )
 
 -- @DOC_CLIENT_KEYBINDINGS@

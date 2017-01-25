@@ -16,34 +16,27 @@
 
 
 -- Simple pulseaudio command bindings for Lua.
+local timer = require("gears.timer")
 
-local pulseaudio = {}
-
+local pulseaudio = {
+   Volume = 0,
+   mute = false
+}
 
 local cmd = "pacmd"
 local default_sink = ""
+local default_increment = 0.10
+local timer_timeout = 2.0
 
-function pulseaudio:Create()
-   local o = {}
-   setmetatable(o, self)
-   self.__index = self
+local update_callbacks = {}
+local timer_obj = nil
 
-   o.Volume = 0     -- volume of default sink
-   o.Mute = false   -- state of the mute flag of the default sink
 
-   o.update_callbacks = {}
-
-   -- retreive current state from Pulseaudio
-   pulseaudio.UpdateState(o)
-
-   return o
+function pulseaudio.register_callback(callback)
+   table.insert(update_callbacks, callback)
 end
 
-function pulseaudio:register_callback(callback)
-   table.insert(self.update_callbacks, callback)
-end
-
-function pulseaudio:UpdateState()
+function pulseaudio.UpdateState()
    local f = io.popen(cmd .. " dump")
 
    -- if the cmd can't be found
@@ -65,7 +58,7 @@ function pulseaudio:UpdateState()
    -- retreive volume of default sink
    for sink, value in string.gmatch(out, "set%-sink%-volume ([^%s]+) (0x%x+)") do
       if sink == default_sink then
-         self.Volume = tonumber(value) / 0x10000
+         pulseaudio.Volume = tonumber(value) / 0x10000
       end
    end
 
@@ -77,9 +70,9 @@ function pulseaudio:UpdateState()
       end
    end
 
-   self.Mute = m == "yes"
+   pulseaudio.Mute = m == "yes"
 
-   for i, callback in ipairs(self.update_callbacks) do
+   for i, callback in ipairs(update_callbacks) do
       callback()
    end
 end
@@ -92,7 +85,7 @@ local function run(command)
 end
 
 -- Sets the volume of the default sink to vol from 0 to 1.
-function pulseaudio:SetVolume(vol)
+function pulseaudio.SetVolume(vol)
    if vol > 1 then
       vol = 1
    end
@@ -106,20 +99,40 @@ function pulseaudio:SetVolume(vol)
    run(cmd .. " set-sink-volume " .. default_sink .. " " .. string.format("0x%x", math.floor(vol)))
 
    -- …and update values
-   self:UpdateState()
+   pulseaudio.UpdateState()
 end
 
+function pulseaudio.IncVolumeBy(increment)
+   pulseaudio.SetVolume(pulseaudio.Volume + increment)
+end
+
+function pulseaudio.VolumeUp()
+   pulseaudio.IncVolumeBy(default_increment)
+end
+
+function pulseaudio.VolumeDown()
+   pulseaudio.IncVolumeBy(-default_increment)
+end
 
 -- Toggles the mute flag of the default default_sink.
-function pulseaudio:ToggleMute()
-   if self.Mute then
+function pulseaudio.VolumeToggleMute()
+   if pulseaudio.Mute then
       run(cmd .. " set-sink-mute " .. default_sink .. " 0")
    else
       run(cmd .. " set-sink-mute " .. default_sink .. " 1")
    end
 
    -- …and update values.
-   self:UpdateState()
+   pulseaudio.UpdateState()
 end
 
+function pulseaudio.start_timer()
+   if timer_obj == nil then
+      timer_obj = timer { timeout = timer_timeout}
+      timer_obj:connect_signal("timeout", pulseaudio.UpdateState)
+      timer_obj:start()
+   end
+end
+
+pulseaudio.UpdateState()
 return pulseaudio

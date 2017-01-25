@@ -20,14 +20,22 @@ local margin_right  = 0         -- right margin in pixels of progressbar
 local margin_left   = 0         -- left margin in pixels of progressbar
 local margin_top    = 0         -- top margin in pixels of progressbar
 local margin_bottom = 0         -- bottom margin in pixels of progressbar
-local step          = 0.05      -- stepsize for volume change (ranges from 0 to 1)
+local step          = 0.10      -- stepsize for volume change (ranges from 0 to 1)
 local color         = '#698f1e' -- foreground color of progessbar
 local color_bg      = '#33450f' -- background color
 local color_mute    = '#be2a15' -- foreground color when muted
 local color_bg_mute = '#532a15' -- background color when muted
 local mixer         = 'pavucontrol' -- mixer command
-local show_text     = false     -- show percentages on progressbar
-local text_color    = '#fff' -- color of text
+local theme_icons = {
+   ["audio-volume-high"] =
+      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-high-panel.svg",
+   ["audio-volume-medium"] =
+      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-medium-panel.svg",
+   ["audio-volume-low"] =
+      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-low-panel.svg",
+   ["audio-volume-muted"] =
+      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-muted-panel.svg"
+}
 
 -- End of configuration
 
@@ -42,108 +50,50 @@ color = beautiful.apw_fg_color or color
 color_bg = beautiful.apw_bg_color or color_bg
 color_mute = beautiful.apw_mute_fg_color or color_mute
 color_bg_mute = beautiful.apw_mute_bg_color or color_bg_mute
-show_text = beautiful.apw_show_text or show_text
-text_color = beautiful.apw_text_colot or text_color
 
-local p = pulseaudio:Create()
+local imagebox = wibox.widget.imagebox()
+local pulseWidget = imagebox
 
-local pulseBar = wibox.widget.progressbar()
-
-pulseBar.forced_height = width
-pulseBar.step = step
-
-local function make_stack(w1, w2)
-   local ret = wibox.widget.base.make_widget()
-
-   ret.fit = function(self, ...) return w1:fit(...) end
-   ret.draw = function(self, wibox, cr, width, height)
-      w1:draw(wibox, cr, width, height)
-      w2:draw(wibox, cr, width, height)
-   end
-
-   local update = function() ret:emit_signal("widget::updated") end
-   w1:connect_signal("widget::updated", update)
-   w2:connect_signal("widget::updated", update)
-
-   return ret
-end
-
-local pulseWidget
-local pulseText
-if show_text then
-   pulseText = wibox.widget.textbox()
-   pulseText:set_align("center")
-   pulseWidget = wibox.container.margin(make_stack(pulseBar, pulseText),
-                                        margin_right, margin_left,
-                                        margin_top, margin_bottom)
-else
-   pulseWidget = wibox.container.margin(pulseBar,
-                                        margin_right, margin_left,
-                                        margin_top, margin_bottom)
-end
-
-function pulseWidget.setColor(mute)
-   if mute then
-      pulseBar:set_color(color_mute)
-      pulseBar:set_background_color(color_bg_mute)
+local function update_volume()
+   local icon
+   if pulseaudio.Mute or pulseaudio.Volume <= 0.0 then
+      icon = 'audio-volume-muted'
+   elseif pulseaudio.Volume <= 0.5 then
+      icon = "audio-volume-low"
+   elseif pulseaudio.Volume <= 0.8 then
+      icon ="audio-volume-medium"
    else
-      pulseBar:set_color(color)
-      pulseBar:set_background_color(color_bg)
+      icon = "audio-volume-high"
    end
-end
-
-local function _update()
-   pulseBar:set_value(p.Volume)
-   pulseWidget.setColor(p.Mute)
-   if show_text then
-      pulseText:set_markup(
-         '<span color="'.. text_color ..'">' ..
-            math.ceil(p.Volume * 100) .. '%</span>')
-   end
+   imagebox:set_image(theme_icons[icon])
 end
 
 function pulseWidget.SetMixer(command)
    mixer = command
 end
 
-function pulseWidget.Up()
-   p:SetVolume(p.Volume + pulseBar.step)
-end
-
-function pulseWidget.Down()
-   p:SetVolume(p.Volume - pulseBar.step)
-end
-
-
-function pulseWidget.ToggleMute()
-   p:ToggleMute()
-end
-
 function pulseWidget.Update()
-   p:UpdateState()
-   _update()
+   pulseaudio.UpdateState()
 end
 
 function pulseWidget.LaunchMixer()
    awful.spawn( mixer )
 end
 
-
 -- register mouse button actions
 pulseWidget:buttons(
    awful.util.table.join(
-      awful.button({ }, 1, pulseWidget.ToggleMute),
+      awful.button({ }, 1, pulseaudio.VolumeToggleMute),
       awful.button({ }, 3, pulseWidget.LaunchMixer),
-      awful.button({ }, 4, pulseWidget.Up),
-      awful.button({ }, 5, pulseWidget.Down)
+      awful.button({ }, 4, pulseaudio.VolumeUp),
+      awful.button({ }, 5, pulseaudio.VolumeDown)
    )
 )
 
-pulseWidget.pulse = p
-p:register_callback(_update)
+pulseaudio.register_callback(update_volume)
+pulseaudio.start_timer()
 
 -- initialize
-_update()
+update_volume()
 
-widget = wibox.container.rotate(pulseWidget, 'east')
-return widget
+return pulseWidget
