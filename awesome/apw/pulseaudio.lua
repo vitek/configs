@@ -106,12 +106,24 @@ function pulseaudio.IncVolumeBy(increment)
    pulseaudio.SetVolume(pulseaudio.Volume + increment)
 end
 
+function pulseaudio.get_increment()
+   if pulseaudio.Volume <= 0.5 then
+      return default_increment / 4
+   elseif pulseaudio.Volume < 0.8 then
+      return default_increment / 2
+   else
+      return default_increment
+   end
+end
+
 function pulseaudio.VolumeUp()
-   pulseaudio.IncVolumeBy(default_increment)
+   local increment = pulseaudio.get_increment()
+   pulseaudio.IncVolumeBy(increment)
 end
 
 function pulseaudio.VolumeDown()
-   pulseaudio.IncVolumeBy(-default_increment)
+   local increment = pulseaudio.get_increment()
+   pulseaudio.IncVolumeBy(-increment)
 end
 
 -- Toggles the mute flag of the default default_sink.
@@ -128,11 +140,9 @@ end
 
 function pulseaudio.start_timer()
    if timer_obj == nil then
-      timer_obj = timer { timeout = timer_timeout}
-      timer_obj:connect_signal("timeout", pulseaudio.UpdateState)
-      timer_obj:start()
+      timer_obj = timer.weak_start_new(timer_timeout, pulseaudio.UpdateState)
    end
 end
 
-pulseaudio.UpdateState()
+timer.delayed_call(pulseaudio.UpdateState)
 return pulseaudio

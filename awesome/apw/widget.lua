@@ -15,16 +15,6 @@
 -- along with APW. If not, see <http://www.gnu.org/licenses/>.
 
 -- Configuration variables
-local width         = 25        -- width in pixels of progressbar
-local margin_right  = 0         -- right margin in pixels of progressbar
-local margin_left   = 0         -- left margin in pixels of progressbar
-local margin_top    = 0         -- top margin in pixels of progressbar
-local margin_bottom = 0         -- bottom margin in pixels of progressbar
-local step          = 0.10      -- stepsize for volume change (ranges from 0 to 1)
-local color         = '#698f1e' -- foreground color of progessbar
-local color_bg      = '#33450f' -- background color
-local color_mute    = '#be2a15' -- foreground color when muted
-local color_bg_mute = '#532a15' -- background color when muted
 local mixer         = 'pavucontrol' -- mixer command
 local theme_icons = {
    ["audio-volume-high"] =
@@ -41,15 +31,8 @@ local theme_icons = {
 
 local awful = require("awful")
 local wibox = require("wibox")
-local beautiful = require("beautiful")
 local pulseaudio = require("apw.pulseaudio")
 local math = require("math")
-
--- default colors overridden by Beautiful theme
-color = beautiful.apw_fg_color or color
-color_bg = beautiful.apw_bg_color or color_bg
-color_mute = beautiful.apw_mute_fg_color or color_mute
-color_bg_mute = beautiful.apw_mute_bg_color or color_bg_mute
 
 local imagebox = wibox.widget.imagebox()
 local pulseWidget = imagebox
@@ -93,7 +76,11 @@ pulseWidget:buttons(
 pulseaudio.register_callback(update_volume)
 pulseaudio.start_timer()
 
--- initialize
-update_volume()
+-- awful.tooltip({
+--     objects = { imagebox },
+--     timer_function = function()
+--        return string.format("Volume %d", pulseaudio.Volume * 100)
+--     end,
+-- })
 
 return pulseWidget
