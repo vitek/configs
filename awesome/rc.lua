@@ -123,8 +123,10 @@ mymainmenu = awful.menu({
       }
 })
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
+mylauncher = awful.widget.launcher({
+      image = "/usr/share/icons/ubuntu-mono-dark/status/22/system-devices-panel.svg",
+      menu = mymainmenu
+})
 
 -- Menubar configuration
 --menubar.utils.terminal = terminal -- Set the terminal for applications that require it
