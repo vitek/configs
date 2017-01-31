@@ -1,7 +1,8 @@
 local awful = require("awful")
 local wibox = require("wibox")
 local utils = require("utils")
-local APW = require("apw/widget")
+local pulseaudio = require("apw.pulseaudio")
+local pulseaudio_widget = require("apw.widget")
 
 local mywibar = {}
 
@@ -43,6 +44,13 @@ function mywibar.create_wibar(s)
    cpuwidget:set_color("#ff8888")
    vicious.cache(vicious.widgets.cpu)
    vicious.register(cpuwidget, vicious.widgets.cpu, "$1", 1)
+   awful.tooltip({
+         objects = { cpuwidget },
+         timer_function = function()
+            local info = vicious.widgets.cpu()
+            return string.format("CPU %d %%", info[1])
+         end,
+   })
 
    local memwidget = wibox.widget.graph()
    memwidget:set_width(25)
@@ -50,6 +58,26 @@ function mywibar.create_wibar(s)
    memwidget:set_color("#8888ff")
    vicious.cache(vicious.widgets.mem)
    vicious.register(memwidget, vicious.widgets.mem, "$1", 1)
+   awful.tooltip({
+         objects = { memwidget },
+         timer_function = function()
+            local info = vicious.widgets.mem()
+            return string.format("Memory %d %%", info[1])
+         end,
+   })
+
+   local volumewidget = pulseaudio_widget(pulseaudio)
+   local volumewidget_tooltip = awful.tooltip({
+         objects = { volumewidget },
+         timer_function = function()
+            return string.format("Volume %d %%", pulseaudio.Volume * 100)
+         end,
+   })
+   pulseaudio.register_callback(function()
+         if volumewidget_tooltip:get_visible() then
+            volumewidget_tooltip.timer_function()
+         end
+   end)
 
    -- Create a promptbox for each screen
    s.mypromptbox = awful.widget.prompt()
@@ -82,7 +110,7 @@ function mywibar.create_wibar(s)
       nil,
       { -- Right widgets
          layout = wibox.layout.fixed.horizontal,
-         APW,
+         volumewidget,
          mykeyboardlayout,
          wibox.widget.systray(),
          mytextclock,

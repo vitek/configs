@@ -65,6 +65,14 @@ local settings = load_settings(
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.get_themes_dir() .. "default/theme.lua")
 
+beautiful.tooltip_border_color = "#ff0000"
+beautiful.tooltip_bg = "#aaaaaa"
+beautiful.tooltip_fg = "#111111"
+beautiful.tooltip_bg = "#000000"
+beautiful.tooltip_fg = "#ffffff"
+beautiful.tooltip_border_width = 0
+beautiful.tooltip_align = "right"
+
 -- @DOC_DEFAULT_APPLICATIONS@
 -- This is used later as the default terminal and editor to run.
 terminal = settings.terminal
