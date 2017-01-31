@@ -15,8 +15,8 @@
 -- along with APW. If not, see <http://www.gnu.org/licenses/>.
 
 -- Configuration variables
-local mixer         = 'pavucontrol' -- mixer command
-local theme_icons = {
+local default_mixer         = 'pavucontrol' -- mixer command
+local default_theme_icons = {
    ["audio-volume-high"] =
       "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-high-panel.svg",
    ["audio-volume-medium"] =
@@ -31,56 +31,61 @@ local theme_icons = {
 
 local awful = require("awful")
 local wibox = require("wibox")
-local pulseaudio = require("apw.pulseaudio")
 local math = require("math")
 
-local imagebox = wibox.widget.imagebox()
-local pulseWidget = imagebox
+local pulseaudio_widget = { mt = {} }
 
-local function update_volume()
-   local icon
-   if pulseaudio.Mute or pulseaudio.Volume <= 0.0 then
-      icon = 'audio-volume-muted'
-   elseif pulseaudio.Volume <= 0.5 then
-      icon = "audio-volume-low"
-   elseif pulseaudio.Volume <= 0.8 then
-      icon ="audio-volume-medium"
-   else
-      icon = "audio-volume-high"
+function pulseaudio_widget.new(pulseaudio)
+   local imagebox = wibox.widget.imagebox()
+   local self = imagebox
+   local mixer = default_mixer
+   local theme_icons = default_theme_icons
+
+   local function update_volume()
+      local icon
+      if pulseaudio.Mute or pulseaudio.Volume <= 0.0 then
+         icon = 'audio-volume-muted'
+      elseif pulseaudio.Volume <= 0.5 then
+         icon = "audio-volume-low"
+      elseif pulseaudio.Volume <= 0.8 then
+         icon ="audio-volume-medium"
+      else
+         icon = "audio-volume-high"
+      end
+      imagebox:set_image(theme_icons[icon])
    end
-   imagebox:set_image(theme_icons[icon])
-end
 
-function pulseWidget.SetMixer(command)
-   mixer = command
-end
+   function self.SetMixer(command)
+      mixer = command
+   end
 
-function pulseWidget.Update()
-   pulseaudio.UpdateState()
-end
+   function self.Update()
+      pulseaudio.UpdateState()
+   end
 
-function pulseWidget.LaunchMixer()
-   awful.spawn( mixer )
-end
+   function self.LaunchMixer()
+      awful.spawn( mixer )
+   end
 
--- register mouse button actions
-pulseWidget:buttons(
-   awful.util.table.join(
-      awful.button({ }, 1, pulseaudio.VolumeToggleMute),
-      awful.button({ }, 3, pulseWidget.LaunchMixer),
-      awful.button({ }, 4, pulseaudio.VolumeUp),
-      awful.button({ }, 5, pulseaudio.VolumeDown)
+   -- register mouse button actions
+   self:buttons(
+      awful.util.table.join(
+         awful.button({ }, 1, pulseaudio.VolumeToggleMute),
+         awful.button({ }, 3, self.LaunchMixer),
+         awful.button({ }, 4, pulseaudio.VolumeUp),
+         awful.button({ }, 5, pulseaudio.VolumeDown)
+      )
    )
-)
 
-pulseaudio.register_callback(update_volume)
-pulseaudio.start_timer()
+   pulseaudio.register_callback(update_volume)
+   pulseaudio.start_timer()
 
--- awful.tooltip({
---     objects = { imagebox },
---     timer_function = function()
---        return string.format("Volume %d", pulseaudio.Volume * 100)
---     end,
--- })
+   return self
+end
 
-return pulseWidget
+
+function pulseaudio_widget.mt:__call(...)
+    return pulseaudio_widget.new(...)
+end
+
+return setmetatable(pulseaudio_widget, pulseaudio_widget.mt)

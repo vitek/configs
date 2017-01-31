@@ -140,7 +140,9 @@ end
 
 function pulseaudio.start_timer()
    if timer_obj == nil then
-      timer_obj = timer.weak_start_new(timer_timeout, pulseaudio.UpdateState)
+      timer_obj = timer { timeout = timer_timeout}
+      timer_obj:connect_signal("timeout", pulseaudio.UpdateState)
+      timer_obj:start()
    end
 end
 
