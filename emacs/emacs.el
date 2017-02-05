@@ -74,6 +74,8 @@
 (setq scroll-down-agressively 0)
 (setq visible-bell t)
 (setq c-basic-offset 4)
+(c-set-offset 'arglist-intro '+)
+(c-set-offset 'inextern-lang 0)
 ;;(setq truncate-lines nil)
 (setq use-dialog-box nil)
 (setq kill-whole-line t)
