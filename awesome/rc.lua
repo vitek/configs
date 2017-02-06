@@ -296,6 +296,8 @@ globalkeys = awful.util.table.join(
     --{description = "show the menubar", group = "launcher"}),
 
     -- My custom keys
+    awful.key({ "Mod1", "Control" }, "Left",   awful.tag.viewprev),
+    awful.key({ "Mod1", "Control" }, "Right",  awful.tag.viewnext),
     awful.key({ "Mod1" }, "space",
        function ()
           keyboard_layout.next(client.focus or {})
