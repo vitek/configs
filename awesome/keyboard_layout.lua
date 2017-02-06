@@ -8,7 +8,10 @@ local function set_layout(c, group)
    if group == nil then
       group = c.xcb_layout_group or last_xcb_layout_group
    end
-   --print('set_layout: ' .. tostring(c) .. " group: " .. tostring(group))
+   -- print('set_layout: ' .. tostring(c) .. " group: " .. tostring(group))
+   if c.disable_kbd_switch then
+      group = 0
+   end
    awesome.xkb_set_layout_group(group)
    last_xcb_layout_group = awesome.xkb_get_layout_group()
    c.xcb_layout_group = last_xcb_layout_group
