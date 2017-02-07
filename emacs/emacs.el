@@ -18,12 +18,16 @@
  '(menu-bar-mode nil)
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
- '(safe-local-variable-values (quote ((indent-tabs-mode . f) (sgml-indent-step . 1) (sgml-indent-data . 1))))
+ '(safe-local-variable-values
+   (quote ((indent-tabs-mode . f)
+           (sgml-indent-step . 1)
+           (sgml-indent-data . 1))))
  '(save-place t nil (saveplace))
  '(setq font-lock-maximum-decoration t)
  '(show-paren-mode t nil (paren))
  '(x-select-enable-clipboard t)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
+ '(log-edit-hook (quote ())))
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -61,12 +65,13 @@
     (package-install 'irony)
     (package-install 'jedi)))
 
-(require 'cython-mode nil t)
 (require 'git-grep nil t)
-(require 'jedi)
-(require 'irony)
-(require 'company)
-(require 'google-c-style)
+(require 'jedi nil t)
+(require 'irony nil t)
+(require 'company nil t)
+(require 'google-c-style nil t)
+(require 'show-wspace nil t)
+(require 'column-marker nil t)
 
 ;;(setq blink-cursor-mode 0)
 (setq scroll-conservatively 50)
@@ -106,12 +111,12 @@
          (color-theme-dark-laptop)))
 ;;(require 'github-theme)
 
-(when (require 'semantic nil t)
-  (progn
-    (global-semanticdb-minor-mode 1)
-    (semantic-mode 1)
-    (global-set-key "\M-n" 'semantic-complete-jump)
-    (global-set-key (kbd "C-c r") 'semantic-symref)))
+;; (when (require 'semantic nil t)
+;;   (progn
+;;     (global-semanticdb-minor-mode 1)
+;;     (semantic-mode 1)
+;;     (global-set-key "\M-n" 'semantic-complete-jump)
+;;     (global-set-key (kbd "C-c r") 'semantic-symref)))
 
 
 (defun my-compile()
@@ -140,14 +145,16 @@
 ;;(define-key ctl-x-map "\C-p" 'previous-error)
 ;;(define-key ctl-x-map "\C-n" 'next-error)
 
+(defun nop()
+  (interactive))
+
 (if window-system
     (progn
       (global-set-key "\C-z" 'ignore)
-      (global-set-key '[mouse-4] 'scroll-down)
-      (global-set-key '[mouse-5] 'scroll-up)
-      (global-unset-key '[mouse-2])
-      (global-unset-key '[mouse-3])
-      (global-unset-key '[mouse-1])
+      (global-set-key [mouse-4] 'scroll-down)
+      (global-set-key [mouse-5] 'scroll-up)
+      (global-set-key [mouse-2] 'nop)
+      (global-set-key [mouse-3] 'nop)
       (global-set-key [C-f9] 'recompile)))
 
 (global-set-key (quote [f1] )
@@ -205,27 +212,25 @@
 (global-set-key [M-down] 'windmove-down)
 
 
-;; Show whitespaces
-(when
-    (require 'show-wspace nil t)
-  (progn
-    (defun highlight-whitespaces ()
-      (if (not (member major-mode
-                       '(compilation-mode
-                         completion-list-mode
-                         fundamental-mode
-                         gud-mode
-                         help-mode
-                         tetris-mode)))
-          (progn (show-ws-highlight-trailing-whitespace)
-                 (show-ws-highlight-tabs))))
-    (add-hook 'font-lock-mode-hook 'highlight-whitespaces)))
+(defun derived-mode-parents (mode)
+  (and mode
+    (cons mode (derived-mode-parents
+          (get mode 'derived-mode-parent)))))
 
-;; Show marker at 80 column
-(when
-    (require 'column-marker nil t)
-  (progn
-    (add-hook 'font-lock-mode-hook '(lambda () (column-marker-1 80)))))
+;; Highlight whitespaces and long strings
+(defun highlight-whitespaces ()
+  (if (intersection (derived-mode-parents major-mode)
+                    '(prog-mode text-mode))
+      (progn
+        (when (fboundp 'show-ws-highlight-trailing-whitespace)
+          (progn
+            (show-ws-highlight-trailing-whitespace)
+            (show-ws-highlight-tabs)))
+        ;; Show marker at 80 column
+        (when
+            (fboundp 'column-marker-1)
+          (column-marker-1 80)))))
+(add-hook 'font-lock-mode-hook 'highlight-whitespaces)
 
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t)
 (setq linum-format (if window-system "%4d" "%4d "))
