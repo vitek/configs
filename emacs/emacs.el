@@ -63,7 +63,9 @@
     (package-install 'company-irony)
     (package-install 'flycheck)
     (package-install 'irony)
-    (package-install 'jedi)))
+    (package-install 'jedi)
+    (package-install 'helm)
+    (package-install 'rtags)))
 
 (require 'git-grep nil t)
 (require 'jedi nil t)
@@ -126,13 +128,16 @@
     (call-interactively 'compile)))
 
 
+
+
+
 ;;(global-set-key "\C-s" 'isearch-forward-regexp)
 ;;(global-set-key "\C-r" 'isearch-backward-regexp)
 
 (global-set-key [f9] 'my-compile)
 (global-set-key (quote [f2]) 'save-buffer)
 (global-set-key (quote [f3]) 'find-file)
-(global-set-key (quote [f4]) 'gdb)
+(global-set-key (quote [f4]) 'gud-gdb)
 (global-set-key (quote [f7]) 'gud-step)
 (global-set-key (quote [f8]) 'gud-next)
 (global-set-key (quote [C-f8]) 'gud-break)
@@ -154,7 +159,6 @@
       (global-set-key [mouse-4] 'scroll-down)
       (global-set-key [mouse-5] 'scroll-up)
       (global-set-key [mouse-2] 'nop)
-      (global-set-key [mouse-3] 'nop)
       (global-set-key [C-f9] 'recompile)))
 
 (global-set-key (quote [f1] )
@@ -237,54 +241,57 @@
 ;;(global-linum-mode)
 
 ;; mcedit-alike word movements functions
-(setq word "[:alnum:]")
-(setq delims " \t\n")
-(setq spaces "\t ")
-(setq specials "^[:alnum:] \t\n")
+(defvar mc-move-word "[:alnum:]")
+(defvar mc-move-delims " \t\n")
+(defvar mc-move-spaces "\t ")
+(defvar mc-move-specials "^[:alnum:] \t\n")
+(defvar mc-move-upper-words "[:upper:][:digit:]")
+(defvar mc-move-lower-words "[:lower:][:digit:]")
 
-(setq upper-words "[:upper:][:digit:]")
-(setq lower-words "[:lower:][:digit:]")
-
-(defun move-by-word (count)
+(defun mc-move-by-word (count)
   (if (> count 0)
       (dotimes (i count)
         (progn
           (cond
-           ((> (skip-chars-forward delims) 0) 1)
-           ((> (+ (skip-chars-forward upper-words)
-                  (skip-chars-forward lower-words)) 0)
-            (skip-chars-forward spaces))
-           ((skip-chars-forward specials)
-            (skip-chars-forward delims))))))
+           ((> (skip-chars-forward mc-move-delims) 0) 1)
+           ((> (+ (skip-chars-forward mc-move-upper-words)
+                  (skip-chars-forward mc-move-lower-words)) 0)
+            (skip-chars-forward mc-move-spaces))
+           ((skip-chars-forward mc-move-specials)
+            (skip-chars-forward mc-move-delims))))))
   (dotimes (i (- count))
     (progn
-      (skip-chars-backward spaces)
+      (skip-chars-backward mc-move-spaces)
       (cond
        ((< (skip-chars-backward "\n") 0) 1)
-       ((< (+ (skip-chars-backward lower-words)
-              (skip-chars-backward upper-words)) 0) 2)
-       ((skip-chars-backward specials) 0)))))
+       ((< (+ (skip-chars-backward mc-move-lower-words)
+              (skip-chars-backward mc-move-upper-words)) 0) 2)
+       ((skip-chars-backward mc-move-specials) 0)))))
 
-(defun forward-word (&optional arg)
+(defun mc-move-forward-word (&optional arg)
   (interactive "p")
   (if arg
-      (move-by-word arg)
-    (move-by-word 1)))
+      (mc-move-by-word arg)
+    (mc-move-by-word 1)))
 
-(defun backward-word (&optional arg)
+(defun mc-move-backward-word (&optional arg)
   (interactive "p")
   (if arg
-      (move-by-word (- arg))
-    (move-by-word -1)))
+      (mc-move-by-word (- arg))
+    (mc-move-by-word -1)))
 
-(defun kill-word (&optional arg)
+(defun mc-move-kill-word (&optional arg)
   (interactive "p")
-  (kill-region (point) (progn (forward-word arg) (point))))
+  (kill-region (point) (progn (mc-move-forward-word arg) (point))))
 
-(defun backward-kill-word (&optional arg)
+(defun mc-move-backward-kill-word (&optional arg)
   (interactive "p")
-  (kill-word (- arg)))
+  (mc-move-kill-word (- arg)))
 
+(defalias 'forward-word 'mc-move-forward-word)
+(defalias 'backward-word 'mc-move-backward-word)
+(defalias 'kill-word 'mc-move-kill-word)
+(defalias 'backward-kill-word 'mc-move-backward-kill-word)
 
 ;; Python-mode settings
 (defun ipdb()
@@ -338,6 +345,22 @@
 ;;  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 ;;(flycheck-irony-setup flycheck-mode-set-explicitly)
 
+
+(progn
+  (require 'rtags)
+  (require 'company-rtags)
+
+  (setq rtags-completions-enabled t)
+  (eval-after-load 'company
+    '(add-to-list
+      'company-backends 'company-rtags))
+  (setq rtags-autostart-diagnostics t)
+  (rtags-enable-standard-keybindings)
+
+  (require 'rtags-helm)
+  (setq rtags-use-helm t)
+
+  (rtags-start-process-unless-running))
 
 (provide '.emacs)
 ;;; .emacs ends here
