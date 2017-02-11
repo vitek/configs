@@ -74,6 +74,7 @@
 (require 'google-c-style nil t)
 (require 'show-wspace nil t)
 (require 'column-marker nil t)
+(require 'mc-move)
 
 ;;(setq blink-cursor-mode 0)
 (setq scroll-conservatively 50)
@@ -239,59 +240,6 @@
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t)
 (setq linum-format (if window-system "%4d" "%4d "))
 ;;(global-linum-mode)
-
-;; mcedit-alike word movements functions
-(defvar mc-move-word "[:alnum:]")
-(defvar mc-move-delims " \t\n")
-(defvar mc-move-spaces "\t ")
-(defvar mc-move-specials "^[:alnum:] \t\n")
-(defvar mc-move-upper-words "[:upper:][:digit:]")
-(defvar mc-move-lower-words "[:lower:][:digit:]")
-
-(defun mc-move-by-word (count)
-  (if (> count 0)
-      (dotimes (i count)
-        (progn
-          (cond
-           ((> (skip-chars-forward mc-move-delims) 0) 1)
-           ((> (+ (skip-chars-forward mc-move-upper-words)
-                  (skip-chars-forward mc-move-lower-words)) 0)
-            (skip-chars-forward mc-move-spaces))
-           ((skip-chars-forward mc-move-specials)
-            (skip-chars-forward mc-move-delims))))))
-  (dotimes (i (- count))
-    (progn
-      (skip-chars-backward mc-move-spaces)
-      (cond
-       ((< (skip-chars-backward "\n") 0) 1)
-       ((< (+ (skip-chars-backward mc-move-lower-words)
-              (skip-chars-backward mc-move-upper-words)) 0) 2)
-       ((skip-chars-backward mc-move-specials) 0)))))
-
-(defun mc-move-forward-word (&optional arg)
-  (interactive "p")
-  (if arg
-      (mc-move-by-word arg)
-    (mc-move-by-word 1)))
-
-(defun mc-move-backward-word (&optional arg)
-  (interactive "p")
-  (if arg
-      (mc-move-by-word (- arg))
-    (mc-move-by-word -1)))
-
-(defun mc-move-kill-word (&optional arg)
-  (interactive "p")
-  (kill-region (point) (progn (mc-move-forward-word arg) (point))))
-
-(defun mc-move-backward-kill-word (&optional arg)
-  (interactive "p")
-  (mc-move-kill-word (- arg)))
-
-(defalias 'forward-word 'mc-move-forward-word)
-(defalias 'backward-word 'mc-move-backward-word)
-(defalias 'kill-word 'mc-move-kill-word)
-(defalias 'backward-kill-word 'mc-move-backward-kill-word)
 
 ;; Python-mode settings
 (defun ipdb()
