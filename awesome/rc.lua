@@ -164,7 +164,7 @@ local function mypromptbox_run ()
    if mypromptbox then
       mypromptbox:run()
    else
-      awful.spawn("gnome-command-run")
+      awful.spawn("gnome-panel-control --run-dialog")
    end
 end
 
