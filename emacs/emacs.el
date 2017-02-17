@@ -195,12 +195,13 @@
 
 (defun silent-save-buffers-kill-emacs (&optional arg)
   "Offer to save each buffer, then kill this Emacs process.
-   With prefix arg, silently save all file-visiting buffers, then kill."
+   With prefix ARG, silently save all file-visiting buffers, then kill."
   (interactive "P")
   (save-some-buffers arg t)
   (kill-emacs))
 
 (defun delete-frame-or-kill-emacs (&optional arg)
+  "Delete frame or kill emacs if current frame is the last one."
   (interactive "P")
   (if (> (length (frame-list)) 1)
       (delete-frame)
@@ -243,18 +244,24 @@
 (setq linum-format (if window-system "%4d" "%4d "))
 ;;(global-linum-mode)
 
+(global-set-key (kbd "C-c #") 'comment-region)
+
 ;; Python-mode settings
-(defun ipdb()
+(defun ipdb-insert-set-trace()
   (interactive)
   (insert "from ipdb import set_trace; set_trace()"))
-(global-set-key (kbd "C-c b") 'ipdb)
 
 (defvar py-flake8-history nil) ; workaround python-mode.el bug
 (setq py-flake8-command-args
       '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
-
-(add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
+
+(add-hook
+ 'python-mode-hook
+ (lambda ()
+   (progn
+     (global-set-key (kbd "C-c b") 'ipdb-insert-set-trace)
+     (jedi:setup))))
 
 ;; C/C++ mode settings
 (add-hook 'c++-mode-hook 'irony-mode)
