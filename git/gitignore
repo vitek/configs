@@ -1,9 +1,16 @@
+\#*#
 *.swp
 *~
+
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+compile_commands.json
 
 *.pyc
 *.pyo
 
+*.a
 *.ko
 *.o
 *.so
