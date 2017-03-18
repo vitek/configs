@@ -57,6 +57,7 @@ install-emacs: install-xresources
 	$(INSTALL) -m 0644 emacs/site-lisp/git-grep.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/google-c-style.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/site-lisp/manual-indent.el $(DESTDIR)/.emacs.d/site-lisp
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc

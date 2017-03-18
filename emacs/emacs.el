@@ -314,5 +314,12 @@
 
 ;; (rtags-start-process-unless-running)
 
+(require 'manual-indent)
+
+(add-hook 'lua-mode-hook
+          (lambda ()
+            (manual-indent-mode 1)
+            (electric-indent-mode 0)))
+
 (provide '.emacs)
 ;;; .emacs ends here
