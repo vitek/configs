@@ -42,12 +42,6 @@
     (-
      (skip-syntax-backward " " (line-beginning-position)))))
 
-(defun manual-indent-tab (&optional count)
-  (interactive "p")
-  (let* ((count (or count 1))
-         (odd (% (current-column) manual-indent-level)))
-    (insert (make-string (- (* count manual-indent-level) odd) ? ))))
-
 (defun manual-indent-delete-trailing-whitespaces ()
   (save-excursion
     (let* ((start (current-column)))
@@ -61,19 +55,28 @@
       (skip-syntax-forward " ")
       (current-column))))
 
-(defun manual-indent-enter (&optional count)
+(defun manual-indent-tab (&optional count)
   (interactive "p")
-  (let* ((indentation (manual-indent-calculate-indent)))
+  (let* ((count (or count 1))
+         (odd (% (current-column) manual-indent-level)))
+    (insert (make-string (- (* count manual-indent-level) odd) ? ))))
+
+(defun manual-indent-enter (&optional arg)
+  (interactive "p")
+  (let* ((count (or arg 1))
+         (indentation (manual-indent-calculate-indent)))
     (manual-indent-delete-trailing-whitespaces)
-    (newline)
+    (newline count)
     (insert (make-string indentation ? ))))
 
 (defun manual-indent-backspace (&optional arg)
   (interactive "p")
-  (let ((spaces (manual-indent-calculate-spaces)))
+  (let ((count (or arg 1))
+        (spaces (manual-indent-calculate-spaces)))
     (delete-char
      (if (and (> spaces 0) (= 0 (% spaces manual-indent-level)))
-         (- manual-indent-level) -1))))
+         (- manual-indent-level) -1))
+    (if (> count 1) (manual-indent-backspace (- count 1)))))
 
 (define-minor-mode manual-indent-mode
   "Toggle manual indent mode"
