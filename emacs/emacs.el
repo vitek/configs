@@ -63,10 +63,10 @@
     (package-install 'company)
     (package-install 'company-irony)
     (package-install 'flycheck)
+    (package-install 'helm)
     (package-install 'irony)
     (package-install 'jedi)
     (package-install 'lua-mode)
-    (package-install 'helm)
     (package-install 'rtags)))
 
 (require 'git-grep nil t)
@@ -129,9 +129,6 @@
   (if (fboundp 'cmake-ide-compile)
       (call-interactively 'cmake-ide-compile)
     (call-interactively 'compile)))
-
-
-
 
 
 ;;(global-set-key "\C-s" 'isearch-forward-regexp)
@@ -302,22 +299,20 @@
 ;;  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 ;;(flycheck-irony-setup flycheck-mode-set-explicitly)
 
+;; (require 'rtags)
+;; (require 'company-rtags)
+;; (require 'rtags-helm)
 
-(progn
-  (require 'rtags)
-  (require 'company-rtags)
+;; (setq rtags-completions-enabled t)
+;; (eval-after-load 'company
+;;   '(add-to-list
+;;     'company-backends 'company-rtags))
+;; (setq rtags-autostart-diagnostics t)
+;; (rtags-enable-standard-keybindings)
 
-  (setq rtags-completions-enabled t)
-  (eval-after-load 'company
-    '(add-to-list
-      'company-backends 'company-rtags))
-  (setq rtags-autostart-diagnostics t)
-  (rtags-enable-standard-keybindings)
+;; (setq rtags-use-helm t)
 
-  (require 'rtags-helm)
-  (setq rtags-use-helm t)
-
-  (rtags-start-process-unless-running))
+;; (rtags-start-process-unless-running)
 
 (provide '.emacs)
 ;;; .emacs ends here
