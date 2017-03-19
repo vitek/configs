@@ -65,6 +65,7 @@
   (interactive "p")
   (let* ((count (or arg 1))
          (indentation (manual-indent-calculate-indent)))
+    (skip-syntax-forward " ")
     (manual-indent-delete-trailing-whitespaces)
     (newline count)
     (insert (make-string indentation ? ))))
