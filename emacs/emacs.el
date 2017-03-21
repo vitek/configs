@@ -318,8 +318,9 @@
 
 (add-hook 'lua-mode-hook
           (lambda ()
+            (setq lua-indent-level 4)
             (manual-indent-mode 1)
-            (electric-indent-mode 0)))
+            (electric-indent-local-mode 0)))
 
 (provide '.emacs)
 ;;; .emacs ends here
