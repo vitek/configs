@@ -7,7 +7,8 @@ AWESOME_FILES = 			\
 	awesome/rc.lua			\
 	awesome/mywibar.lua		\
 	awesome/keyboard_layout.lua	\
-	awesome/utils.lua
+	awesome/utils.lua		\
+	awesome/quake.lua
 
 default:
 

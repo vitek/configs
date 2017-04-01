@@ -15,6 +15,7 @@ local utils = require("utils")
 local mywibar = require("mywibar")
 
 local pulseaudio = require('apw.pulseaudio')
+local quake = require("quake")
 
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
@@ -135,6 +136,12 @@ mylauncher = awful.widget.launcher({
       image = "/usr/share/icons/ubuntu-mono-dark/status/22/system-devices-panel.svg",
       menu = mymainmenu
 })
+
+quakeconsole = quake{
+    terminal = "gnome-terminal --disable-factory",
+    argname = "--name %s",
+    height = 0.3
+}
 
 -- Menubar configuration
 --menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -316,7 +323,9 @@ globalkeys = awful.util.table.join(
     -- Volume control
     awful.key({ }, "XF86AudioRaiseVolume",  pulseaudio.VolumeUp),
     awful.key({ }, "XF86AudioLowerVolume",  pulseaudio.VolumeDown),
-    awful.key({ }, "XF86AudioMute",         pulseaudio.VolumeToggleMute)
+    awful.key({ }, "XF86AudioMute",         pulseaudio.VolumeToggleMute),
+
+    awful.key({ modkey }, "`", function () quakeconsole:toggle() end)
 )
 
 -- @DOC_CLIENT_KEYBINDINGS@
