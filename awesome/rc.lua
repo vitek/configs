@@ -139,8 +139,15 @@ mylauncher = awful.widget.launcher({
 
 quakeconsole = quake{
     terminal = "gnome-terminal --disable-factory",
-    argname = "--name %s",
-    height = 0.3
+    argclass = "--class %s",
+    height = 0.3,
+    keys = awful.util.table.join(
+        awful.key({ modkey }, "Down", function (c)
+            quakeconsole:incHeight(c, 0.1)
+        end),
+        awful.key({ modkey }, "Up", function (c)
+            quakeconsole:incHeight(c, -0.1)
+        end))
 }
 
 -- Menubar configuration
