@@ -136,7 +136,8 @@ end
 
 function QuakeConsole:updateGeometry(client)
     -- Comptute size
-    local geom = capi.screen[self.screen].workarea
+    local screen = self.screen or capi.mouse.screen
+    local geom = capi.screen[screen].workarea
     local width, height = self.width, self.height
     if width  <= 1 then width = geom.width * width end
     if height <= 1 then height = geom.height * height end
@@ -148,7 +149,7 @@ function QuakeConsole:updateGeometry(client)
     elseif self.vert == "bottom" then y = geom.height + geom.y - height
     else   y = geom.y + (geom.height - height)/2 end
 
-    width = width- 2 * client.border_width
+    width = width - 2 * client.border_width
     height = height - 2 * client.border_width
 
     -- Resize
@@ -180,7 +181,7 @@ function QuakeConsole:new(config)
     config.minHeight = config.minHeight or config.height
     config.maxHeight = config.maxHeight or 1.0
 
-    config.screen   = config.screen or capi.mouse.screen
+    config.screen   = config.screen
     config.visible  = config.visible or false -- Initially, not visible
     config.keys     = config.keys or {}
 
