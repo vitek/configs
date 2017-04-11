@@ -138,8 +138,6 @@ mylauncher = awful.widget.launcher({
 })
 
 quakeconsole = quake{
-    terminal = "gnome-terminal --disable-factory",
-    argclass = "--class %s",
     height = 0.3,
     keys = awful.util.table.join(
         awful.key({ modkey }, "Down", function (c)

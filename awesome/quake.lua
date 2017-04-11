@@ -44,45 +44,45 @@ local capi = {
 
 local QuakeConsole = {}
 local consoles = {}
-local all_consoles = {}
+
+local next_console_id = 0
+local function get_next_console_id()
+    next_console_id = next_console_id + 1
+    return string.format('quake-console-%d', next_console_id)
+end
 
 local function clamp(value, minValue, maxValue)
     return math.min(math.max(value, minValue), maxValue)
 end
 
 capi.client.connect_signal("manage", function(c)
-    -- try to attach terminal from previous awesome run
-    for _, console in pairs(all_consoles) do
-        if (c.class == console.class and console.pid == nil and
-                consoles[c.pid] == nil) then
-            console.pid = c.pid
-            consoles[console.pid] = console
+    local console = consoles[c.quake_console_id]
+    if console ~= nil then
+        if console.waitingForAppear then
+            console:show(c)
+        else
+            -- console from prevous awesome run
             c.hidden = true
-            return
         end
-    end
-
-    if consoles[c.pid] ~= nil then
-        consoles[c.pid]:show(c)
     end
 end)
 capi.client.connect_signal("unmanage", function(c)
-    if consoles[c.pid] ~= nil then
-        consoles[c.pid]:hide(c)
+    local console = consoles[c.quake_console_id]
+    if console ~= nil then
+        console:hide(c)
     end
 end)
 capi.client.connect_signal("property::geometry", function(c)
+    local console = consoles[c.quake_console_id]
     -- don't allow client to adjust its own size
-    if consoles[c.pid] ~= nil then
-        consoles[c.pid]:updateGeometry(c)
+    if console ~= nil then
+        console:updateGeometry(c)
     end
 end)
 
 function QuakeConsole:findClient()
-    if not self.pid then return end
-
     for c in awful.client.iterate(function (c)
-        return c.pid == self.pid and c.class == self.class
+        return c.quake_console_id == self.console_id
     end) do return c end
 end
 
@@ -103,13 +103,13 @@ function QuakeConsole:show(client)
     if not client then client = self:findClient() end
 
     if not client then
-        if self.pid then consoles[self.pid] = nil end
-        local command =
-            self.terminal .. " " .. string.format(self.argclass, self.class)
-        self.pid = awful.spawn(command, false)
-        -- Race condition much?
-        consoles[self.pid] = self
-        return -- Wait for client to spawn.
+        if not self.waitingForAppear then
+            awful.spawn(self.terminal, {
+                quake_console_id = self.console_id
+            })
+            self.waitingForAppear = true
+        end
+        return
     end
 
     client.floating = true
@@ -129,9 +129,10 @@ function QuakeConsole:show(client)
 
     client.hidden = false
     client:raise()
-    self.visible = true
-
     capi.client.focus = client
+
+    self.visible = true
+    self.waitingForAppear = false
 end
 
 function QuakeConsole:updateGeometry(client)
@@ -166,11 +167,8 @@ end
 function QuakeConsole:new(config)
     -- The "console" object is just its configuration.
 
-    -- The application to be invoked is:
-    --   config.terminal .. " " .. string.format(config.argclass, config.class)
-    config.terminal = config.terminal or "xterm" -- application to spawn
-    config.class    = config.class or "QuakeConsoleNeedsUniqueName" -- window class
-    config.argclass = config.argclass or "-class %s"     -- how to specify window name
+    config.console_id = config.console_id or get_next_console_id()
+    config.terminal = config.terminal or terminal -- application to spawn
 
     -- If width or height <= 1 this is a proportion of the workspace
     config.height   = config.height   or 0.25           -- height
@@ -186,7 +184,7 @@ function QuakeConsole:new(config)
     config.keys     = config.keys or {}
 
     local console = setmetatable(config, { __index = QuakeConsole })
-    table.insert(all_consoles, console)
+    consoles[config.console_id] = console
     return console
 end
 
@@ -195,6 +193,12 @@ function QuakeConsole:toggle()
     if self.visible then self:hide() else self:show() end
 end
 
-setmetatable(QuakeConsole, { __call = function(_, ...) return QuakeConsole:new(...) end })
+awful.client.property.persist("quake_console_id", "string")
+
+setmetatable(QuakeConsole, {
+    __call = function(_, ...)
+        return QuakeConsole:new(...)
+    end
+})
 
 return QuakeConsole
