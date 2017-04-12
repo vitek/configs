@@ -47,14 +47,16 @@ local consoles = {}
 
 local next_console_id = 0
 local function get_next_console_id()
+    local id = next_console_id
     next_console_id = next_console_id + 1
-    return string.format('quake-console-%d', next_console_id)
+    return id
 end
 
 local function clamp(value, minValue, maxValue)
     return math.min(math.max(value, minValue), maxValue)
 end
 
+awful.client.property.persist("quake_console_id", "number")
 capi.client.connect_signal("manage", function(c)
     local console = consoles[c.quake_console_id]
     if console ~= nil then
@@ -192,8 +194,6 @@ end
 function QuakeConsole:toggle()
     if self.visible then self:hide() else self:show() end
 end
-
-awful.client.property.persist("quake_console_id", "string")
 
 setmetatable(QuakeConsole, {
     __call = function(_, ...)
