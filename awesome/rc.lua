@@ -186,12 +186,14 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s,
+        awful.layout.layouts[1])
 
     if settings.enable_wibar then
-       if s.index == 1 then
-          mywibar.create_wibar(s)
-       end
+        -- only enable wibar on the main screen
+        if s.index == 1 then
+            mywibar.create_wibar(s)
+        end
     end
 end)
 -- }}}
@@ -563,6 +565,42 @@ client.connect_signal("mouse::enter", function(c)
 end)
 
 -- @DOC_BORDER@
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("focus", function(c)
+    c.border_color = beautiful.border_focus
+end)
+client.connect_signal("unfocus", function(c)
+    c.border_color = beautiful.border_normal
+end)
 -- }}}
+
+-- On screen disconnect move client to the same tag number other screen
+client.connect_signal("request::tag", function (c, t, hints)
+    if hints and hints.reason == "screen-removed" then
+        local fallback = nil
+        for other_screen in screen do
+            if #other_screen.tags > 0 then
+                fallback = other_screen.tags[c.first_tag.index] or
+                    other_screen.tags[1]
+                break
+            end
+        end
+        if fallback then
+            c.screen_evicted = true
+            c:move_to_tag(fallback)
+        end
+    end
+end)
+
+-- Move client back to the screen and tag
+-- TODO: restore full state
+screen.connect_signal("added", function (s)
+    for _, c in ipairs(client.get()) do
+        if c.screen_evicted then
+            local tag = s.tags[c.first_tag.index]
+            if tag then
+                c:move_to_tag(tag)
+            end
+            c.screen_evicted = nil
+        end
+    end
+end)
