@@ -35,10 +35,10 @@ local math = require("math")
 
 local pulseaudio_widget = { mt = {} }
 
-function pulseaudio_widget.new(pulseaudio)
+function pulseaudio_widget.new(pulseaudio, options)
    local imagebox = wibox.widget.imagebox()
    local self = imagebox
-   local mixer = default_mixer
+   local mixer = options.mixer or default_mixer
    local theme_icons = default_theme_icons
 
    local function update_volume()

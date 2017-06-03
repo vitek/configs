@@ -66,7 +66,9 @@ function mywibar.create_wibar(s)
          end,
    })
 
-   local volumewidget = pulseaudio_widget(pulseaudio)
+   local volumewidget = pulseaudio_widget(pulseaudio, {
+        mixer = "gnome-control-center sound"
+   })
    local volumewidget_tooltip = awful.tooltip({
          objects = { volumewidget },
          timer_function = function()
