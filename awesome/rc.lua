@@ -591,6 +591,9 @@ client.connect_signal("request::tag", function (c, t, hints)
     end
 end)
 
+local screen_state = {
+    selected_tag
+}
 -- Move client back to the screen and tag
 -- TODO: restore full state
 screen.connect_signal("added", function (s)
@@ -602,5 +605,17 @@ screen.connect_signal("added", function (s)
             end
             c.screen_evicted = nil
         end
+    end
+
+    local tag = s.tags[screen_state.selected_tag]
+    if tag then
+        tag:view_only()
+    end
+    screen_state.selected_tag = nil
+end)
+
+tag.connect_signal("removal-pending", function (t)
+    if t.selected then
+        screen_state.selected_tag = t.index
     end
 end)

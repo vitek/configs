@@ -5,18 +5,11 @@ local dbus = dbus
 
 local utils = {}
 
-function utils.switch_tag(screen, step)
-   -- switch w/o cycle
-   local sel = screen.selected_tag
-   local tags = screen.tags
-   for k, t in ipairs(tags) do
-      if t == sel then
-         local tag = screen.tags[k + step]
-         if tag then
-            tag:view_only()
-         end
-      end
-   end
+function utils.switch_tag(s, step)
+    local tag = s.tags[s.selected_tag.index + step]
+    if tag then
+        tag:view_only()
+     end
 end
 
 function utils.lock_screen()
