@@ -6,6 +6,7 @@ DESTDIR   = $(HOME)
 AWESOME_FILES = 			\
 	awesome/rc.lua			\
 	awesome/mywibar.lua		\
+	awesome/brightness.lua		\
 	awesome/keyboard_layout.lua	\
 	awesome/utils.lua		\
 	awesome/quake.lua

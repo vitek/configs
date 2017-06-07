@@ -15,6 +15,7 @@ local utils = require("utils")
 local mywibar = require("mywibar")
 
 local pulseaudio = require('apw.pulseaudio')
+local brightness = require("brightness")
 local quake = require("quake")
 
 -- {{{ Error handling
@@ -331,6 +332,8 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86AudioRaiseVolume",  pulseaudio.VolumeUp),
     awful.key({ }, "XF86AudioLowerVolume",  pulseaudio.VolumeDown),
     awful.key({ }, "XF86AudioMute",         pulseaudio.VolumeToggleMute),
+    awful.key({ }, "XF86MonBrightnessDown", brightness.dec),
+    awful.key({ }, "XF86MonBrightnessUp", brightness.inc),
 
     awful.key({ modkey }, "`", function () quakeconsole:toggle() end)
 )
