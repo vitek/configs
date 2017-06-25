@@ -96,7 +96,6 @@ function QuakeConsole:hide(client)
     self.visible = false
 end
 
-
 -- Display
 function QuakeConsole:show(client)
     if self.visible then return end
@@ -126,7 +125,12 @@ function QuakeConsole:show(client)
     self:updateGeometry(client)
 
     -- This is not a normal window, don't apply any specific keyboard stuff
-    client:buttons({})
+    client:buttons(awful.util.table.join(
+        awful.button({ }, 1, function (client)
+            client:raise()
+            capi.client.focus = client
+        end)
+    ))
     client:keys(self.keys)
 
     client.hidden = false
