@@ -64,7 +64,11 @@ function pulseaudio_widget.new(pulseaudio, options)
    end
 
    function self.LaunchMixer()
-      awful.spawn( mixer )
+      if type(mixer) == 'string' then
+         awful.spawn( mixer )
+      else
+         mixer()
+      end
    end
 
    -- register mouse button actions

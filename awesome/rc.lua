@@ -5,8 +5,8 @@ local awful = require("awful")
 require("awful.autofocus")
 -- Theme handling library
 local beautiful = require("beautiful")
--- Notification library
-local naughty = require("naughty")
+-- Notification library, require core to disable dbus interface
+local naughty = require("naughty.core")
 --local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 

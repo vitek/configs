@@ -67,7 +67,11 @@ function mywibar.create_wibar(s)
    })
 
    local volumewidget = pulseaudio_widget(pulseaudio, {
-        mixer = "unity-control-center sound"
+      mixer = function ()
+         awful.spawn.with_shell(
+            "XDG_CURRENT_DESKTOP=Unity unity-control-center sound"
+         )
+      end
    })
    local volumewidget_tooltip = awful.tooltip({
          objects = { volumewidget },
@@ -112,8 +116,8 @@ function mywibar.create_wibar(s)
       nil,
       { -- Right widgets
          layout = wibox.layout.fixed.horizontal,
-         volumewidget,
          mykeyboardlayout,
+         volumewidget,
          wibox.widget.systray(),
          mytextclock,
          mylauncher,
