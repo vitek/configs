@@ -17,6 +17,7 @@ local mywibar = require("mywibar")
 local pulseaudio = require('apw.pulseaudio')
 local brightness = require("brightness")
 local quake = require("quake")
+local xrandr = require("xrandr")
 
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
@@ -327,6 +328,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey },            "e",
        function () awful.spawn('emacs') end),
     awful.key({"Mod1", "Control"}, "l", utils.lock_screen),
+    awful.key({"Mod1"}, "Escape", xrandr.menu),
 
     -- Volume control
     awful.key({ }, "XF86AudioRaiseVolume",  pulseaudio.VolumeUp),

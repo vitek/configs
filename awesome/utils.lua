@@ -31,7 +31,6 @@ dbus.connect_signal(
    function(...)
       local data = {...}
       if data[1].member == "ActiveChanged" then
-         print('locking')
          awesome.xkb_set_layout_group(0)
       end
    end
