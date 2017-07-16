@@ -50,57 +50,59 @@ local function xrandr_move(output, pivot, where)
     )
 end
 
-local function xrandr_menu()
-    local secondary = {}
-    local primary
-
-    for _, output in ipairs(list_outputs()) do
-        if output.primary then
-            primary = output
-        else
-            table.insert(secondary, output)
-        end
-    end
-
-    local items = {
+local function relation_menu(output, pivot)
+    return {
         {
-            string.format("%s (%s), primray",
-                primary.name, primary.mode or "unknown")
+            string.format("Right-Of %s", pivot.name),
+            xrandr_move(output.name, pivot.name, "right-of")
+        },
+        {
+            string.format("Left-Of %s", pivot.name),
+            xrandr_move(output.name, pivot.name, "left-of")
+        },
+        {
+            string.format("Above %s", pivot.name),
+            xrandr_move(output.name, pivot.name, "above")
+        },
+        {
+            string.format("Bellow %s", pivot.name),
+            xrandr_move(output.name, pivot.name, "below")
+        },
+        {
+            string.format("Mirror %s", pivot.name),
+            xrandr_move(output.name, pivot.name, "same-as")
         }
     }
-    for _, output in ipairs(secondary) do
-        table.insert(items, {
-            string.format("%s (%s)", output.name, output.mode or "unknown"), {
-                {
-                    string.format("Right-Of %s", primary.name),
-                    xrandr_move(output.name, primary.name, "right-of")
-                },
-                {
-                    string.format("Left-Of %s", primary.name),
-                    xrandr_move(output.name, primary.name, "left-of")
-                },
-                {
-                    string.format("Above %s", primary.name),
-                    xrandr_move(output.name, primary.name, "above")
-                },
-                {
-                    string.format("Bellow %s", primary.name),
-                    xrandr_move(output.name, primary.name, "below")
-                },
-                {
-                    string.format("Mirror %s", primary.name),
-                    xrandr_move(output.name, primary.name, "same-as")
-                },
-                {
-                    "Make primray",
-                    string.format("xrandr --output %s --primary", output.name)
-                },
-                {
-                    "Switch Off",
-                    string.format("xrandr --output %s --off", output.name)
-                }
-            }
+end
+
+local function xrandr_menu()
+    local items = {}
+    local outputs = list_outputs()
+    for _, output in ipairs(outputs) do
+        local title = string.format(
+            "%s (%s)", output.name, output.mode or "unknown")
+        if output.primary then
+            title = title .. ', primary'
+        end
+
+        local submenu = {}
+        for _, pivot in ipairs(outputs) do
+            if pivot.name ~= output.name then
+                table.insert(submenu, {
+                    pivot.name, relation_menu(output, pivot)
+                })
+            end
+        end
+
+        table.insert(submenu, {
+            "Make primray",
+            string.format("xrandr --output %s --primary", output.name)
         })
+        table.insert(submenu, {
+            "Switch Off",
+            string.format("xrandr --output %s --off", output.name)
+        })
+        table.insert(items, {title, submenu})
     end
 
     local xrandr_menu = awful.menu({
