@@ -25,7 +25,7 @@ local function list_outputs()
             local output = {
                 name = name,
                 primary = false,
-                mode = info[#info],
+                mode = nil,
                 connected = false
             }
             for _, flag in ipairs(info) do
@@ -33,11 +33,12 @@ local function list_outputs()
                     output.primary = true
                 elseif flag == "connected" then
                     output.connected = true
+                elseif flag:match('^%d+x%d+[+-]%d+[+-]%d+$') then
+                    print('mode', flag)
+                    output.mode = flag
                 end
             end
-            if output.connected then
-                table.insert(outputs, output)
-            end
+            table.insert(outputs, output)
         end
     end
     xrandr:close()
@@ -75,19 +76,17 @@ local function relation_menu(output, pivot)
     }
 end
 
-local function xrandr_menu()
-    local items = {}
-    local outputs = list_outputs()
-    for _, output in ipairs(outputs) do
-        local title = string.format(
-            "%s (%s)", output.name, output.mode or "unknown")
-        if output.primary then
-            title = title .. ', primary'
-        end
+local function build_output_menu(output, outputs)
+    local title = string.format(
+        "%s (%s)", output.name, output.mode or "none")
+    if output.primary then
+        title = title .. ', primary'
+    end
 
-        local submenu = {}
+    local submenu = {}
+    if output.connected then
         for _, pivot in ipairs(outputs) do
-            if pivot.name ~= output.name then
+            if pivot.name ~= output.name and pivot.connected then
                 table.insert(submenu, {
                     pivot.name, relation_menu(output, pivot)
                 })
@@ -98,11 +97,21 @@ local function xrandr_menu()
             "Make primray",
             string.format("xrandr --output %s --primary", output.name)
         })
-        table.insert(submenu, {
-            "Switch Off",
-            string.format("xrandr --output %s --off", output.name)
-        })
-        table.insert(items, {title, submenu})
+    end
+    table.insert(submenu, {
+        "Switch Off",
+        string.format("xrandr --output %s --off", output.name)
+    })
+    return {title, submenu}
+end
+
+local function xrandr_menu()
+    local items = {}
+    local outputs = list_outputs()
+    for _, output in ipairs(outputs) do
+        if output.connected or output.mode then
+            table.insert(items, build_output_menu(output, outputs))
+        end
     end
 
     local xrandr_menu = awful.menu({
