@@ -3,6 +3,7 @@ local wibox = require("wibox")
 local utils = require("utils")
 local pulseaudio = require("apw.pulseaudio")
 local pulseaudio_widget = require("apw.widget")
+local battery = require("battery")
 
 local mywibar = {}
 
@@ -66,6 +67,8 @@ function mywibar.create_wibar(s)
          end,
    })
 
+    local batwidget = battery.BatteryWidget{}
+
    local volumewidget = pulseaudio_widget(pulseaudio, {
       mixer = function ()
          awful.spawn.with_shell(
@@ -118,6 +121,7 @@ function mywibar.create_wibar(s)
          layout = wibox.layout.fixed.horizontal,
          mykeyboardlayout,
          volumewidget,
+         batwidget,
          wibox.widget.systray(),
          mytextclock,
          mylauncher,

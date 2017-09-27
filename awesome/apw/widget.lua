@@ -16,15 +16,16 @@
 
 -- Configuration variables
 local default_mixer         = 'pavucontrol' -- mixer command
+local icondir_base = "/usr/share/icons/ubuntu-mono-dark/status/22/"
 local default_theme_icons = {
    ["audio-volume-high"] =
-      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-high-panel.svg",
+      icondir_base .. "audio-volume-high-panel.svg",
    ["audio-volume-medium"] =
-      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-medium-panel.svg",
+      icondir_base .. "audio-volume-medium-panel.svg",
    ["audio-volume-low"] =
-      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-low-panel.svg",
+      icondir_base .. "audio-volume-low-panel.svg",
    ["audio-volume-muted"] =
-      "/usr/share/icons/ubuntu-mono-dark/status/22/audio-volume-muted-panel.svg"
+      icondir_base .. "audio-volume-muted-panel.svg"
 }
 
 -- End of configuration
