@@ -63,7 +63,6 @@ local function BatteryWidget(opts)
         local fmt = {
             ["↯"] = "charged",
             ["⌁"] = "discharging-000",
-            ["↯"] = "discharging-100",
             ["+"] = "charging-%03d",
             ["-"] = "discharging-%03d"
         }
@@ -81,10 +80,10 @@ local function BatteryWidget(opts)
             local fmt = {
                 ["↯"] = "Full, %d%%, %s left",
                 ["⌁"] = "Unknown state",
-                ["↯"] = "Charged %d%%, %s left",
                 ["+"] = "Charging %d%%, %s until charged",
                 ["-"] = "Discharging %d%%, %s remaining"
             }
+            print(state)
             return string.format(fmt[state], percentage, remaining)
         end,
     })
