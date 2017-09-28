@@ -35,6 +35,19 @@ local battery_icons = {
         icondir_base .. "battery-100.svg"
 }
 
+local iconkey_fmt = {
+    ["↯"] = "charged",
+    ["⌁"] = "discharging-000",
+    ["+"] = "charging-%03d",
+    ["-"] = "discharging-%03d"
+}
+local tooltip_fmt = {
+    ["↯"] = "Full, %d%%, %s left",
+    ["⌁"] = "Unknown state",
+    ["+"] = "Charging %d%%, %s until charged",
+    ["-"] = "Discharging %d%%, %s remaining"
+}
+
 local function round(value, div)
     local k = value / (div or 1.0)
     local f = math.floor(k)
@@ -60,31 +73,15 @@ local function BatteryWidget(opts)
     end
     vicious.cache(vicious.widgets.bat)
     vicious.register(batwidget, vicious.widgets.bat, function (widget, data)
-        local fmt = {
-            ["↯"] = "charged",
-            ["⌁"] = "discharging-000",
-            ["+"] = "charging-%03d",
-            ["-"] = "discharging-%03d"
-        }
-        local state = data[1]
-        local percentage = data[2]
-        return string.format(fmt[state], round(percentage, 20))
+        local state, percentage = unpack(data)
+        return string.format(iconkey_fmt[state], round(percentage, 20))
     end, options.refresh, options.batname)
     awful.tooltip({
         objects = { batwidget },
         timer_function = function()
             local data = vicious.widgets.bat(nil, options.batname)
-            local state = data[1]
-            local percentage = data[2]
-            local remaining = data[3]
-            local fmt = {
-                ["↯"] = "Full, %d%%, %s left",
-                ["⌁"] = "Unknown state",
-                ["+"] = "Charging %d%%, %s until charged",
-                ["-"] = "Discharging %d%%, %s remaining"
-            }
-            print(state)
-            return string.format(fmt[state], percentage, remaining)
+            local state, percentage, remaining = unpack(data)
+            return string.format(tooltip_fmt[state], percentage, remaining)
         end,
     })
     return batwidget
