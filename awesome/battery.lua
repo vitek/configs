@@ -37,7 +37,6 @@ local battery_icons = {
 
 local iconkey_fmt = {
     ["↯"] = "charged",
-    ["⌁"] = "discharging-000",
     ["+"] = "charging-%03d",
     ["-"] = "discharging-%03d"
 }
@@ -69,12 +68,20 @@ local function BatteryWidget(opts)
     local batwidget = wibox.widget.imagebox()
     batwidget:set_image(battery_icons["charged"])
     function batwidget.set_markup(self, value)
-        self:set_image(options.icon_theme[value])
+        if value ~= nil then
+            self.visible = true
+            self:set_image(options.icon_theme[value])
+        else
+            self.visible = false
+        end
     end
     vicious.cache(vicious.widgets.bat)
     vicious.register(batwidget, vicious.widgets.bat, function (widget, data)
         local state, percentage = unpack(data)
-        return string.format(iconkey_fmt[state], round(percentage, 20))
+        local fmt = iconkey_fmt[state]
+        if fmt ~= nil then
+            return string.format(fmt, round(percentage, 20))
+        end
     end, options.refresh, options.batname)
     awful.tooltip({
         objects = { batwidget },
