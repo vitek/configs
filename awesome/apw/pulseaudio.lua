@@ -16,6 +16,7 @@
 
 
 -- Simple pulseaudio command bindings for Lua.
+local awful = require("awful")
 local timer = require("gears.timer")
 
 local pulseaudio = {
@@ -36,17 +37,7 @@ function pulseaudio.register_callback(callback)
    table.insert(update_callbacks, callback)
 end
 
-function pulseaudio.UpdateState()
-   local f = io.popen(cmd .. " dump")
-
-   -- if the cmd can't be found
-   if f == nil then
-      return false
-   end
-
-   local out = f:read("*a")
-   f:close()
-
+local function UpdateStateFromOutput(out)
    -- get the default sink
    default_sink = string.match(out, "set%-default%-sink ([^\n]+)")
 
@@ -77,29 +68,33 @@ function pulseaudio.UpdateState()
    end
 end
 
--- Run process and wait for it to end
-local function run(command)
-   local p = io.popen(command)
-   p:read("*a")
-   p:close()
+function pulseaudio.UpdateState()
+    awful.spawn.easy_async(cmd .. " dump", function (stdout)
+        UpdateStateFromOutput(stdout)
+    end)
+end
+
+-- Run pacmd
+local function pacmd_run(command)
+    awful.spawn.easy_async(command, function ()
+        pulseaudio.UpdateState()
+    end)
 end
 
 -- Sets the volume of the default sink to vol from 0 to 1.
 function pulseaudio.SetVolume(vol)
-   if vol > 1 then
-      vol = 1
-   end
+    if vol > 1 then
+        vol = 1
+    end
+    if vol < 0 then
+        vol = 0
+    end
 
-   if vol < 0 then
-      vol = 0
-   end
-
-   vol = vol * 0x10000
-   -- set…
-   run(cmd .. " set-sink-volume " .. default_sink .. " " .. string.format("0x%x", math.floor(vol)))
-
-   -- …and update values
-   pulseaudio.UpdateState()
+    vol = vol * 0x10000
+    -- set…
+    pacmd_run(
+        cmd .. " set-sink-volume " .. default_sink ..
+        " " .. string.format("0x%x", math.floor(vol)))
 end
 
 function pulseaudio.IncVolumeBy(increment)
@@ -129,13 +124,10 @@ end
 -- Toggles the mute flag of the default default_sink.
 function pulseaudio.VolumeToggleMute()
    if pulseaudio.Mute then
-      run(cmd .. " set-sink-mute " .. default_sink .. " 0")
+      pacmd_run(cmd .. " set-sink-mute " .. default_sink .. " 0")
    else
-      run(cmd .. " set-sink-mute " .. default_sink .. " 1")
+      pacmd_run(cmd .. " set-sink-mute " .. default_sink .. " 1")
    end
-
-   -- …and update values.
-   pulseaudio.UpdateState()
 end
 
 function pulseaudio.start_timer()
