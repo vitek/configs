@@ -4,7 +4,7 @@ deflogin on
 vbell on
 vbell_msg "   Wuff  ----  Wuff!!  "
 
-defscrollback 4096
+defscrollback 20000
 
 bind ^k
 bind ^\
@@ -21,7 +21,6 @@ defnonblock 5
 defutf8 on
 
 caption always "%{= kw}%-w%{= BW}%n %t%{-}%+w %-= @%H"
-
 
 altscreen on
 autodetach on
