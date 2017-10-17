@@ -234,7 +234,7 @@
         ;; Show marker at 80 column
         (when
             (fboundp 'column-marker-1)
-          (column-marker-1 80)))))
+          (column-marker-1 79)))))
 (add-hook 'font-lock-mode-hook 'highlight-whitespaces)
 
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t)
