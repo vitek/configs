@@ -1,31 +1,58 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import json
 import sys
 
 
+def format_json(obj):
+    encoded = json.dumps(
+        obj, indent=2, separators=(',', ': '),
+        sort_keys=True, ensure_ascii=False
+    )
+    return encoded.encode('utf-8') + b'\n'
+
+
+def process_stdin():
+    data = json.load(sys.stdin)
+    encoded = format_json(data)
+    sys.stdout.buffer.write(encoded)
+
+
+def process_file(path, in_place=False):
+    with open(path) as fp:
+        try:
+            data = json.load(fp)
+        except json.JSONDecodeError as exc:
+            print(
+                '%s: %s' % (path, exc), file=sys.stderr
+            )
+            sys.exit(1)
+    encoded = format_json(data)
+    if in_place:
+        if encoded != data:
+            with open(path, 'w') as fp:
+                fp.buffer.write(encoded)
+    else:
+        sys.stdout.buffer.write(encoded)
+
+
 def json_pp_main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('input', nargs='?', help='Input JSON file')
+    parser = argparse.ArgumentParser('JSON file pretty formatter')
+    parser.add_argument(
+        '--in-place', '-i', action='store_true', help='Edit the file in place'
+    )
+    parser.add_argument('input', nargs='*', help='Input JSON file')
     args = parser.parse_args()
 
-    if not args.input or args.input == '-':
-        data = json.load(sys.stdin)
+    if not args.input:
+        process_stdin()
     else:
-        with open(args.input) as fp:
-            data = json.load(fp)
-
-    encoded = json.dumps(
-        data, sys.stdout,
-        indent=2, separators=(',', ': '),
-        sort_keys=True,
-        ensure_ascii=False
-    )
-    encoded = encoded.encode('utf-8')
-
-    sys.stdout.write(encoded)
-    sys.stdout.write("\n")
+        for path in args.input:
+            if path == '-':
+                process_stdin()
+            else:
+                process_file(path, args.in_place)
 
 
 if __name__ == '__main__':
