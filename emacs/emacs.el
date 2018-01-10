@@ -56,6 +56,7 @@
   (progn
     (package-refresh-contents)
     (package-initialize)
+    ;; list of packages to install
     (package-install 'clang-format)
     (package-install 'cmake-ide)
     (package-install 'cmake-mode)
@@ -67,7 +68,8 @@
     (package-install 'irony)
     (package-install 'jedi)
     (package-install 'lua-mode)
-    (package-install 'rtags)))
+    (package-install 'rtags)
+    (package-install 'zoom-frm)))
 
 (require 'git-grep nil t)
 (require 'jedi nil t)
@@ -150,6 +152,12 @@
 ;;(define-key ctl-x-map "\C-p" 'previous-error)
 ;;(define-key ctl-x-map "\C-n" 'next-error)
 
+(when
+    (require 'zoom-frm nil t)
+  (progn (global-set-key (kbd "C-M-=") 'zoom-in)
+         (global-set-key (kbd "C-M--") 'zoom-out)
+         (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)))
+
 (defun nop()
   (interactive))
 
@@ -225,7 +233,7 @@
 ;; Highlight whitespaces and long strings
 (defun highlight-whitespaces ()
   (if (intersection (derived-mode-parents major-mode)
-                    '(prog-mode text-mode))
+                    '(prog-mode text-mode cmake-mode))
       (progn
         (when (fboundp 'show-ws-highlight-trailing-whitespace)
           (progn
