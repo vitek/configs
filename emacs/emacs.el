@@ -78,7 +78,11 @@
 (require 'google-c-style nil t)
 (require 'show-wspace nil t)
 (require 'column-marker nil t)
+(require 'yaml-mode nil t)
+(require 'find-file-in-project nil t)
 (require 'mc-move)
+
+(setq jit-lock-defer-time 0.05)
 
 ;;(setq blink-cursor-mode 0)
 (setq scroll-conservatively 50)
