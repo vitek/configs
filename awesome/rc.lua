@@ -218,8 +218,8 @@ globalkeys = awful.util.table.join(
               {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
-              {description = "go back", group = "tag"}),
+    --awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
+    --          {description = "go back", group = "tag"}),
 
     awful.key({ modkey,           }, "j",
         function ()
@@ -322,6 +322,8 @@ globalkeys = awful.util.table.join(
     ---{description = "Language switch", group = "client"}),
     awful.key({ "Mod1",           }, "F1", function () mymainmenu:show() end,
        {description = "show main menu", group = "awesome"}),
+    awful.key({ "Control",           }, "Escape", function () mymainmenu:show() end,
+       {description = "show main menu", group = "awesome"}),
     awful.key({ "Mod1" },            "F2",
        mypromptbox_run,
        {description = "run prompt", group = "launcher"}),
@@ -337,7 +339,8 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86MonBrightnessDown", brightness.dec),
     awful.key({ }, "XF86MonBrightnessUp", brightness.inc),
 
-    awful.key({ modkey }, "`", function () quakeconsole:toggle() end)
+    awful.key({ modkey }, "`", function () quakeconsole:toggle() end),
+    awful.key({ modkey }, "Escape", function () quakeconsole:toggle() end)
 )
 
 -- @DOC_CLIENT_KEYBINDINGS@
