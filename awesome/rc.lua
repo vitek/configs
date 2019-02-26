@@ -339,6 +339,12 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86MonBrightnessDown", brightness.dec),
     awful.key({ }, "XF86MonBrightnessUp", brightness.inc),
 
+    awful.key({ modkey }, "F1", pulseaudio.VolumeToggleMute),
+    awful.key({ modkey }, "F2", pulseaudio.VolumeDown),
+    awful.key({ modkey }, "F3", pulseaudio.VolumeUp),
+    awful.key({ modkey }, "F11", brightness.dec),
+    awful.key({ modkey }, "F12", brightness.inc),
+
     awful.key({ modkey }, "`", function () quakeconsole:toggle() end),
     awful.key({ modkey }, "Escape", function () quakeconsole:toggle() end)
 )
