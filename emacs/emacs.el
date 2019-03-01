@@ -160,7 +160,10 @@
     (require 'zoom-frm nil t)
   (progn (global-set-key (kbd "C-M-=") 'zoom-in)
          (global-set-key (kbd "C-M--") 'zoom-out)
-         (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)))
+         (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)
+         ;; mouse bindings
+         (global-set-key (kbd "<C-mouse-4>") 'zoom-in)
+         (global-set-key (kbd "<C-mouse-5>") 'zoom-out)))
 
 (defun nop()
   (interactive))
