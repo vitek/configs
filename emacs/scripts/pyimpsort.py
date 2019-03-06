@@ -97,7 +97,9 @@ class ImpSorter(ast.NodeVisitor):
         non_future = non_stdlib = non_thirdparty = True
         relative = False
         if isinstance(node, ast.Import):
-            name = [node.names[0].name, node.names[0].asname]
+            name = [node.names[0].name, ]
+            if node.names[0].asname:
+                name.append(node.names[0].asname)
             level = 0
             from_names = None
             fromimport = 0
@@ -105,9 +107,7 @@ class ImpSorter(ast.NodeVisitor):
             name = [node.module]
             level = node.level
             from_names = [nm.name for nm in node.names]
-            if from_names:
-                name = ['.'.join([node.module, from_names[0]])]
-            fromimport = 0  ##XXX
+            fromimport = 0
         else:
             raise TypeError(node)
         modname = name[0].split('.')[0] if name[0] else ''
@@ -147,7 +147,6 @@ class ImpSorter(ast.NodeVisitor):
         """
         pkey = None
         for key, node in sorted(self.new_nodes()):
-            #print(key)
             # insert new lines between groups
             if pkey and key[:4] != pkey[:4]:
                 print(u'', file=file)
