@@ -68,6 +68,7 @@
     (package-install 'irony)
     (package-install 'jedi)
     (package-install 'lua-mode)
+    (package-install 'pyimpsort)
     (package-install 'rtags)
     (package-install 'zoom-frm)))
 
@@ -81,6 +82,10 @@
 (require 'yaml-mode nil t)
 (require 'find-file-in-project nil t)
 (require 'mc-move)
+(require 'pyimpsort nil t) ;; TODO: use own patched pyimpsort.py
+
+(setq pyimpsort-script
+      (concat user-emacs-directory "scripts/pyimpsort.py"))
 
 (setq jit-lock-defer-time 0.05)
 

@@ -54,6 +54,7 @@ install-xresources:
 
 install-emacs: install-xresources
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -d $(DESTDIR)/.emacs.d/scripts
 	$(INSTALL) -m 0644 emacs/emacs.el $(DESTDIR)/.emacs
 	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/column-marker.el $(DESTDIR)/.emacs.d/site-lisp
@@ -62,6 +63,7 @@ install-emacs: install-xresources
 	$(INSTALL) -m 0644 emacs/site-lisp/google-c-style.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/manual-indent.el $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
