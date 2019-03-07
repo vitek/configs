@@ -124,6 +124,8 @@ esac
 
 export LIBOVERLAY_SCROLLBAR=0
 export GTK_OVERLAY_SCROLLING=0
+# https://ubuntuforums.org/showthread.php?t=2390362
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
 function fileat() {
     for path in $*; do
