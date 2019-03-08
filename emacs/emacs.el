@@ -342,5 +342,7 @@
             (manual-indent-mode 1)
             (electric-indent-local-mode 0)))
 
+(if window-system (server-start))
+
 (provide '.emacs)
 ;;; .emacs ends here
