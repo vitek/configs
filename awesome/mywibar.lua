@@ -79,7 +79,8 @@ function mywibar.create_wibar(s)
    local volumewidget_tooltip = awful.tooltip({
          objects = { volumewidget },
          timer_function = function()
-            return string.format("Volume %d %%", pulseaudio.Volume * 100)
+            return string.format(
+                "Volume %d %%", utils.round(pulseaudio.Volume * 100, 1))
          end,
    })
    pulseaudio.register_callback(function()
