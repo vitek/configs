@@ -69,8 +69,7 @@
     (package-install 'jedi)
     (package-install 'lua-mode)
     (package-install 'pyimpsort)
-    (package-install 'rtags)
-    (package-install 'zoom-frm)))
+    (package-install 'rtags)))
 
 (require 'git-grep nil t)
 (require 'jedi nil t)
@@ -161,6 +160,7 @@
 ;;(define-key ctl-x-map "\C-p" 'previous-error)
 ;;(define-key ctl-x-map "\C-n" 'next-error)
 
+;; https://github.com/emacsmirror/zoom-frm
 (when
     (require 'zoom-frm nil t)
   (progn (global-set-key (kbd "C-M-=") 'zoom-in)
