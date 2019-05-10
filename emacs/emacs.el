@@ -153,7 +153,7 @@
 (global-set-key (quote [C-f8]) 'gud-break)
 (global-set-key (quote [f5]) 'goto-line)
 
-(global-set-key (quote [f12]) 'grep)
+(global-set-key (quote [f12]) 'git-grep)
 
 ;;(define-key ctl-x-map "p" 'previous-error)
 ;;(define-key ctl-x-map "n" 'next-error)
