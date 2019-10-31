@@ -69,6 +69,7 @@
     (package-install 'jedi)
     (package-install 'lua-mode)
     (package-install 'pyimpsort)
+    (package-install 'python-black)
     (package-install 'rtags)))
 
 (require 'git-grep nil t)
@@ -266,19 +267,29 @@
 ;; Python-mode settings
 (defun ipdb-insert-set-trace()
   (interactive)
-  (insert "from ipdb import set_trace; set_trace()"))
+  (insert "from pdb import set_trace; set_trace()"))
 
 (defvar py-flake8-history nil) ; workaround python-mode.el bug
 (setq py-flake8-command-args
       '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
-(setq jedi:complete-on-dot t)
+
+;;(setq jedi:complete-on-dot t)
+
+(custom-set-variables
+  '(flycheck-python-flake8-executable "python3")
+  '(flycheck-python-pycompile-executable "python3")
+  '(flycheck-python-pylint-executable "python3")
+  '(clang-format-executable "clang-format-7")
+  '(python-black-command "taxi-black"))
 
 (add-hook
  'python-mode-hook
  (lambda ()
    (progn
      (global-set-key (kbd "C-c b") 'ipdb-insert-set-trace)
-     (jedi:setup))))
+     (global-set-key (kbd "C-c f") 'python-black-buffer)
+     ;;(jedi:setup)
+     )))
 
 ;; C/C++ mode settings
 (add-hook 'c++-mode-hook 'irony-mode)
@@ -290,7 +301,8 @@
    (progn
      (setq flycheck-gcc-language-standard "c++11")
      (setq flycheck-clang-language-standard "c++11")
-     (google-set-c-style))))
+     (google-set-c-style)
+     (global-set-key (kbd "C-c f") 'clang-format))))
 
 (add-hook 'after-init-hook 'global-company-mode)
 ;;(eval-after-load 'company
