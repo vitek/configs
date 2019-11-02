@@ -46,9 +46,8 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (require 'package)
-(add-to-list
- 'package-archives
- '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("stable.melpa" . "http://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
 
 (defun install-my-packages()
@@ -60,22 +59,18 @@
     (package-install 'clang-format)
     (package-install 'cmake-ide)
     (package-install 'cmake-mode)
-    (package-install 'color-theme)
-    (package-install 'company)
-    (package-install 'company-irony)
+    (package-install 'color-theme-modern)
     (package-install 'flycheck)
     (package-install 'helm)
-    (package-install 'irony)
-    (package-install 'jedi)
+    (package-install 'lsp-mode)
+    (package-install 'lsp-ui)
+    (package-install 'lsp-treemacs)
     (package-install 'lua-mode)
     (package-install 'pyimpsort)
     (package-install 'python-black)
-    (package-install 'rtags)))
+    (package-install 'yaml-mode)))
 
 (require 'git-grep nil t)
-(require 'jedi nil t)
-(require 'irony nil t)
-(require 'company nil t)
 (require 'google-c-style nil t)
 (require 'show-wspace nil t)
 (require 'column-marker nil t)
@@ -133,7 +128,6 @@
 ;;     (semantic-mode 1)
 ;;     (global-set-key "\M-n" 'semantic-complete-jump)
 ;;     (global-set-key (kbd "C-c r") 'semantic-symref)))
-
 
 (defun my-compile()
   (interactive)
@@ -221,7 +215,7 @@
 (defun delete-frame-or-kill-emacs (&optional arg)
   "Delete frame or kill emacs if current frame is the last one."
   (interactive "P")
-  (if (> (length (frame-list)) 1)
+  (if (> (length (seq-filter 'frame-visible-p (frame-list))) 1)
       (delete-frame)
     (progn
       (save-some-buffers arg t)
@@ -273,8 +267,6 @@
 (setq py-flake8-command-args
       '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
 
-;;(setq jedi:complete-on-dot t)
-
 (custom-set-variables
   '(flycheck-python-flake8-executable "python3")
   '(flycheck-python-pycompile-executable "python3")
@@ -286,14 +278,13 @@
  'python-mode-hook
  (lambda ()
    (progn
+     (lsp)
      (global-set-key (kbd "C-c b") 'ipdb-insert-set-trace)
-     (global-set-key (kbd "C-c f") 'python-black-buffer)
-     ;;(jedi:setup)
-     )))
+     (global-set-key (kbd "C-c f") 'python-black-buffer))))
 
 ;; C/C++ mode settings
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
+(setq lsp-clients-clangd-executable "clangd-9")
+(setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
 
 (add-hook
  'c++-mode-hook
@@ -301,50 +292,15 @@
    (progn
      (setq flycheck-gcc-language-standard "c++11")
      (setq flycheck-clang-language-standard "c++11")
+     (lsp)
      (google-set-c-style)
      (global-set-key (kbd "C-c f") 'clang-format))))
-
-(add-hook 'after-init-hook 'global-company-mode)
-;;(eval-after-load 'company
-;;  '(add-to-list 'company-backends 'company-irony))
-
-;; replace the `completion-at-point' and `complete-symbol' bindings in
-;; irony-mode's buffers by irony-mode's function
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
 
 ;; Enable flycheck globally
 (add-hook 'after-init-hook
           (lambda ()
             (when (boundp 'global-flycheck-mode)
               (global-flycheck-mode))))
-
-;(require 'flycheck-irony)
-;;a
-;;(eval-after-load 'flycheck
-;;  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-;;(flycheck-irony-setup flycheck-mode-set-explicitly)
-
-;; (require 'rtags)
-;; (require 'company-rtags)
-;; (require 'rtags-helm)
-
-;; (setq rtags-completions-enabled t)
-;; (eval-after-load 'company
-;;   '(add-to-list
-;;     'company-backends 'company-rtags))
-;; (setq rtags-autostart-diagnostics t)
-;; (rtags-enable-standard-keybindings)
-
-;; (setq rtags-use-helm t)
-
-;; (rtags-start-process-unless-running)
 
 (require 'manual-indent)
 
@@ -355,6 +311,8 @@
             (electric-indent-local-mode 0)))
 
 (if window-system (server-start))
+
+(require 'lsp-mode)
 
 (provide '.emacs)
 ;;; .emacs ends here
