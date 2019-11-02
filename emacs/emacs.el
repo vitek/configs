@@ -29,6 +29,8 @@
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(log-edit-hook (quote ())))
 
+(set-face-attribute 'default nil :height 200)
+
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -46,29 +48,32 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (require 'package)
-(add-to-list 'package-archives '("stable.melpa" . "http://stable.melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("stable.melpa" . "http://stable.melpa.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 (defun install-my-packages()
   (interactive)
   (progn
     (package-refresh-contents)
-    (package-initialize)
     ;; list of packages to install
     (package-install 'clang-format)
     (package-install 'cmake-ide)
     (package-install 'cmake-mode)
     (package-install 'color-theme-modern)
+    (package-install 'company-lsp)
     (package-install 'flycheck)
-    (package-install 'helm)
+    ;;(package-install 'helm)
     (package-install 'lsp-mode)
-    (package-install 'lsp-ui)
-    (package-install 'lsp-treemacs)
+    ;;(package-install 'lsp-ui)
+    ;; (package-install 'lsp-treemacs)
     (package-install 'lua-mode)
     (package-install 'pyimpsort)
     (package-install 'python-black)
-    (package-install 'yaml-mode)))
+    (package-install 'yaml-mode)
+    (package-install 'yasnippet)))
 
 (require 'git-grep nil t)
 (require 'google-c-style nil t)
@@ -120,14 +125,6 @@
   (progn (when (fboundp 'color-theme-initialize)
            (color-theme-initialize))
          (color-theme-dark-laptop)))
-;;(require 'github-theme)
-
-;; (when (require 'semantic nil t)
-;;   (progn
-;;     (global-semanticdb-minor-mode 1)
-;;     (semantic-mode 1)
-;;     (global-set-key "\M-n" 'semantic-complete-jump)
-;;     (global-set-key (kbd "C-c r") 'semantic-symref)))
 
 (defun my-compile()
   (interactive)
@@ -135,59 +132,7 @@
       (call-interactively 'cmake-ide-compile)
     (call-interactively 'compile)))
 
-
-;;(global-set-key "\C-s" 'isearch-forward-regexp)
-;;(global-set-key "\C-r" 'isearch-backward-regexp)
-
-(global-set-key [f9] 'my-compile)
-(global-set-key (quote [f2]) 'save-buffer)
-(global-set-key (quote [f3]) 'find-file)
-(global-set-key (quote [f4]) 'gud-gdb)
-(global-set-key (quote [f7]) 'gud-step)
-(global-set-key (quote [f8]) 'gud-next)
-(global-set-key (quote [C-f8]) 'gud-break)
-(global-set-key (quote [f5]) 'goto-line)
-
-(global-set-key (quote [f12]) 'git-grep)
-
-;;(define-key ctl-x-map "p" 'previous-error)
-;;(define-key ctl-x-map "n" 'next-error)
-;;(define-key ctl-x-map "\C-p" 'previous-error)
-;;(define-key ctl-x-map "\C-n" 'next-error)
-
-;; https://github.com/emacsmirror/zoom-frm
-(when
-    (require 'zoom-frm nil t)
-  (progn (global-set-key (kbd "C-M-=") 'zoom-in)
-         (global-set-key (kbd "C-M--") 'zoom-out)
-         (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)
-         ;; mouse bindings
-         (global-set-key (kbd "<C-mouse-4>") 'zoom-in)
-         (global-set-key (kbd "<C-mouse-5>") 'zoom-out)))
-
-(defun nop()
-  (interactive))
-
-(if window-system
-    (progn
-      (global-set-key "\C-z" 'ignore)
-      (global-set-key [mouse-4] 'scroll-down)
-      (global-set-key [mouse-5] 'scroll-up)
-      (global-set-key [mouse-2] 'nop)
-      (global-set-key [C-f9] 'recompile)))
-
-(global-set-key (quote [f1] )
-        (lambda ()
-          (interactive)
-          (let ((woman-topic-at-point t))
-            (woman))))
-
-(autoload 'woman "woman"
-  "Decode and browse a UN*X man page." t)
-(autoload 'woman-find-file "woman"
-  "Find, decode and browse a specific UN*X man-page file." t)
-
-(setq woman-cache-filename "~/.woman-cache")
+(defun nop() (interactive))
 
 (defun default-c-mode ()
   "C mode with adjusted defaults for use with the Linux kernel."
@@ -205,32 +150,17 @@
   (setq c-basic-offset 8)
   (setq truncate-lines nil))
 
-(defun silent-save-buffers-kill-emacs (&optional arg)
-  "Offer to save each buffer, then kill this Emacs process.
-   With prefix ARG, silently save all file-visiting buffers, then kill."
-  (interactive "P")
-  (save-some-buffers arg t)
-  (kill-emacs))
-
 (defun delete-frame-or-kill-emacs (&optional arg)
   "Delete frame or kill emacs if current frame is the last one."
   (interactive "P")
   (if (> (length (seq-filter 'frame-visible-p (frame-list))) 1)
       (delete-frame)
     (progn
+      ;; Workarond against lsp-mode server restart prompt
+      ;; see https://github.com/emacs-lsp/lsp-mode/issues/641
+      (setq lsp-restart 'ignore)
       (save-some-buffers arg t)
       (kill-emacs))))
-
-;;(define-key ctl-x-map "\C-c" 'silent-save-buffers-kill-emacs)
-(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
-
-(global-set-key [C-prior] 'previous-buffer)
-(global-set-key [C-next] 'next-buffer)
-(global-set-key [M-left] 'windmove-left)
-(global-set-key [M-right] 'windmove-right)
-(global-set-key [M-up] 'windmove-up)
-(global-set-key [M-down] 'windmove-down)
-
 
 (defun derived-mode-parents (mode)
   (and mode
@@ -251,12 +181,6 @@
             (fboundp 'column-marker-1)
           (column-marker-1 79)))))
 (add-hook 'font-lock-mode-hook 'highlight-whitespaces)
-
-(autoload 'linum-mode "linum" "toggle line numbers on/off" t)
-(setq linum-format (if window-system "%4d" "%4d "))
-;;(global-linum-mode)
-
-(global-set-key (kbd "C-c #") 'comment-region)
 
 ;; Python-mode settings
 (defun ipdb-insert-set-trace()
@@ -283,9 +207,6 @@
      (global-set-key (kbd "C-c f") 'python-black-buffer))))
 
 ;; C/C++ mode settings
-(setq lsp-clients-clangd-executable "clangd-9")
-(setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
-
 (add-hook
  'c++-mode-hook
  (lambda ()
@@ -296,12 +217,7 @@
      (google-set-c-style)
      (global-set-key (kbd "C-c f") 'clang-format))))
 
-;; Enable flycheck globally
-(add-hook 'after-init-hook
-          (lambda ()
-            (when (boundp 'global-flycheck-mode)
-              (global-flycheck-mode))))
-
+;; Lua
 (require 'manual-indent)
 
 (add-hook 'lua-mode-hook
@@ -310,9 +226,61 @@
             (manual-indent-mode 1)
             (electric-indent-local-mode 0)))
 
+;; Enable flycheck globally
+(add-hook 'after-init-hook
+          (lambda ()
+            (when (boundp 'global-flycheck-mode)
+              (global-flycheck-mode))))
+
+;; lsp-mode setup
+(require 'lsp-mode)
+(setq lsp-clients-clangd-executable "clangd-9")
+(setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+(setq lsp-enable-symbol-highlighting nil)
+;;(setq lsp-enable-snippet nil)
+
+;; Emacs server
 (if window-system (server-start))
 
-(require 'lsp-mode)
+;; Custom keybindings
+(global-set-key (kbd "C-c #") 'comment-region)
+(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
+
+(global-set-key [C-prior] 'previous-buffer)
+(global-set-key [C-next] 'next-buffer)
+(global-set-key [M-left] 'windmove-left)
+(global-set-key [M-right] 'windmove-right)
+(global-set-key [M-up] 'windmove-up)
+(global-set-key [M-down] 'windmove-down)
+
+(global-set-key [f9] 'my-compile)
+(global-set-key (quote [f2]) 'save-buffer)
+(global-set-key (quote [f3]) 'find-file)
+(global-set-key (quote [f4]) 'gud-gdb)
+(global-set-key (quote [f7]) 'gud-step)
+(global-set-key (quote [f8]) 'gud-next)
+(global-set-key (quote [C-f8]) 'gud-break)
+(global-set-key (quote [f5]) 'goto-line)
+
+(global-set-key (quote [f12]) 'git-grep)
+
+;; https://github.com/emacsmirror/zoom-frm
+(when
+    (require 'zoom-frm nil t)
+  (progn (global-set-key (kbd "C-M-=") 'zoom-in)
+         (global-set-key (kbd "C-M--") 'zoom-out)
+         (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)
+         ;; mouse bindings
+         (global-set-key (kbd "<C-mouse-4>") 'zoom-in)
+         (global-set-key (kbd "<C-mouse-5>") 'zoom-out)))
+
+(if window-system
+    (progn
+      (global-set-key "\C-z" 'ignore)
+      (global-set-key [mouse-4] 'scroll-down)
+      (global-set-key [mouse-5] 'scroll-up)
+      (global-set-key [mouse-2] 'nop)
+      (global-set-key [C-f9] 'recompile)))
 
 (provide '.emacs)
 ;;; .emacs ends here
