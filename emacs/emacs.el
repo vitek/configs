@@ -59,6 +59,7 @@
   (progn
     (package-refresh-contents)
     ;; list of packages to install
+    (package-install 'gnu-elpa-keyring-update)
     (package-install 'clang-format)
     (package-install 'cmake-ide)
     (package-install 'cmake-mode)
@@ -211,8 +212,8 @@
  'c++-mode-hook
  (lambda ()
    (progn
-     (setq flycheck-gcc-language-standard "c++11")
-     (setq flycheck-clang-language-standard "c++11")
+     (setq flycheck-gcc-language-standard "c++17")
+     (setq flycheck-clang-language-standard "c++17")
      (lsp)
      (google-set-c-style)
      (global-set-key (kbd "C-c f") 'clang-format))))
@@ -237,6 +238,7 @@
 (setq lsp-clients-clangd-executable "clangd-9")
 (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
 (setq lsp-enable-symbol-highlighting nil)
+(setq lsp-prefer-flymake nil)
 ;;(setq lsp-enable-snippet nil)
 
 ;; Emacs server
@@ -281,6 +283,8 @@
       (global-set-key [mouse-5] 'scroll-up)
       (global-set-key [mouse-2] 'nop)
       (global-set-key [C-f9] 'recompile)))
+
+(cmake-ide-setup)
 
 (provide '.emacs)
 ;;; .emacs ends here
