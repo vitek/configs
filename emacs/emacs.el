@@ -29,8 +29,6 @@
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(log-edit-hook (quote ())))
 
-(set-face-attribute 'default nil :height 200)
-
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -44,7 +42,6 @@
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file t)
-
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (require 'package)
@@ -54,39 +51,48 @@
         ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
+;; list of packages to install
+(defvar package-list
+      '(clang-format
+        cmake-ide
+        cmake-mode
+        color-theme-modern
+        company-lsp
+        delight
+        flycheck
+        gnu-elpa-keyring-update
+        helm
+        lsp-mode
+        ;;lsp-treemacs
+        ;;lsp-ui
+        lua-mode
+        pyimpsort
+        python-black
+        use-package
+        yaml-mode
+        yasnippet))
+
 (defun install-my-packages()
   (interactive)
   (progn
-    (package-refresh-contents)
-    ;; list of packages to install
-    (package-install 'gnu-elpa-keyring-update)
-    (package-install 'clang-format)
-    (package-install 'cmake-ide)
-    (package-install 'cmake-mode)
-    (package-install 'color-theme-modern)
-    (package-install 'company-lsp)
-    (package-install 'flycheck)
-    ;;(package-install 'helm)
-    (package-install 'lsp-mode)
-    ;;(package-install 'lsp-ui)
-    ;; (package-install 'lsp-treemacs)
-    (package-install 'lua-mode)
-    (package-install 'pyimpsort)
-    (package-install 'python-black)
-    (package-install 'yaml-mode)
-    (package-install 'yasnippet)))
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (dolist (package package-list)
+      (unless (package-installed-p package)
+        (package-install package)))))
 
-(require 'git-grep nil t)
-(require 'google-c-style nil t)
-(require 'show-wspace nil t)
-(require 'column-marker nil t)
-(require 'yaml-mode nil t)
-(require 'find-file-in-project nil t)
-(require 'mc-move)
-(require 'pyimpsort nil t) ;; TODO: use own patched pyimpsort.py
+;; Consider using use-package the only problem it may be not installed yet
+(defmacro when-pkg-installed (package &rest body)
+  (when (require package nil t) `(progn ,@body)))
 
-(setq pyimpsort-script
-      (concat user-emacs-directory "scripts/pyimpsort.py"))
+;; Require some packages
+(when-pkg-installed git-grep)
+(when-pkg-installed google-c-style)
+(when-pkg-installed show-wspace)
+(when-pkg-installed column-marker)
+(when-pkg-installed yaml-mode)
+(when-pkg-installed find-file-in-project)
+(when-pkg-installed mc-move)
 
 (setq jit-lock-defer-time 0.05)
 
@@ -122,10 +128,10 @@
 ;;(if window-system (global-hl-line-mode))
 
 ;; Color theme setup
-(when (require 'color-theme nil t)
-  (progn (when (fboundp 'color-theme-initialize)
-           (color-theme-initialize))
-         (color-theme-dark-laptop)))
+(when-pkg-installed color-theme
+                    (when (fboundp 'color-theme-initialize)
+                      (color-theme-initialize))
+                    (color-theme-dark-laptop))
 
 (defun my-compile()
   (interactive)
@@ -152,7 +158,7 @@
   (setq truncate-lines nil))
 
 (defun delete-frame-or-kill-emacs (&optional arg)
-  "Delete frame or kill emacs if current frame is the last one."
+  "Delete frame or kill Emacs if current frame is the last one."
   (interactive "P")
   (if (> (length (seq-filter 'frame-visible-p (frame-list))) 1)
       (delete-frame)
@@ -207,6 +213,12 @@
      (global-set-key (kbd "C-c b") 'ipdb-insert-set-trace)
      (global-set-key (kbd "C-c f") 'python-black-buffer))))
 
+(when-pkg-installed
+ pyimpsort
+ ;; TODO: use own patched pyimpsort.py
+ (setq pyimpsort-script
+       (concat user-emacs-directory "scripts/pyimpsort.py")))
+
 ;; C/C++ mode settings
 (add-hook
  'c++-mode-hook
@@ -218,14 +230,18 @@
      (google-set-c-style)
      (global-set-key (kbd "C-c f") 'clang-format))))
 
-;; Lua
-(require 'manual-indent)
+(when-pkg-installed
+ cmake-ide
+ (cmake-ide-setup))
 
-(add-hook 'lua-mode-hook
-          (lambda ()
-            (setq lua-indent-level 4)
-            (manual-indent-mode 1)
-            (electric-indent-local-mode 0)))
+;; Lua
+(when-pkg-installed
+ manual-indent
+ (add-hook 'lua-mode-hook
+           (lambda ()
+             (setq lua-indent-level 4)
+             (manual-indent-mode 1)
+             (electric-indent-local-mode 0))))
 
 ;; Enable flycheck globally
 (add-hook 'after-init-hook
@@ -234,12 +250,25 @@
               (global-flycheck-mode))))
 
 ;; lsp-mode setup
-(require 'lsp-mode)
-(setq lsp-clients-clangd-executable "clangd-9")
-(setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
-(setq lsp-enable-symbol-highlighting nil)
-(setq lsp-prefer-flymake nil)
-;;(setq lsp-enable-snippet nil)
+(when-pkg-installed
+ lsp-mode
+ (setq lsp-clients-clangd-executable "clangd-9")
+ (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+ (setq lsp-enable-symbol-highlighting nil)
+ (setq lsp-prefer-flymake nil)
+ (setq lsp-enable-snippet nil))
+
+;; delight, tune minor mode bar
+(when-pkg-installed
+ delight
+ (delight '((abbrev-mode nil abbrev)
+            (company-mode nil company)
+            (eldoc-mode nil "eldoc")
+            (yas-minor-mode nil "yasnippet")
+            (lsp-mode "/lsp" "lsp")
+            (python-mode "py" python-mode)
+            (c++-mode "c++" c++-mode)
+            (flycheck-mode nil flycheck))))
 
 ;; Emacs server
 (if window-system (server-start))
@@ -267,14 +296,14 @@
 (global-set-key (quote [f12]) 'git-grep)
 
 ;; https://github.com/emacsmirror/zoom-frm
-(when
-    (require 'zoom-frm nil t)
-  (progn (global-set-key (kbd "C-M-=") 'zoom-in)
-         (global-set-key (kbd "C-M--") 'zoom-out)
-         (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)
-         ;; mouse bindings
-         (global-set-key (kbd "<C-mouse-4>") 'zoom-in)
-         (global-set-key (kbd "<C-mouse-5>") 'zoom-out)))
+(when-pkg-installed
+ zoom-frm
+ (global-set-key (kbd "C-M-=") 'zoom-in)
+ (global-set-key (kbd "C-M--") 'zoom-out)
+ (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)
+ ;; mouse bindings
+ (global-set-key (kbd "<C-mouse-4>") 'zoom-in)
+ (global-set-key (kbd "<C-mouse-5>") 'zoom-out))
 
 (if window-system
     (progn
@@ -284,7 +313,8 @@
       (global-set-key [mouse-2] 'nop)
       (global-set-key [C-f9] 'recompile)))
 
-(cmake-ide-setup)
+;; Load machine local configuration (if available)
+(load "~/.emacs_local.el" t)
 
 (provide '.emacs)
 ;;; .emacs ends here
