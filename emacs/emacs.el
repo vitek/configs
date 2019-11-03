@@ -1,3 +1,4 @@
+;; TODO: cleanup this mess
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -40,9 +41,13 @@
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
  '(show-ws-tab ((t (:background "#222"))) 'now))
 
-(setq custom-file "~/.emacs-custom.el")
-(load custom-file t)
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
+(defun set-executable (key choices)
+  (let ((value (seq-find 'executable-find choices)))
+    (when value
+      (message (format "Executable %s chosen from %s" value choices))
+      (set key value))))
 
 (require 'package)
 (setq package-archives
@@ -198,12 +203,18 @@
 (setq py-flake8-command-args
       '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
 
-(custom-set-variables
-  '(flycheck-python-flake8-executable "python3")
-  '(flycheck-python-pycompile-executable "python3")
-  '(flycheck-python-pylint-executable "python3")
-  '(clang-format-executable "clang-format-7")
-  '(python-black-command "taxi-black"))
+(set-executable 'python3-executable
+                '("taxi-python3" "python3.7" "python3"))
+(when python3-executable
+  (message (format "Python found: %s" python3-executable))
+  (setq flycheck-python-flake8-executable python3-executable
+        flycheck-python-pycompile-executable python3-executable
+        flycheck-python-pylint-executable python3-executable))
+
+(when-pkg-installed
+ python-black
+ (set-executable 'python-black-command
+                 '("taxi-black" "black")))
 
 (add-hook
  'python-mode-hook
@@ -231,6 +242,11 @@
      (global-set-key (kbd "C-c f") 'clang-format))))
 
 (when-pkg-installed
+ clang-format
+ (set-executable 'clang-format-executable
+                 '("clang-format-7" "clang-format")))
+
+(when-pkg-installed
  cmake-ide
  (cmake-ide-setup))
 
@@ -252,7 +268,8 @@
 ;; lsp-mode setup
 (when-pkg-installed
  lsp-mode
- (setq lsp-clients-clangd-executable "clangd-9")
+ (set-executable 'lsp-clients-clangd-executable
+                 '("clangd-9" "clangd"))
  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
  (setq lsp-enable-symbol-highlighting nil)
  (setq lsp-prefer-flymake nil)
@@ -315,6 +332,15 @@
 
 ;; Load machine local configuration (if available)
 (load "~/.emacs_local.el" t)
+
+;; Load custom file
+(setq custom-file "~/.emacs-custom.el")
+(load custom-file t)
+
+(defun executable-find-one-of (&rest binaries-list)
+  (dolist (binary binaries-list)
+    (let ((path (executable-find binary)))
+    (print path))))
 
 (provide '.emacs)
 ;;; .emacs ends here
