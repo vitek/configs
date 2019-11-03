@@ -270,9 +270,6 @@
             (c++-mode "c++" c++-mode)
             (flycheck-mode nil flycheck))))
 
-;; Emacs server
-(if window-system (server-start))
-
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
@@ -312,6 +309,9 @@
       (global-set-key [mouse-5] 'scroll-up)
       (global-set-key [mouse-2] 'nop)
       (global-set-key [C-f9] 'recompile)))
+
+;; Emacs server
+(if window-system (server-start))
 
 ;; Load machine local configuration (if available)
 (load "~/.emacs_local.el" t)
