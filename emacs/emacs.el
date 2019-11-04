@@ -1,14 +1,23 @@
+;; -*- lexical-binding: t -*-
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
+(require 'package)
 (require 'seq)
+(require 'cl)
 
-(setq gc-cons-threshold 40000000)
-(setq jit-lock-defer-time 0.05)
-
-(defun my-set-variables (&rest vars)
-  (dolist (entry vars)
-    (eval (cons 'setq entry))))
+;; https://github.com/purcell/emacs.d/blob/master/init.el
+;;----------------------------------------------------------------------------
+;; Adjust garbage collection thresholds during startup, and thereafter
+;;----------------------------------------------------------------------------
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
 ;; Interface decorations
 (setq
+ frame-title-format "emacs: %b"
  cursor-type 'bar
  inhibit-startup-screen t
  menu-bar-mode nil
@@ -17,6 +26,8 @@
  use-dialog-box nil
  use-file-dialog nil
  visible-bell t
+
+ jit-lock-defer-time 0.05
 
  ;; scroll speed
  scroll-conservatively 50
@@ -41,16 +52,16 @@
       kept-old-versions 5    ; and how many of the old
       )
 
+(save-place-mode 1)
+
 ;; TODO: cleanup this mess
-(my-set-variables
- '(load-home-init-file t)
- '(save-place t)
- '(case-fold-search t)
- '(compile-command "make ")
- '(current-language-environment "UTF-8")
- '(frame-title-format "emacs: %b")
- '(font-lock-maximum-decoration t)
- '(log-edit-hook (quote ())))
+(setq
+ load-home-init-file t
+ case-fold-search t
+ compile-command "make "
+ current-language-environment "UTF-8"
+ font-lock-maximum-decoration t
+ log-edit-hook (quote ()))
 
 (custom-set-faces
  '(diff-added ((t (:foreground "Green"))) 'now)
@@ -58,8 +69,6 @@
 
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
  '(show-ws-tab ((t (:background "#222"))) 'now))
-
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (defun set-executable (key choices)
   (let ((value (seq-find 'executable-find choices)))
@@ -75,6 +84,7 @@
         cmake-mode
         color-theme-modern
         company-lsp
+        find-file-in-project
         delight
         flycheck
         gnu-elpa-keyring-update
@@ -89,13 +99,13 @@
         yaml-mode
         yasnippet))
 
-(require 'package)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("stable.melpa" . "http://stable.melpa.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 (setq package-enable-at-startup nil) ; Don't initialize later as well
 (package-initialize)
+
 (defun install-my-packages()
   (interactive)
   (progn
@@ -103,20 +113,17 @@
       (package-refresh-contents))
     (dolist (package package-list)
       (unless (package-installed-p package)
-        (package-install package)))))
-
-;; Consider using use-package the only problem it may be not installed yet
-(defmacro when-pkg-installed (package &rest body)
-  (when (require package nil t) `(progn ,@body)))
+        (package-install package t)))))
 
 ;; Require some packages
-(when-pkg-installed git-grep)
-(when-pkg-installed google-c-style)
-(when-pkg-installed show-wspace)
-(when-pkg-installed column-marker)
-(when-pkg-installed yaml-mode)
-(when-pkg-installed find-file-in-project)
-(when-pkg-installed mc-move)
+(use-package git-grep
+  :bind (([f12] . git-grep)))
+(use-package show-wspace)
+(use-package column-marker)
+
+(use-package yaml-mode)
+(use-package find-file-in-project)
+(use-package mc-move)
 
 (setq c-basic-offset 4)
 (c-set-offset 'arglist-intro '+)
@@ -146,11 +153,10 @@
 ;;(if window-system (global-hl-line-mode))
 
 ;; Color theme setup, 0.1s
-(when-pkg-installed
- color-theme
- (when (fboundp 'color-theme-initialize)
-   (color-theme-initialize))
- (color-theme-dark-laptop))
+(use-package color-theme
+  :config
+  (color-theme-initialize)
+  (color-theme-dark-laptop))
 
 (defun my-compile()
   (interactive)
@@ -190,33 +196,38 @@
 
 (defun derived-mode-parents (mode)
   (and mode
-    (cons mode (derived-mode-parents
-          (get mode 'derived-mode-parent)))))
+       (cons mode (derived-mode-parents
+                   (get mode 'derived-mode-parent)))))
+
+(defun highlight-prog ()
+  (intersection (derived-mode-parents major-mode)
+                '(prog-mode text-mode cmake-mode)))
 
 ;; Highlight whitespaces and long strings
 (defun highlight-whitespaces ()
-  (if (intersection (derived-mode-parents major-mode)
-                    '(prog-mode text-mode cmake-mode))
-      (progn
-        (when (fboundp 'show-ws-highlight-trailing-whitespace)
-          (progn
-            (show-ws-highlight-trailing-whitespace)
-            (show-ws-highlight-tabs)))
-        ;; Show marker at 80 column
-        (when
-            (fboundp 'column-marker-1)
-          (column-marker-1 79)))))
+  (when (highlight-prog)
+    (when (fboundp 'show-ws-highlight-trailing-whitespace)
+      (show-ws-highlight-trailing-whitespace)
+      (show-ws-highlight-tabs))
+    ;;Show marker at 80 column
+    (when (fboundp 'column-marker-1)
+      (column-marker-1 79))))
+
 (add-hook 'font-lock-mode-hook 'highlight-whitespaces)
 
 ;; Unique buffer names
-(when-pkg-installed
- uniquify
- (setq uniquify-buffer-name-style 'post-forward))
+(use-package uniquify
+  :init
+  (setq uniquify-buffer-name-style 'post-forward))
 
 ;; Python-mode settings
 (defun ipdb-insert-set-trace()
   (interactive)
   (insert "from pdb import set_trace; set_trace()"))
+
+(use-package python
+  :bind (:map python-mode-map
+              ("C-c b" . ipdb-insert-set-trace)))
 
 (defvar py-flake8-history nil) ; workaround python-mode.el bug
 (setq py-flake8-command-args
@@ -224,88 +235,83 @@
 
 (set-executable 'python3-executable
                 '("taxi-python3" "python3.7" "python3"))
-(when python3-executable
-  (message (format "Python found: %s" python3-executable))
-  (setq flycheck-python-flake8-executable python3-executable
-        flycheck-python-pycompile-executable python3-executable
-        flycheck-python-pylint-executable python3-executable))
 
-(when-pkg-installed
- python-black
- (set-executable 'python-black-command
-                 '("taxi-black" "black")))
+(use-package python-black
+  :init
+  (set-executable 'python-black-command
+                  '("taxi-black" "black"))
+  :after python
+  :bind (:map python-mode-map ("C-c f" . python-black-buffer)))
 
-(add-hook
- 'python-mode-hook
- (lambda ()
-   (progn
-     (lsp)
-     (global-set-key (kbd "C-c b") 'ipdb-insert-set-trace)
-     (global-set-key (kbd "C-c f") 'python-black-buffer))))
-
-(when-pkg-installed
- pyimpsort
- ;; TODO: use own patched pyimpsort.py
- (setq pyimpsort-script
-       (concat user-emacs-directory "scripts/pyimpsort.py")))
+(use-package pyimpsort
+  :init
+  ;; TODO: use own patched pyimpsort.py
+  (setq pyimpsort-script
+        (concat user-emacs-directory "scripts/pyimpsort.py")))
 
 ;; C/C++ mode settings
-(add-hook
- 'c++-mode-hook
- (lambda ()
-   (progn
-     (setq flycheck-gcc-language-standard "c++17")
-     (setq flycheck-clang-language-standard "c++17")
-     (lsp)
-     (google-set-c-style)
-     (global-set-key (kbd "C-c f") 'clang-format))))
+(use-package google-c-style
+  :hook (c++-mode . google-set-c-style))
 
-(when-pkg-installed
- clang-format
- (set-executable 'clang-format-executable
-                 '("clang-format-7" "clang-format")))
+(use-package clang-format
+  :init
+  (set-executable 'clang-format-executable
+                  '("clang-format-7" "clang-format"))
+  :hook (c++-mode . (lambda ()
+                      (local-set-key (kbd "C-c f") 'clang-format))))
 
-(when-pkg-installed
- cmake-ide
- (cmake-ide-setup))
+(use-package cmake-ide
+  :config
+  (cmake-ide-setup))
 
 ;; Lua
-(when-pkg-installed
- manual-indent
- (add-hook 'lua-mode-hook
-           (lambda ()
-             (setq lua-indent-level 4)
-             (manual-indent-mode 1)
-             (electric-indent-local-mode 0))))
+(use-package manual-indent
+  :hook
+  (lua-mode-hook . (lambda ()
+                     (setq lua-indent-level 4)
+                     (manual-indent-mode 1)
+                     (electric-indent-local-mode 0))))
 
 ;; Enable flycheck globally
-(add-hook 'after-init-hook
-          (lambda ()
-            (when (boundp 'global-flycheck-mode)
-              (global-flycheck-mode))))
+(use-package flycheck
+  :init
+  (setq flycheck-gcc-language-standard "c++17")
+  (setq flycheck-clang-language-standard "c++17")
+  (when python3-executable
+    (setq flycheck-python-flake8-executable python3-executable
+          flycheck-python-pycompile-executable python3-executable
+          flycheck-python-pylint-executable python3-executable))
+  :config
+  (global-flycheck-mode)
+  :delight (flycheck-mode "/flycheck" "flycheck"))
 
 ;; lsp-mode setup
-(when-pkg-installed
- lsp-mode
- (message "LSP-MODE")
- (set-executable 'lsp-clients-clangd-executable
-                 '("clangd-9" "clangd"))
- (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
- (setq lsp-enable-symbol-highlighting nil)
- (setq lsp-prefer-flymake nil)
- (setq lsp-enable-snippet nil))
+(use-package lsp-mode
+  :init
+  (set-executable 'lsp-clients-clangd-executable
+                  '("clangd-9" "clangd"))
+  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-enable-snippet nil)
+  :commands lsp
+  :hook ((python-mode . lsp-deferred)
+         (c++-mode . lsp-deferred)))
 
 ;; delight, tune minor mode bar
-(when-pkg-installed
- delight
- (delight '((abbrev-mode nil "abbrev")
-            (company-mode nil "company")
-            (eldoc-mode nil "eldoc")
-            (yas-minor-mode nil "yasnippet")
-            (lsp-mode "/lsp" "lsp")
-            (python-mode "py" "python-mode")
-            (c++-mode "c++" "c++-mode")
-            (flycheck-mode nil "flycheck"))))
+(use-package delight
+  :config
+  (delight '((abbrev-mode nil "abbrev")
+             (company-mode nil "company")
+             (eldoc-mode nil "eldoc")
+             (yas-minor-mode nil "yasnippet")
+             (lsp-mode "/lsp" "lsp")
+             (python-mode "py" "python-mode")
+             ;; File mode specification error: (wrong-type-argument stringp (inhibit-mode-name-delight C++//l c++))
+             ;;(c++-mode "c++" "c++-mode")
+             ))
+  ;;:commands delight
+  )
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
@@ -327,18 +333,6 @@
 (global-set-key [C-f8] 'gud-break)
 (global-set-key [f5] 'goto-line)
 
-(global-set-key [f12] 'git-grep)
-
-;; https://github.com/emacsmirror/zoom-frm
-(when-pkg-installed
- zoom-frm
- (global-set-key (kbd "C-M-=") 'zoom-in)
- (global-set-key (kbd "C-M--") 'zoom-out)
- (global-set-key (kbd "C-M-0") 'zoom-frm-unzoom)
- ;; mouse bindings
- (global-set-key (kbd "<C-mouse-4>") 'zoom-in)
- (global-set-key (kbd "<C-mouse-5>") 'zoom-out))
-
 (if window-system
     (progn
       (global-set-key "\C-z" 'ignore)
@@ -347,7 +341,17 @@
       (global-set-key [mouse-2] 'nop)
       (global-set-key [C-f9] 'recompile)))
 
-;; ;; Emacs server
+;; https://github.com/emacsmirror/zoom-frm
+(use-package zoom-frm
+  :bind
+  ("C-M-=" . zoom-in)
+  ("C-M--" . zoom-out)
+  ("C-M-0" . zoom-frm-unzoom)
+  ;; mouse bindings
+  ("<C-mouse-4>" . zoom-in)
+  ("<C-mouse-5>" . zoom-out))
+
+ ;; Emacs server
 (if window-system (server-start))
 
 ;; Load machine local configuration (if available)
