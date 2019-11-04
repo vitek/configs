@@ -224,7 +224,9 @@
 
 ;; C/C++ mode settings
 (use-package google-c-style
-  :hook (c++-mode . google-set-c-style))
+  :hook (c++-mode . (lambda ()
+                      (google-set-c-style)
+                      (c-set-offset 'inlambda 0))))
 
 (use-package clang-format
   :init
@@ -328,10 +330,10 @@
 (if window-system (server-start))
 
 ;; Load machine local configuration (if available)
-(load "~/.emacs.d/local.el" t)
+(load (concat user-emacs-directory "local.el") t)
 
 ;; Load custom file
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file t)
 
 (message (format "gcs-done: %d" gcs-done))

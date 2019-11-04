@@ -27,9 +27,9 @@
 
 (defun byte-compile-site-lisp ()
   (let*
-      ((user-emacs-directory (elt argv 0))
-       (site-lisp-directory (concat user-emacs-directory "/site-lisp"))
-       (init-el-path (concat user-emacs-directory "/init.el")))
+      ((user-emacs-directory (file-name-as-directory (elt argv 0)))
+       (site-lisp-directory (concat user-emacs-directory "site-lisp"))
+       (init-el-path (concat user-emacs-directory "init.el")))
     (message
      (format
       "Compiling emacs files, directory: %s" site-lisp-directory))
