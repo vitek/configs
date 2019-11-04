@@ -1,9 +1,6 @@
-;; -*- lexical-binding: t -*-
-(add-to-list 'load-path "~/.emacs.d/site-lisp/")
-
-(require 'package)
-(require 'seq)
-(require 'cl)
+;;; init.el --- Emacs configuration -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
 
 ;; https://github.com/purcell/emacs.d/blob/master/init.el
 ;;----------------------------------------------------------------------------
@@ -14,6 +11,12 @@
   (setq gc-cons-threshold init-gc-cons-threshold)
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/")
+
+(require 'cl-lib)
+(require 'package)
+(require 'seq)
 
 ;; Interface decorations
 (setq
@@ -167,7 +170,7 @@
                    (get mode 'derived-mode-parent)))))
 
 (defun highlight-prog ()
-  (intersection (derived-mode-parents major-mode)
+  (cl-intersection (derived-mode-parents major-mode)
                 '(prog-mode text-mode cmake-mode)))
 
 ;; Highlight whitespaces and long strings
@@ -335,4 +338,4 @@
 (message (format "Emacs init time: %s" (emacs-init-time)))
 
 (provide 'init)
-;;; .emacs ends here
+;;; init.el ends here
