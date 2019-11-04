@@ -77,28 +77,6 @@
       (set key value))))
 
 ;; Configure package
-;; list of packages to install
-(defvar package-list
-      '(clang-format
-        cmake-ide
-        cmake-mode
-        color-theme-modern
-        company-lsp
-        find-file-in-project
-        delight
-        flycheck
-        gnu-elpa-keyring-update
-        helm
-        lsp-mode
-        ;;lsp-treemacs
-        ;;lsp-ui
-        lua-mode
-        pyimpsort
-        python-black
-        use-package
-        yaml-mode
-        yasnippet))
-
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("stable.melpa" . "http://stable.melpa.org/packages/")
@@ -106,20 +84,9 @@
 (setq package-enable-at-startup nil) ; Don't initialize later as well
 (package-initialize)
 
-(defun install-my-packages()
-  (interactive)
-  (progn
-    (unless package-archive-contents
-      (package-refresh-contents))
-    (dolist (package package-list)
-      (unless (package-installed-p package)
-        (package-install package t)))))
-
 ;; Require some packages
 (use-package git-grep
   :bind (([f12] . git-grep)))
-(use-package show-wspace)
-(use-package column-marker)
 
 (use-package yaml-mode)
 (use-package find-file-in-project)
@@ -209,11 +176,14 @@
     (when (fboundp 'show-ws-highlight-trailing-whitespace)
       (show-ws-highlight-trailing-whitespace)
       (show-ws-highlight-tabs))
-    ;;Show marker at 80 column
+    ;; Show marker at 80 column
     (when (fboundp 'column-marker-1)
       (column-marker-1 79))))
 
 (add-hook 'font-lock-mode-hook 'highlight-whitespaces)
+
+(use-package show-wspace)
+(use-package column-marker)
 
 ;; Unique buffer names
 (use-package uniquify
@@ -221,6 +191,13 @@
   (setq uniquify-buffer-name-style 'post-forward))
 
 ;; Python-mode settings
+(defvar py-flake8-history nil) ; workaround python-mode.el bug
+(setq py-flake8-command-args
+      '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
+
+(set-executable 'python3-executable
+                '("taxi-python3" "python3.7" "python3"))
+
 (defun ipdb-insert-set-trace()
   (interactive)
   (insert "from pdb import set_trace; set_trace()"))
@@ -228,13 +205,6 @@
 (use-package python
   :bind (:map python-mode-map
               ("C-c b" . ipdb-insert-set-trace)))
-
-(defvar py-flake8-history nil) ; workaround python-mode.el bug
-(setq py-flake8-command-args
-      '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
-
-(set-executable 'python3-executable
-                '("taxi-python3" "python3.7" "python3"))
 
 (use-package python-black
   :init
@@ -257,12 +227,13 @@
   :init
   (set-executable 'clang-format-executable
                   '("clang-format-7" "clang-format"))
-  :hook (c++-mode . (lambda ()
-                      (local-set-key (kbd "C-c f") 'clang-format))))
+  :after cc-mode
+  :bind (:map c++-mode-map ("C-c f" . clang-format)))
 
 (use-package cmake-ide
   :config
-  (cmake-ide-setup))
+  (cmake-ide-setup)
+  :defer t)
 
 ;; Lua
 (use-package manual-indent
@@ -308,9 +279,8 @@
              (lsp-mode "/lsp" "lsp")
              (python-mode "py" "python-mode")
              ;; File mode specification error: (wrong-type-argument stringp (inhibit-mode-name-delight C++//l c++))
-             ;;(c++-mode "c++" "c++-mode")
+             ;;(c++-mode "c++" "cc-mode")
              ))
-  ;;:commands delight
   )
 
 ;; Custom keybindings
@@ -351,7 +321,7 @@
   ("<C-mouse-4>" . zoom-in)
   ("<C-mouse-5>" . zoom-out))
 
- ;; Emacs server
+;; Emacs server
 (if window-system (server-start))
 
 ;; Load machine local configuration (if available)
@@ -364,5 +334,5 @@
 (message (format "gcs-done: %d" gcs-done))
 (message (format "Emacs init time: %s" (emacs-init-time)))
 
-(provide '.emacs)
+(provide 'init)
 ;;; .emacs ends here
