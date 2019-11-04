@@ -39,9 +39,9 @@
 
 ;; Configure window info line
 (setq
- display-time-mode t
- column-number-mode t
- display-time-24hr-format t)
+ display-time-24hr-format t
+ display-time-default-load-average nil
+ column-number-mode t)
 
 ;; Handle x11 clipboard
 (setq x-select-enable-clipboard t)
