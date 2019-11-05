@@ -264,12 +264,20 @@
 ;; lsp-mode setup
 (use-package lsp-mode
   :init
+  ;; clangd
   (set-executable 'lsp-clients-clangd-executable
                   '("clangd-9" "clangd"))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+
+  ;; pyls
+  (set-executable 'lsp-pyls-server-command
+                  '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
+
+  ;; common settings
   (setq lsp-enable-symbol-highlighting nil)
   (setq lsp-prefer-flymake nil)
   (setq lsp-enable-snippet nil)
+
   :commands lsp
   :hook ((python-mode . lsp-deferred)
          (c++-mode . lsp-deferred)))
