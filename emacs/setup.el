@@ -38,6 +38,9 @@
     (byte-recompile-file init-el-path 0)))
 
 (defun install-packages ()
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+  ;; See http://elpa.gnu.org/packages/gnu-elpa-keyring-update.html
+  ;;(setq package-check-signature nil)
   (package-initialize)
   (unless package-archive-contents
     (message "Refreshing packages list...")
@@ -47,5 +50,5 @@
       (message (format "Installing package: %s" package))
       (package-install package t))))
 
-(byte-compile-site-lisp)
 (install-packages)
+(byte-compile-site-lisp)
