@@ -233,7 +233,7 @@
   (set-executable 'clang-format-executable
                   '("clang-format-7" "clang-format"))
   :after cc-mode
-  :bind (:map c++-mode-map ("C-c f" . clang-format)))
+  :bind (:map c++-mode-map ("C-c f" . clang-format-buffer)))
 
 (use-package cmake-ide
   :config
