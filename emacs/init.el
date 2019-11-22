@@ -350,6 +350,11 @@
   ("<C-mouse-4>" . zoom-in)
   ("<C-mouse-5>" . zoom-out))
 
+(use-package projectile
+  :init
+  (projectile-mode 1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
 ;; Emacs server
 (if window-system (server-start))
 
