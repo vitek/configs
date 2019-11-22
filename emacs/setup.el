@@ -21,6 +21,7 @@
     ;;lsp-treemacs
     ;;lsp-ui
     lua-mode
+    projectile
     pyimpsort
     python-black
     use-package
