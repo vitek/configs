@@ -276,6 +276,9 @@
   (set-executable 'lsp-pyls-server-command
                   '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
 
+  ;; golang
+  (set-executable 'lsp-gopls-server-path '("gopls" "/home/vitja/go/bin/gopls"))
+
   ;; common settings
   (setq lsp-enable-symbol-highlighting nil)
   (setq lsp-prefer-flymake nil)
@@ -283,7 +286,8 @@
 
   :commands lsp
   :hook ((python-mode . lsp-deferred)
-         (c++-mode . lsp-deferred)))
+         (c++-mode . lsp-deferred)
+         (go-mode . lsp-deferred)))
 
 ;; delight, tune minor mode bar
 (use-package delight
@@ -298,6 +302,15 @@
              ;;(c++-mode "c++" "cc-mode")
              ))
   )
+
+(use-package go-mode
+  :hook
+  (go-mode
+   . (lambda ()
+       (setq tab-width 4)
+       (setq indent-tabs-mode 1)))
+  :bind (:map go-mode-map
+              ("C-c f" . gofmt)))
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
