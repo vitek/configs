@@ -223,6 +223,11 @@
         (concat user-emacs-directory "scripts/pyimpsort.py")))
 
 ;; C/C++ mode settings
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (setq-local flycheck-gcc-language-standard "c++17")
+            (setq-local flycheck-clang-language-standard "c++17")))
+
 (use-package google-c-style
   :hook (c++-mode . (lambda ()
                       (google-set-c-style)
@@ -251,8 +256,6 @@
 ;; Enable flycheck globally
 (use-package flycheck
   :init
-  (setq flycheck-gcc-language-standard "c++17")
-  (setq flycheck-clang-language-standard "c++17")
   (when python3-executable
     (setq flycheck-python-flake8-executable python3-executable
           flycheck-python-pycompile-executable python3-executable
