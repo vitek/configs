@@ -12,6 +12,7 @@
     color-theme-modern
     company-lsp
     find-file-in-project
+    go-mode
     delight
     flycheck
     gnu-elpa-keyring-update
