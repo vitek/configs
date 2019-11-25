@@ -312,6 +312,10 @@
   :bind (:map go-mode-map
               ("C-c f" . gofmt)))
 
+;; Dired setup
+(add-hook 'dired-mode-hook
+          (lambda () (hl-line-mode 1)))
+
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
