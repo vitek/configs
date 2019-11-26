@@ -314,7 +314,11 @@
 
 ;; Dired setup
 (add-hook 'dired-mode-hook
-          (lambda () (hl-line-mode 1)))
+          (lambda ()
+            (load "dired-x")
+            (hl-line-mode 1)
+            (dired-omit-mode 1)))
+(setq dired-listing-switches "-alhv --group-directories-first")
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
