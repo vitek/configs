@@ -319,6 +319,7 @@
             (hl-line-mode 1)
             (dired-omit-mode 1)))
 (setq dired-listing-switches "-alhv --group-directories-first")
+(setq dired-isearch-filenames 'dwim)
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
