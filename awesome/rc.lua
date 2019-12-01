@@ -513,7 +513,7 @@ awful.rules.rules = {
     },
 
     -- Emacs has its own keyboard switcher
-    { rule_any = { class =  { "Emacs" } },
+    { rule_any = { class =  { "emacs", "Emacs" } },
       properties = { disable_kbd_switch = true } },
 
     { rule_any = { class =  { "chrome-browser",
