@@ -67,7 +67,7 @@ function mywibar.create_wibar(s)
          end,
    })
 
-    local batwidget = battery.BatteryWidget{}
+   --local batwidget = battery.BatteryWidget{}
 
    local volumewidget = pulseaudio_widget(pulseaudio, {
       mixer = function ()
@@ -122,7 +122,7 @@ function mywibar.create_wibar(s)
          layout = wibox.layout.fixed.horizontal,
          mykeyboardlayout,
          volumewidget,
-         batwidget,
+         --batwidget,
          wibox.widget.systray(),
          mytextclock,
          mylauncher,

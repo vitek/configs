@@ -322,6 +322,7 @@ globalkeys = awful.util.table.join(
     awful.key({ "Mod1", "Control" }, "Right",  awful.tag.viewnext),
     awful.key({ "Mod1" }, "space",
        function ()
+          print('switch')
           keyboard_layout.next(client.focus or {})
        end
     ),

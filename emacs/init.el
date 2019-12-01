@@ -321,6 +321,11 @@
 (setq dired-listing-switches "-alhv --group-directories-first")
 (setq dired-isearch-filenames 'dwim)
 
+
+;; ido-mode
+(setq ido-enable-flex-matching t)
+(ido-mode 1)
+
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
