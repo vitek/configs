@@ -325,6 +325,7 @@
 
 ;; ido-mode
 (setq ido-enable-flex-matching t)
+(setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
 
 ;; Custom keybindings
