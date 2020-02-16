@@ -55,7 +55,8 @@ install-xresources:
 install-emacs: install-xresources
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/scripts
-	$(INSTALL) -m 0644 emacs/emacs.el $(DESTDIR)/.emacs
+	rm -f  $(DESTDIR)/.emacs
+	$(INSTALL) -m 0644 emacs/init.el $(DESTDIR)/.emacs.d/init.el
 	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/column-marker.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/github-theme.el $(DESTDIR)/.emacs.d/site-lisp
@@ -67,6 +68,7 @@ install-emacs: install-xresources
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-fns.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-cmds.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
+	emacs --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc

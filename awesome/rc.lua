@@ -322,6 +322,7 @@ globalkeys = awful.util.table.join(
     awful.key({ "Mod1", "Control" }, "Right",  awful.tag.viewnext),
     awful.key({ "Mod1" }, "space",
        function ()
+          print('switch')
           keyboard_layout.next(client.focus or {})
        end
     ),
@@ -513,7 +514,7 @@ awful.rules.rules = {
     },
 
     -- Emacs has its own keyboard switcher
-    { rule_any = { class =  { "Emacs" } },
+    { rule_any = { class =  { "emacs", "Emacs" } },
       properties = { disable_kbd_switch = true } },
 
     { rule_any = { class =  { "chrome-browser",

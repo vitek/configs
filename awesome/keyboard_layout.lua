@@ -4,17 +4,19 @@ local keyboard_layout = {}
 
 local last_xcb_layout_group = 0
 
-local function set_layout(c, group)
-   if group == nil then
-      group = c.xcb_layout_group or last_xcb_layout_group
-   end
-   -- print('set_layout: ' .. tostring(c) .. " group: " .. tostring(group))
-   if c.disable_kbd_switch then
-      group = 0
-   end
+local function update_layout(c, group)
    awesome.xkb_set_layout_group(group)
    last_xcb_layout_group = awesome.xkb_get_layout_group()
    c.xcb_layout_group = last_xcb_layout_group
+end
+
+local function set_layout(c, group)
+   if c.disable_kbd_switch then
+      group = 0
+   elseif group == nil then
+      group = c.xcb_layout_group or last_xcb_layout_group
+   end
+   update_layout(c, group)
 end
 
 function keyboard_layout.cycle(c, inc)
@@ -29,10 +31,11 @@ function keyboard_layout.prev(c)
 end
 
 client.connect_signal("focus", function(c) set_layout(c, nil) end)
-capi.awesome.connect_signal("xkb::group_changed",
-                            function ()
-                               keyboard_layout.cycle(client.focus or {}, 0)
-                            end
+capi.awesome.connect_signal(
+   "xkb::group_changed",
+   function ()
+      update_layout(client.focus or {}, awesome.xkb_get_layout_group())
+   end
 )
 
 return keyboard_layout
