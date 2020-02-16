@@ -1,15 +1,32 @@
 local awful = require("awful")
+local ascreen = require("awful.screen")
 
 require("awful.dbus")
 local dbus = dbus
+local capi = {
+   screen = screen
+}
 
 local utils = {}
 
-function utils.switch_tag(s, step)
-    local tag = s.tags[s.selected_tag.index + step]
-    if tag then
-        tag:view_only()
-     end
+local function get_screen(s)
+    return s and capi.screen[s]
+end
+
+function utils.switch_tag(screen, step)
+   screen = get_screen(screen or ascreen.focused())
+   local tag = screen.tags[screen.selected_tag.index + step]
+   if tag then
+      tag:view_only()
+   end
+end
+
+function utils.switch_tag_next(s)
+   utils.switch_tag(s, 1)
+end
+
+function utils.switch_tag_prev(s)
+   utils.switch_tag(s, -1)
 end
 
 function utils.lock_screen()

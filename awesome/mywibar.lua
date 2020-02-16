@@ -23,9 +23,9 @@ local taglist_buttons = awful.util.table.join(
                                               end
                                           end),
                     awful.button({ }, 4,
-                       function(t) utils.switch_tag(t.screen, -1) end),
+                       function(t) utils.switch_tag_prev(t.screen) end),
                     awful.button({ }, 5,
-                       function(t) utils.switch_tag(t.screen, 1) end)
+                       function(t) utils.switch_tag_next(t.screen) end)
                 )
 
 -- Create a textclock widget

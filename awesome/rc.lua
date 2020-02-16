@@ -210,8 +210,8 @@ end)
 -- @DOC_ROOT_BUTTONS@
 root.buttons(awful.util.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+    awful.button({ modkey }, 4, utils.switch_tag_prev),
+    awful.button({ modkey }, 5, utils.switch_tag_next)
 ))
 -- }}}
 
@@ -453,7 +453,10 @@ clientbuttons = gears.table.join(
     awful.button({ modkey }, 3, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
         awful.mouse.client.resize(c)
-    end)
+    end),
+
+    awful.button({ modkey }, 4, function (c) utils.switch_tag_prev(c.screen) end),
+    awful.button({ modkey }, 5, function (c) utils.switch_tag_next(c.screen) end)
 )
 
 -- Set keys
