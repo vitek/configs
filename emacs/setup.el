@@ -24,6 +24,7 @@
     projectile
     pyimpsort
     python-black
+    nginx-mode
     use-package
     yaml-mode))
 
