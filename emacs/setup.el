@@ -25,6 +25,7 @@
     pyimpsort
     python-black
     nginx-mode
+    magit
     use-package
     yaml-mode))
 
