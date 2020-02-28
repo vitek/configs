@@ -131,8 +131,8 @@
 
 (defun my-compile()
   (interactive)
-  (if (fboundp 'cmake-ide-compile)
-      (call-interactively 'cmake-ide-compile)
+  (if (fboundp 'projectile-compile-project)
+      (call-interactively 'projectile-compile-project)
     (call-interactively 'compile)))
 
 (defun nop() (interactive))
@@ -240,11 +240,6 @@
                   '("clang-format-7" "clang-format"))
   :after cc-mode
   :bind (:map c++-mode-map ("C-c f" . clang-format-buffer)))
-
-(use-package cmake-ide
-  :config
-  (cmake-ide-setup)
-  :defer t)
 
 ;; Lua
 (use-package manual-indent
