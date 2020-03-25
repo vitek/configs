@@ -70,6 +70,11 @@ local settings = load_settings(
       editor = os.getenv("EDITOR") or "vim"
 })
 
+local function run_startup_script()
+   awful.spawn(os.getenv("HOME") .. '/.config/awesome/scripts/start.sh')
+end
+
+run_startup_script()
 -- @DOC_LOAD_THEME@
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")

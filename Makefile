@@ -84,14 +84,24 @@ install-gconf:
 	$(GCONFTOOL) --set /apps/nautilus/preferences/show_desktop --type boolean 0
 	$(GCONFTOOL) --set /apps/gnome-terminal/profiles/Default/scrollbar_position --type string hidden
 
-install-awesome:
+install-awesome: install-x11-utils
 	$(INSTALL) -d $(DESTDIR)/.config/awesome
 	$(INSTALL) -m 0644 $(AWESOME_FILES) $(DESTDIR)/.config/awesome/
 	$(INSTALL) -m 0644 awesome/gnomerc $(DESTDIR)/.gnomerc
 	$(INSTALL) -d $(DESTDIR)/.config/awesome/apw
 	$(INSTALL) -m 0644 awesome/apw/widget.lua awesome/apw/pulseaudio.lua \
 		$(DESTDIR)/.config/awesome/apw
+	$(INSTALL) -d $(DESTDIR)/.config/awesome/scripts
+	@if [ -e $(DESTDIR)/.config/awesome/scripts/start.sh ]; then	\
+		echo "Awesome startup script already exists";		\
+	else								\
+		echo "Installing awesom startup script template";	\
+		$(INSTALL) -m 0755 awesome/scripts/start.sh		\
+			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
+	fi
 
+install-x11-utils:
+	$(INSTALL) -m 0644 xbindkeysrc $(DESTDIR)/.xbindkeysrc
 
 install-bashrc:
 	$(INSTALL) -m 0644 profile $(DESTDIR)/.profile

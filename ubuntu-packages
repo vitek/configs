@@ -1,9 +1,9 @@
 # WM
 awesome
 
-# gnome-classic
-gnome-panel
-gnome-panel-control
+# x11
+xdotool
+xbindkeys
 
 # Web
 chromium-browser
@@ -11,56 +11,24 @@ chromium-browser-l10n
 chromium-browser-inspector
 pidgin
 
-# EMU
-#wine
-
-
 # Media
-#audacity
-flashplugin-nonfree
-gimp
-#gqview
-#inkscape
-#sox
 vlc
 
 # Emacs
 emacs
-emacs-goodies-el
-python-mode
-lua-mode
 
 # Vim
 vim-nox
 
 # VC
-cvs
 git-core
 git-gui
-git-svn
 gitk
-mercurial
 subversion
-
-## AVR stuff
-#gcc-avr
-#avr-libc
-
-# Python
-ipython
-python-coverage
-python-dev
-python-lxml
-python-pip
-python-setuptools
-g++
 
 # Misc
 pwgen
-#stardict
 sshfs
 minicom
 graphviz
 gnuplot
-
-kbdd
