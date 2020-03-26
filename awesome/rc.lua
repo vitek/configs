@@ -5,6 +5,7 @@ pcall(require, "luarocks.loader")
 -- @DOC_REQUIRE_SECTION@
 -- Standard awesome library
 local gears = require("gears")
+local gfs = require("gears.filesystem")
 local awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
@@ -71,7 +72,7 @@ local settings = load_settings(
 })
 
 local function run_startup_script()
-   awful.spawn(os.getenv("HOME") .. '/.config/awesome/scripts/start.sh')
+   awful.spawn(gfs.get_configuration_dir() .. 'scripts/start.sh')
 end
 
 run_startup_script()
@@ -167,17 +168,24 @@ quakeconsole = quake{
 
 -- {{{ Wibar
 
+local default_wallpaper = gfs.get_configuration_dir() .. 'background.jpeg'
+
 -- @DOC_WALLPAPER@
 local function set_wallpaper(s)
-    -- Wallpaper
-    if beautiful.wallpaper then
-        local wallpaper = beautiful.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
-    end
+   local wallpaper
+   -- Wallpaper
+   if gfs.file_readable(default_wallpaper) then
+      wallpaper = default_wallpaper
+   elseif beautiful.wallpaper then
+      wallpaper = beautiful.wallpaper
+      -- If wallpaper is a function, call it with the screen
+      if type(wallpaper) == "function" then
+         wallpaper = wallpaper(s)
+      end
+   end
+   if wallpaper then
+      gears.wallpaper.maximized(wallpaper, s, true)
+   end
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)

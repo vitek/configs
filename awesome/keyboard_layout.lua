@@ -37,5 +37,11 @@ capi.awesome.connect_signal(
       update_layout(client.focus or {}, awesome.xkb_get_layout_group())
    end
 )
+capi.awesome.connect_signal(
+   "xkb::map_changed",
+   function ()
+      print('map changed')
+   end
+)
 
 return keyboard_layout

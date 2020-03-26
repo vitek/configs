@@ -1,9 +1,10 @@
 local awful = require "awful"
+local gfs = require("gears.filesystem")
 
 local brightness = {}
 
 local DEFAULT_BRIGHTNESS = 60
-local BRIGHTNESS_PATH = os.getenv("HOME") .. '/.config/awesome/.brightness'
+local BRIGHTNESS_PATH = gfs.get_configuration_dir() .. '.brightness'
 local STEP = 10
 
 local function save_brightness(value)
