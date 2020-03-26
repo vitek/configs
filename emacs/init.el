@@ -269,8 +269,29 @@
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
 
   ;; pyls
-  (set-executable 'lsp-pyls-server-command
+  (set-executable 'vitja-lsp-pyls-server-command
                   '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
+  (setq lsp-pyls-server-command vitja-lsp-pyls-server-command)
+
+  (add-hook
+   'hack-local-variables-hook
+   (lambda ()
+     (when (boundp 'vitja-lsp-python-path)
+       (setq-local
+        lsp-pyls-server-command
+        (list "/bin/sh" "-c"
+              (concat
+               "PYTHONPATH='"
+               (string-join
+                ;; filter out bad parts
+                (seq-filter
+                 (lambda (string)
+                   (if (string-match "['\"\\$:;]" string)
+                       (progn
+                         (message "Dangerous PYTHONPATH part %s" string) nil)
+                     t))
+                 vitja-lsp-python-path)
+                ":") "' " vitja-lsp-pyls-server-command))))))
 
   ;; golang
   (set-executable 'lsp-gopls-server-path '("gopls" "/home/vitja/go/bin/gopls"))
@@ -365,6 +386,10 @@
   :init
   (projectile-mode 1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status)))
 
 ;; Emacs server
 (if window-system (server-start))

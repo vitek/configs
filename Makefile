@@ -52,7 +52,7 @@ install-bzr:
 install-xresources:
 	$(INSTALL) -m 0644 Xresources $(DESTDIR)/.Xresources
 
-install-emacs: install-xresources
+install-emacs-configs:
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/scripts
 	rm -f  $(DESTDIR)/.emacs
@@ -68,6 +68,8 @@ install-emacs: install-xresources
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-fns.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-cmds.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
+
+install-emacs: install-xresources install-emacs-configs
 	emacs --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
 
 install-vim:

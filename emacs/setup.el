@@ -44,11 +44,10 @@
 (defun install-packages ()
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
   ;; See http://elpa.gnu.org/packages/gnu-elpa-keyring-update.html
-  ;;(setq package-check-signature nil)
+  (setq package-check-signature nil)
   (package-initialize)
-  (unless package-archive-contents
-    (message "Refreshing packages list...")
-    (package-refresh-contents))
+  (message "Refreshing packages list...")
+  (package-refresh-contents)
   (dolist (package bootstrap-packages)
     (unless (package-installed-p package)
       (message (format "Installing package: %s" package))
