@@ -365,6 +365,17 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "F11", brightness.dec),
     awful.key({ modkey }, "F12", brightness.inc),
 
+    -- Screenshots
+    awful.key({ modkey }, "\\",
+       function () awful.spawn("gnome-screenshot -wB") end),
+    awful.key({ modkey, "Shift"}, "\\",
+       function () awful.spawn("gnome-screenshot -wBc") end),
+    awful.key({ modkey, "Mod1" }, "\\",
+       function () awful.spawn("gnome-screenshot -a") end),
+    awful.key({ modkey, "Mod1", "Shift"}, "\\",
+       function () awful.spawn("gnome-screenshot -ac") end),
+
+    -- quakeconsole
     awful.key({ modkey }, "`", function () quakeconsole:toggle() end),
     awful.key({ modkey }, "Escape", function () quakeconsole:toggle() end)
 )
