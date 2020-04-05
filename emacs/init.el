@@ -126,8 +126,10 @@
 ;; Color theme setup, 0.1s
 (use-package color-theme
   :config
-  (color-theme-initialize)
-  (color-theme-dark-laptop))
+  (if window-system
+      (progn
+        (color-theme-initialize)
+        (color-theme-dark-laptop))))
 
 (defun my-compile()
   (interactive)
