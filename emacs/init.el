@@ -92,7 +92,14 @@
 (use-package git-grep
   :bind (([f12] . git-grep)))
 
-(use-package yaml-mode)
+(use-package yaml-mode
+  :config
+  (setq yaml-indent-offset 4))
+
+(use-package js
+  :config
+  (setq js-indent-level 4))
+
 (use-package find-file-in-project)
 (use-package mc-move)
 
@@ -274,6 +281,7 @@
   (set-executable 'vitja-lsp-pyls-server-command
                   '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
   (setq lsp-pyls-server-command vitja-lsp-pyls-server-command)
+  (setq xref-prompt-for-identifier nil)
 
   (add-hook
    'hack-local-variables-hook
