@@ -98,7 +98,7 @@
 
 (use-package js
   :config
-  (setq js-indent-level 4))
+  (setq js-indent-level 2))
 
 (use-package find-file-in-project)
 (use-package mc-move)
