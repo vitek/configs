@@ -159,7 +159,17 @@ quakeconsole = quake{
         end),
         awful.key({ modkey }, "Up", function (c)
             quakeconsole:incHeight(c, -0.1)
-        end))
+    end)),
+    buttons = awful.util.table.join(
+        awful.button({ }, 1, function (c)
+            client.focus = c
+            c:raise()
+        end),
+        awful.button({ modkey }, 3, function (c)
+            c:emit_signal("request::activate", "mouse_click", {raise = true})
+            awful.mouse.client.resize(c, 'bottom')
+        end)
+    )
 }
 
 -- Menubar configuration
@@ -367,13 +377,15 @@ globalkeys = awful.util.table.join(
 
     -- Screenshots
     awful.key({ modkey }, "\\",
-       function () awful.spawn("gnome-screenshot -wB") end),
-    awful.key({ modkey, "Shift"}, "\\",
-       function () awful.spawn("gnome-screenshot -wBc") end),
+       function () end,
+       function () awful.spawn("gnome-screenshot -acB") end),
     awful.key({ modkey, "Mod1" }, "\\",
-       function () awful.spawn("gnome-screenshot -a") end),
-    awful.key({ modkey, "Mod1", "Shift"}, "\\",
-       function () awful.spawn("gnome-screenshot -ac") end),
+       function () awful.spawn("gnome-screenshot -wBc") end),
+    awful.key({ modkey, "Shift" }, "\\",
+       function () end,
+       function () awful.spawn("gnome-screenshot -aB") end),
+    awful.key({ modkey, "Shift", "Mod1" }, "\\",
+       function () awful.spawn("gnome-screenshot -wB") end),
 
     -- quakeconsole
     awful.key({ modkey }, "`", function () quakeconsole:toggle() end),

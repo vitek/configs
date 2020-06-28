@@ -74,13 +74,6 @@ capi.client.connect_signal("unmanage", function(c)
         console:hide(c)
     end
 end)
-capi.client.connect_signal("property::geometry", function(c)
-    local console = consoles[c.quake_console_id]
-    -- don't allow client to adjust its own size
-    if console ~= nil then
-        console:updateGeometry(c)
-    end
-end)
 
 function QuakeConsole:findClient()
     for c in awful.client.iterate(function (c)
@@ -124,13 +117,19 @@ function QuakeConsole:show(client)
 
     self:updateGeometry(client)
 
+    client:connect_signal("request::geometry", function(c, context, geo)
+        if context ~= 'mouse.resize' then return end
+        local screen = self.screen or capi.mouse.screen
+        local geom = capi.screen[screen].workarea
+        self.height = (geo.height + 2 * client.border_width) / geom.height
+    end)
+    client:connect_signal("property::geometry", function(c)
+        -- don't allow client to adjust its own size
+        self:updateGeometry(c)
+    end)
+
     -- This is not a normal window, don't apply any specific keyboard stuff
-    client:buttons(awful.util.table.join(
-        awful.button({ }, 1, function (client)
-            client:raise()
-            capi.client.focus = client
-        end)
-    ))
+    client:buttons(self.buttons)
     client:keys(self.keys)
 
     client.hidden = false
@@ -187,6 +186,7 @@ function QuakeConsole:new(config)
 
     config.screen   = config.screen
     config.visible  = config.visible or false -- Initially, not visible
+    config.buttons  = config.buttons or {}
     config.keys     = config.keys or {}
 
     local console = setmetatable(config, { __index = QuakeConsole })
