@@ -13,6 +13,11 @@ AWESOME_FILES =					\
 	awesome/quake.lua			\
 	awesome/xrandr.lua
 
+BIN_FILES =					\
+	bin/xml-pp				\
+	bin/json-pp				\
+	bin/xkb-layout
+
 default:
 
 install: install-vc install-editor install-misc
@@ -111,7 +116,7 @@ install-bashrc:
 
 install-bin:
 	$(INSTALL) -d $(DESTDIR)/bin
-	$(INSTALL) -m 0755 bin/xml-pp bin/json-pp $(DESTDIR)/bin/
+	$(INSTALL) -m 0755 $(BIN_FILES) $(DESTDIR)/bin/
 
 install-ubuntu-extra:
 	python installpkgs.py ubuntu-packages

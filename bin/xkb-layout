@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import argparse
+import queue
+import re
+import subprocess
+import threading
+import typing
+
+INPUT_DEVICE_RE = re.compile(r'^/devices/.*/input/input\d+$')
+
+
+def run_command(command):
+    print(f'Running {command}')
+    try:
+        subprocess.run(command)
+    except (FileNotFoundError, subprocess.CalledProcessError) as exc:
+        print(f'Command failed: {exc!r}')
+
+
+def worker(kbd_queue: queue.Queue, command: typing.List[str]):
+    while True:
+        kbd_queue.get()
+        while True:
+            try:
+                kbd_queue.get(timeout=0.1)
+            except queue.Empty:
+                break
+            run_command(command)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Run command when input device is added',
+    )
+    parser.add_argument(
+        'command', nargs='*', default=['setxkbmap', '-layout', 'us,ru'],
+    )
+    args = parser.parse_args()
+
+    run_command(args.command)
+
+    kbd_queue = queue.Queue()
+    worker_thread = threading.Thread(
+        target=worker, args=(kbd_queue, args.command), daemon=True,
+    )
+    worker_thread.start()
+
+    with subprocess.Popen(
+            ['stdbuf', '-oL', 'udevadm', 'monitor', '-u', '-s', 'input'],
+            stdout=subprocess.PIPE,
+            encoding='utf-8',
+    ) as process:
+        for line in process.stdout:
+            line = line.strip()
+            parts = line.split()
+            if len(parts) > 4:
+                if (
+                        parts[0] == 'UDEV'
+                        and parts[2] == 'add'
+                        and INPUT_DEVICE_RE.match(parts[3])
+                ):
+                    print(f'input device added {parts[3]}')
+                    kbd_queue.put(parts[3])
+
+
+if __name__ == '__main__':
+    main()
