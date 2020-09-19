@@ -80,6 +80,10 @@
       (message (format "Executable %s chosen from %s" value choices))
       (set key value))))
 
+;; Load custom file
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(load custom-file t)
+
 ;; Configure package
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -131,12 +135,11 @@
 ;;(if window-system (global-hl-line-mode))
 
 ;; Color theme setup, 0.1s
-(use-package color-theme
+(use-package color-theme-modern
   :config
   (if window-system
       (progn
-        (color-theme-initialize)
-        (color-theme-dark-laptop))))
+        (load-theme 'dark-laptop))))
 
 (defun my-compile()
   (interactive)
@@ -406,10 +409,6 @@
 
 ;; Load machine local configuration (if available)
 (load (concat user-emacs-directory "local.el") t)
-
-;; Load custom file
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(load custom-file t)
 
 (message (format "gcs-done: %d" gcs-done))
 (message (format "Emacs init time: %s" (emacs-init-time)))
