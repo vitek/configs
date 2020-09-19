@@ -66,15 +66,15 @@
 #  Control + b:2 + Release
 
 # Rebind Logi mouse buttons
-"xdotool key XF86Back"
-  b:6
-"xdotool key XF86Forward"
-  b:7
+#"xdotool key XF86Back"
+#  b:6
+#"xdotool key XF86Forward"
+#  b:7
 
-"xdotool key Super+Left"
-  b:8
-"xdotool key Super+Right"
-  b:9
+#"xdotool key Super+Left"
+#  b:8
+#"xdotool key Super+Right"
+#  b:9
 
 ##################################
 # End of xbindkeys configuration #

@@ -135,6 +135,8 @@ install-awesome-session:
 	sudo cp awesome/session/gnome-awesome.desktop \
 		/usr/share/xsessions/gnome-awesome.desktop
 
+install-logid:
+	sudo cp logid.cfg /etc/logid.cfg
 
 .PHONY: diff
 diff:
