@@ -174,8 +174,13 @@
       ;; Workarond against lsp-mode server restart prompt
       ;; see https://github.com/emacs-lsp/lsp-mode/issues/641
       (setq lsp-restart 'ignore)
-      (save-some-buffers arg t)
-      (kill-emacs))))
+
+      (if (y-or-n-p (format "Really want to quit emacs? "))
+          (save-buffers-kill-emacs)
+        (message "Not quiting emacs"))
+      ;;(save-some-buffers arg t)
+      ;;(kill-emacs)
+      )))
 
 (defun derived-mode-parents (mode)
   (and mode
@@ -277,7 +282,8 @@
   :init
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
-                  '("clangd-10" "clangd-9" "clangd"))
+                  '(;;"clangd-10"
+                    "clangd-9" "clangd"))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
 
   ;; pyls
@@ -285,6 +291,7 @@
                   '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
   (setq lsp-pyls-server-command vitja-lsp-pyls-server-command)
   (setq xref-prompt-for-identifier nil)
+  (setq lsp-enable-links nil)
 
   (add-hook
    'hack-local-variables-hook
