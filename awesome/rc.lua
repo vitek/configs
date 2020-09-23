@@ -233,8 +233,6 @@ end)
 -- @DOC_ROOT_BUTTONS@
 root.buttons(awful.util.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ modkey }, 4, utils.switch_tag_prev),
-    awful.button({ modkey }, 5, utils.switch_tag_next)
 ))
 -- }}}
 
