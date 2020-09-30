@@ -232,7 +232,7 @@ end)
 -- {{{ Mouse bindings
 -- @DOC_ROOT_BUTTONS@
 root.buttons(awful.util.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
+    awful.button({ }, 3, function () mymainmenu:toggle() end)
 ))
 -- }}}
 
