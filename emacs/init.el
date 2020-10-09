@@ -23,7 +23,6 @@
  frame-title-format "emacs: %b"
  cursor-type 'bar
  inhibit-startup-screen t
- menu-bar-mode nil
  scroll-bar-mode nil
  tool-bar-mode nil
  use-dialog-box nil
@@ -37,11 +36,15 @@
  scroll-up-agressively 0
  scroll-down-agressively 0)
 
+(menu-bar-mode -1)
+
 ;; Configure window info line
 (setq
  display-time-24hr-format t
  display-time-default-load-average nil
  column-number-mode t)
+
+
 
 ;; Handle x11 clipboard
 (setq x-select-enable-clipboard t)
@@ -139,7 +142,8 @@
   :config
   (if window-system
       (progn
-        (load-theme 'dark-laptop))))
+        ;;(load-theme 'dark-laptop)
+        (load-theme 'classic))))
 
 (defun my-compile()
   (interactive)
@@ -353,11 +357,10 @@
 (add-hook 'dired-mode-hook
           (lambda ()
             (load "dired-x")
-            (hl-line-mode 1)
+            (if window-system (hl-line-mode 1))
             (dired-omit-mode 1)))
 (setq dired-listing-switches "-alhv --group-directories-first")
 (setq dired-isearch-filenames 'dwim)
-
 
 ;; ido-mode
 (setq ido-enable-flex-matching t)
@@ -402,10 +405,39 @@
   ("<C-mouse-4>" . zoom-in)
   ("<C-mouse-5>" . zoom-out))
 
+(defun projectile--find-file-at-point (invalidate-cache &optional ff-variant)
+  "Jump to a project's file at point.
+With INVALIDATE-CACHE invalidates the cache first.  With FF-VARIANT set to a
+defun, use that instead of `find-file'.   A typical example of such a defun
+would be `find-file-other-window' or `find-file-other-frame'"
+  (interactive "P")
+  (projectile-maybe-invalidate-cache invalidate-cache)
+  (let* ((project-root (projectile-ensure-project (projectile-project-root)))
+         (file (or (ffap-file-at-point)
+                   (thing-at-point 'filename)
+                   (thing-at-point 'symbol)
+                   (read-string "No file name at point. Please provide file name:")))
+         (ff (or ff-variant #'find-file)))
+    (when file
+      (funcall ff (expand-file-name file project-root))
+      (run-hooks 'projectile-find-file-hook))))
+
+(defun projectile-find-file-at-point(&optional invalidate-cache)
+  "Jump to a project's file at point.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first."
+  (interactive "P")
+  (projectile--find-file-at-point invalidate-cache))
+
 (use-package projectile
   :init
   (projectile-mode 1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (require 'ffap)
+
+  :bind (("C-c p 1" . 'projectile-find-file-at-point)
+         ("C-c p 0" . (lambda ()
+                        (interactive)
+                        (projectile--find-file-at-point nil 'find-file-other-window)))))
 
 (use-package magit
   :ensure t
