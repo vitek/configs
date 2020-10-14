@@ -19,7 +19,7 @@ local function list_outputs()
 
     for line in xrandr:lines() do
         local name, info, details = line:match(
-            "^([%w-]+) (.*) (%(.+%).*)$")
+            "^([%w-.]+) (.*) (%(.+%).*)$")
         if name then
             info = split(info)
             local output = {
