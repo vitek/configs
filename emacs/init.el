@@ -83,6 +83,8 @@
       (message (format "Executable %s chosen from %s" value choices))
       (set key value))))
 
+(setq vc-annotate-background "black")
+
 ;; Load custom file
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file t)
