@@ -299,8 +299,7 @@
   :init
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
-                  '(;;"clangd-10"
-                    "clangd-9" "clangd"))
+                  '("clangd-11" "clangd-10" "clangd-9" "clangd"))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
 
   ;; pyls
