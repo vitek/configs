@@ -44,8 +44,6 @@
  display-time-default-load-average nil
  column-number-mode t)
 
-
-
 ;; Handle x11 clipboard
 (setq x-select-enable-clipboard t)
 
@@ -75,7 +73,11 @@
  '(diff-removed ((t (:foreground "Red"))) 'now)
 
  '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
- '(show-ws-tab ((t (:background "#222"))) 'now))
+ '(show-ws-tab ((t (:background "#222"))) 'now)
+ '(whitespace-line
+   ((t (;;:underline t
+                   :inverse-video t
+                   )))))
 
 (defun set-executable (key choices)
   (let ((value (seq-find 'executable-find choices)))
@@ -209,16 +211,17 @@
     (when (fboundp 'column-marker-1)
       (column-marker-1 79))))
 
-(add-hook 'font-lock-mode-hook 'highlight-whitespaces)
+;;(add-hook 'font-lock-mode-hook 'highlight-whitespaces)
+
+;;(use-package show-wspace)
+;;(use-package column-marker)
 
 ;; whitespace
 (use-package whitespace
   :init
-  (setq whitespace-style '(face tabs trailing)
+  (setq whitespace-style '(face tabs trailing lines-tail)
         whitespace-line-column 79)
   (global-whitespace-mode))
-;;(use-package show-wspace)
-(use-package column-marker)
 
 ;; Unique buffer names
 (use-package uniquify
