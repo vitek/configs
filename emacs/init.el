@@ -95,7 +95,9 @@
         ("stable.melpa" . "http://stable.melpa.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 (setq package-enable-at-startup nil) ; Don't initialize later as well
-(package-initialize)
+
+(when (< emacs-major-version 27)
+  (package-initialize))
 
 ;; Require some packages
 (use-package git-grep
