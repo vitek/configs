@@ -209,7 +209,13 @@
 
 (add-hook 'font-lock-mode-hook 'highlight-whitespaces)
 
-(use-package show-wspace)
+;; whitespace
+(use-package whitespace
+  :init
+  (setq whitespace-style '(face tabs trailing)
+        whitespace-line-column 79)
+  (global-whitespace-mode))
+;;(use-package show-wspace)
 (use-package column-marker)
 
 ;; Unique buffer names
