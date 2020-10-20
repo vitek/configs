@@ -34,18 +34,17 @@
  ;; scroll speed
  scroll-conservatively 50
  scroll-up-agressively 0
- scroll-down-agressively 0)
+ scroll-down-agressively 0
 
-(menu-bar-mode -1)
-
-;; Configure window info line
-(setq
+ ;; Configure window info line
  display-time-24hr-format t
  display-time-default-load-average nil
- column-number-mode t)
+ column-number-mode t
 
-;; Handle x11 clipboard
-(setq x-select-enable-clipboard t)
+ ;; Handle x11 clipboard
+ x-select-enable-clipboard t)
+
+(menu-bar-mode -1)
 
 ;; Backup files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
@@ -95,8 +94,9 @@
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("stable.melpa" . "http://stable.melpa.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
-(setq package-enable-at-startup nil) ; Don't initialize later as well
+        ("melpa" . "http://melpa.org/packages/"))
+                                        ; Don't initialize later as well
+      package-enable-at-startup nil)
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -204,24 +204,25 @@
 ;; Highlight whitespaces and long strings
 (defun highlight-whitespaces ()
   (when (highlight-prog)
-    (when (fboundp 'show-ws-highlight-trailing-whitespace)
+    (cond
+     ((fboundp 'whitespace-mode) (whitespace-mode 1))
+     ((fboundp 'show-ws-highlight-trailing-whitespace)
       (show-ws-highlight-trailing-whitespace)
-      (show-ws-highlight-tabs))
+      (show-ws-highlight-tabs)))
     ;; Show marker at 80 column
     (when (fboundp 'column-marker-1)
       (column-marker-1 79))))
 
-;;(add-hook 'font-lock-mode-hook 'highlight-whitespaces)
+(add-hook 'font-lock-mode-hook 'highlight-whitespaces)
 
-;;(use-package show-wspace)
-;;(use-package column-marker)
+(use-package column-marker)
 
 ;; whitespace
 (use-package whitespace
+  :delight (whitespace-mode nil "whitespace")
   :init
-  (setq whitespace-style '(face tabs trailing lines-tail)
-        whitespace-line-column 79)
-  (global-whitespace-mode))
+  (setq whitespace-style '(face tabs trailing)
+        whitespace-line-column 79))
 
 ;; Unique buffer names
 (use-package uniquify
@@ -241,6 +242,7 @@
   (insert "from pdb import set_trace; set_trace()"))
 
 (use-package python
+  :delight (python-mode "py" "python-mode")
   :bind (:map python-mode-map
               ("C-c b" . ipdb-insert-set-trace)))
 
@@ -296,6 +298,7 @@
 
 ;; lsp-mode setup
 (use-package lsp-mode
+  :delight (lsp-mode "/lsp" "lsp")
   :init
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
@@ -349,13 +352,11 @@
              (company-mode nil "company")
              (eldoc-mode nil "eldoc")
              (yas-minor-mode nil "yasnippet")
-             (lsp-mode "/lsp" "lsp")
-             (python-mode "py" "python-mode")
              ;; File mode specification error: (wrong-type-argument stringp (inhibit-mode-name-delight C++//l c++))
              ;;(c++-mode "c++" "cc-mode")
-             ))
-  )
+             )))
 
+;; Go support
 (use-package go-mode
   :hook
   (go-mode
@@ -366,46 +367,22 @@
               ("C-c f" . gofmt)))
 
 ;; Dired setup
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (load "dired-x")
-            (if window-system (hl-line-mode 1))
-            (dired-omit-mode 1)))
-(setq dired-listing-switches "-alhv --group-directories-first")
-(setq dired-isearch-filenames 'dwim)
+(use-package dired
+  :init
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (load "dired-x")
+              (if window-system (hl-line-mode 1))
+              (dired-omit-mode 1)))
+  (setq dired-listing-switches "-alhv --group-directories-first"
+        dired-isearch-filenames 'dwim))
 
 ;; ido-mode
-(setq ido-enable-flex-matching t)
-(setq ido-default-buffer-method 'selected-window)
-(ido-mode 1)
-
-;; Custom keybindings
-(global-set-key (kbd "C-c #") 'comment-region)
-(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
-
-(global-set-key [C-prior] 'previous-buffer)
-(global-set-key [C-next] 'next-buffer)
-(global-set-key [M-left] 'windmove-left)
-(global-set-key [M-right] 'windmove-right)
-(global-set-key [M-up] 'windmove-up)
-(global-set-key [M-down] 'windmove-down)
-
-(global-set-key [f9] 'my-compile)
-(global-set-key [f2] 'save-buffer)
-(global-set-key [f3] 'find-file)
-(global-set-key [f4] 'gud-gdb)
-(global-set-key [f7] 'gud-step)
-(global-set-key [f8] 'gud-next)
-(global-set-key [C-f8] 'gud-break)
-(global-set-key [f5] 'goto-line)
-
-(if window-system
-    (progn
-      (global-set-key "\C-z" 'ignore)
-      (global-set-key [mouse-4] 'scroll-down)
-      (global-set-key [mouse-5] 'scroll-up)
-      (global-set-key [mouse-2] 'nop)
-      (global-set-key [C-f9] 'recompile)))
+(use-package ido
+  :init
+  (setq ido-enable-flex-matching t
+        ido-default-buffer-method 'selected-window)
+  (ido-mode 1))
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
@@ -441,6 +418,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (projectile--find-file-at-point invalidate-cache))
 
 (use-package projectile
+  :delight (projectile-mode nil "projectile")
   :init
   (projectile-mode 1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
@@ -450,10 +428,38 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
          ("C-c p 0" . (lambda ()
                         (interactive)
                         (projectile--find-file-at-point nil 'find-file-other-window)))))
-
+;; Magit
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)))
+
+;; Custom keybindings
+(global-set-key (kbd "C-c #") 'comment-region)
+(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
+
+(global-set-key [C-prior] 'previous-buffer)
+(global-set-key [C-next] 'next-buffer)
+(global-set-key [M-left] 'windmove-left)
+(global-set-key [M-right] 'windmove-right)
+(global-set-key [M-up] 'windmove-up)
+(global-set-key [M-down] 'windmove-down)
+
+(global-set-key [f9] 'my-compile)
+(global-set-key [f2] 'save-buffer)
+(global-set-key [f3] 'find-file)
+(global-set-key [f4] 'gud-gdb)
+(global-set-key [f7] 'gud-step)
+(global-set-key [f8] 'gud-next)
+(global-set-key [C-f8] 'gud-break)
+(global-set-key [f5] 'goto-line)
+
+(if window-system
+    (progn
+      (global-set-key "\C-z" 'ignore)
+      (global-set-key [mouse-4] 'scroll-down)
+      (global-set-key [mouse-5] 'scroll-up)
+      (global-set-key [mouse-2] 'nop)
+      (global-set-key [C-f9] 'recompile)))
 
 ;; Emacs server
 (if window-system (server-start))
