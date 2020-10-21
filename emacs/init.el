@@ -433,25 +433,28 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+(use-package windmove
+  :bind
+  ([M-left]  . windmove-left)
+  ([M-right] . windmove-right)
+  ([M-up]    . windmove-up)
+  ([M-down]  . windmove-down))
+
+(use-package gud
+  :bind
+  ([f4]   . gud-gdb)
+  ([f7]   . gud-step)
+  ([f8]   . gud-next)
+  ([C-f8] . gud-break))
+
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
 
 (global-set-key [C-prior] 'previous-buffer)
 (global-set-key [C-next] 'next-buffer)
-(global-set-key [M-left] 'windmove-left)
-(global-set-key [M-right] 'windmove-right)
-(global-set-key [M-up] 'windmove-up)
-(global-set-key [M-down] 'windmove-down)
 
 (global-set-key [f9] 'my-compile)
-(global-set-key [f2] 'save-buffer)
-(global-set-key [f3] 'find-file)
-(global-set-key [f4] 'gud-gdb)
-(global-set-key [f7] 'gud-step)
-(global-set-key [f8] 'gud-next)
-(global-set-key [C-f8] 'gud-break)
-(global-set-key [f5] 'goto-line)
 
 (if window-system
     (progn
