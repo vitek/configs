@@ -41,6 +41,9 @@
  display-time-default-load-average nil
  column-number-mode t
 
+ ;; Calendar
+ calendar-week-start-day 1
+
  ;; Handle x11 clipboard
  x-select-enable-clipboard t)
 
