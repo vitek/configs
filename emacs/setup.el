@@ -15,6 +15,7 @@
     flycheck
     gnu-elpa-keyring-update
     go-mode
+    graphviz-dot-mode
     helm
     lsp-mode
     ;;lsp-treemacs
