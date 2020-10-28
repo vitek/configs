@@ -64,7 +64,6 @@ install-emacs-configs:
 	$(INSTALL) -m 0644 emacs/init.el $(DESTDIR)/.emacs.d/init.el
 	$(INSTALL) -m 0644 emacs/site-lisp/cython-mode.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/column-marker.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/github-theme.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/git-grep.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/google-c-style.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp

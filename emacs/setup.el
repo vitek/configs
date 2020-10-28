@@ -9,26 +9,31 @@
   '(clang-format
     cmake-ide
     cmake-mode
-    color-theme-modern
     company-lsp
-    find-file-in-project
-    go-mode
     delight
+    find-file-in-project
     flycheck
     gnu-elpa-keyring-update
+    go-mode
     helm
     lsp-mode
     ;;lsp-treemacs
     ;;lsp-ui
     lua-mode
+    magit
+    nginx-mode
     php-mode
     projectile
     pyimpsort
     python-black
-    nginx-mode
-    magit
     use-package
-    yaml-mode))
+    yaml-mode
+
+    ;; themes
+    color-theme-modern
+    monokai-theme
+    nova-theme
+    solarized-theme))
 
 (defun byte-compile-site-lisp ()
   (let*
@@ -45,7 +50,7 @@
 (defun install-packages ()
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
   ;; See http://elpa.gnu.org/packages/gnu-elpa-keyring-update.html
-  (setq package-check-signature nil)
+  ;;(setq package-check-signature nil)
   (package-initialize)
   (message "Refreshing packages list...")
   (package-refresh-contents)

@@ -149,10 +149,12 @@
 ;; Color theme setup, 0.1s
 (use-package color-theme-modern
   :config
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
   (if window-system
       (progn
         ;;(load-theme 'dark-laptop)
-        (load-theme 'classic))))
+        ;;(load-theme 'classic)
+        (load-theme 'solarized-dark))))
 
 (defun my-compile()
   (interactive)
