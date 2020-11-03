@@ -452,6 +452,15 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   ([f8]   . gud-next)
   ([C-f8] . gud-break))
 
+(use-package org
+  :config
+  (setq org-src-fontify-natively t)
+  (defun org-summary-todo (n-done n-not-done)
+    "Switch entry to DONE when all subentries are done, to TODO otherwise."
+    (let (org-log-done org-log-states)   ; turn off logging
+      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
+
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
 (define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
