@@ -154,6 +154,10 @@
       (progn
         ;;(load-theme 'dark-laptop)
         ;;(load-theme 'classic)
+        (setq solarized-scale-org-headlines nil
+              solarized-scale-outline-headlines nil
+              solarized-use-variable-pitch nil
+              solarized-use-less-bold t)
         (load-theme 'solarized-dark))))
 
 (defun my-compile()
