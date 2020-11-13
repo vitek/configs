@@ -74,12 +74,9 @@
  '(diff-added ((t (:foreground "Green"))) 'now)
  '(diff-removed ((t (:foreground "Red"))) 'now)
 
- '(show-ws-trailing-whitespace ((t (:background "Red"))) 'now)
- '(show-ws-tab ((t (:background "#222"))) 'now)
- '(whitespace-line
-   ((t (;;:underline t
-                   :inverse-video t
-                   )))))
+ '(whitespace-trailing ((t (:background "Red"))) 'now)
+ '(whitespace-tab ((t (:background "#433" :inverse-video nil))) 'now)
+ '(whitespace-line ((t (:background "gray"))) 'now))
 
 (defun set-executable (key choices)
   (let ((value (seq-find 'executable-find choices)))
@@ -210,28 +207,44 @@
   (cl-intersection (derived-mode-parents major-mode)
                 '(prog-mode text-mode cmake-mode)))
 
-;; Highlight whitespaces and long strings
-(defun highlight-whitespaces ()
-  (when (highlight-prog)
-    (cond
-     ((fboundp 'whitespace-mode) (whitespace-mode 1))
-     ((fboundp 'show-ws-highlight-trailing-whitespace)
-      (show-ws-highlight-trailing-whitespace)
-      (show-ws-highlight-tabs)))
-    ;; Show marker at 80 column
-    (when (fboundp 'column-marker-1)
-      (column-marker-1 79))))
-
-(add-hook 'font-lock-mode-hook 'highlight-whitespaces)
-
-(use-package column-marker)
-
 ;; whitespace
 (use-package whitespace
-  :delight (whitespace-mode nil "whitespace")
-  :init
-  (setq whitespace-style '(face tabs trailing)
-        whitespace-line-column 79))
+   :delight (whitespace-mode nil "whitespace")
+   :init
+
+   (setq whitespace-style '(face tabs)
+         whitespace-line-column 79)
+
+   (defun my-whitespace-column-regexp()
+     (let ((line-column (or whitespace-line-column fill-column)))
+       (format
+        "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.\\).*$"
+        tab-width
+        (1- tab-width)
+        (/ line-column tab-width)
+        (let ((rem (% line-column tab-width)))
+          (if (zerop rem)
+              ""
+            (format ".\\{%d\\}" rem))))))
+
+   (defun my-highlight-column ()
+     (font-lock-add-keywords
+      nil
+      `((,(my-whitespace-column-regexp) 2 whitespace-line prepend))
+      t))
+
+   ;; Highlight whitespaces and long strings
+   (defun my-highlight-whitespaces ()
+     (when (highlight-prog)
+       (cond
+        ((fboundp 'whitespace-mode)
+         (whitespace-mode 1)
+         (setq-local show-trailing-whitespace t)
+         ;; Show single column marker
+         (my-highlight-column)))))
+
+   (add-hook 'font-lock-mode-hook 'my-highlight-whitespaces))
+
 
 ;; Unique buffer names
 (use-package uniquify

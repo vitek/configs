@@ -6,28 +6,37 @@
         ("stable.melpa" . "http://stable.melpa.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 (defvar bootstrap-packages
-  '(clang-format
-    cmake-ide
-    cmake-mode
-    company-lsp
-    delight
+  '(delight
     find-file-in-project
     flycheck
     gnu-elpa-keyring-update
-    go-mode
-    graphviz-dot-mode
     helm
+    magit
+    projectile
+    use-package
+
+    ;; lsp related
+    company-lsp
     lsp-mode
     ;;lsp-treemacs
     ;;lsp-ui
-    lua-mode
-    magit
-    nginx-mode
-    php-mode
-    projectile
+    
+    ;; c/c++ related
+    clang-format
+    cmake-ide
+    cmake-mode
+    
+    ;; python related
     pyimpsort
     python-black
-    use-package
+    cython-mode
+
+    ;; prog modes
+    go-mode
+    graphviz-dot-mode
+    lua-mode
+    nginx-mode
+    php-mode
     yaml-mode
 
     ;; themes
