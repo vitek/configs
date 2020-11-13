@@ -20,12 +20,12 @@
     lsp-mode
     ;;lsp-treemacs
     ;;lsp-ui
-    
+
     ;; c/c++ related
     clang-format
     cmake-ide
     cmake-mode
-    
+
     ;; python related
     pyimpsort
     python-black
@@ -54,13 +54,15 @@
      (format
       "Compiling emacs files, directory: %s" site-lisp-directory))
     (add-to-list 'load-path site-lisp-directory)
+    (byte-recompile-directory site-lisp-directory 0)
     (message (format "Compiling emacs %s" init-el-path))
     (byte-recompile-file init-el-path 0)))
 
 (defun install-packages ()
   (package-initialize)
   (message "Refreshing packages list...")
-  (package-refresh-contents)
+  (when (not (getenv "EMACS_PACKAGES_REFRESH_SKIP"))
+    (package-refresh-contents))
   (dolist (package bootstrap-packages)
     (unless (package-installed-p package)
       (message (format "Installing package: %s" package))

@@ -74,6 +74,9 @@ install-emacs-configs:
 install-emacs: install-xresources install-emacs-configs
 	emacs --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
 
+install-emacs-norefresh: export EMACS_PACKAGES_REFRESH_SKIP=1
+install-emacs-norefresh: install-emacs
+
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
 
