@@ -245,6 +245,11 @@
 
    (add-hook 'font-lock-mode-hook 'my-highlight-whitespaces))
 
+(use-package recentf
+  :bind (("C-x C-r" . recentf-open-files))
+  :config
+  (setq recentf-max-menu-items 25)
+  (recentf-mode 1))
 
 ;; Unique buffer names
 (use-package uniquify
