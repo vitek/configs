@@ -326,7 +326,7 @@
 ;; lsp-mode setup
 (use-package lsp-mode
   :delight (lsp-mode "/lsp" "lsp")
-  :init
+  :config
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
                   '("clangd-11" "clangd-10" "clangd-9" "clangd"))
