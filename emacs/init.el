@@ -114,7 +114,9 @@
   (setq js-indent-level 2))
 
 (use-package find-file-in-project)
-(use-package mc-move)
+(use-package mc-move
+  :config
+  (global-mc-move-mode))
 
 (setq c-basic-offset 4)
 (c-set-offset 'arglist-intro '+)
