@@ -212,7 +212,7 @@
 ;; whitespace
 (use-package whitespace
    :delight (whitespace-mode nil "whitespace")
-   :init
+   :config
 
    (setq whitespace-style '(face tabs)
          whitespace-line-column 79)
@@ -255,7 +255,7 @@
 
 ;; Unique buffer names
 (use-package uniquify
-  :init
+  :config
   (setq uniquify-buffer-name-style 'post-forward))
 
 ;; Python-mode settings
@@ -263,8 +263,10 @@
 (setq py-flake8-command-args
       '("--ignore=E12,F403" "--max-line-length=120" "--max-complexity=73"))
 
-(set-executable 'python3-executable
-                '("taxi-python3" "python3.7" "python3"))
+(defun my-find-py3 ()
+  (when (not (boundp 'python3-executable))
+    (set-executable 'python3-executable
+                    '("taxi-python3" "python3.7" "python3"))))
 
 (defun ipdb-insert-set-trace()
   (interactive)
@@ -276,14 +278,14 @@
               ("C-c b" . ipdb-insert-set-trace)))
 
 (use-package python-black
-  :init
+  :config
   (set-executable 'python-black-command
                   '("taxi-black" "black"))
   :after python
   :bind (:map python-mode-map ("C-c f" . python-black-buffer)))
 
 (use-package pyimpsort
-  :init
+  :config
   ;; TODO: use own patched pyimpsort.py
   (setq pyimpsort-script
         (concat user-emacs-directory "scripts/pyimpsort.py")))
@@ -300,7 +302,7 @@
                       (c-set-offset 'inlambda 0))))
 
 (use-package clang-format
-  :init
+  :config
   (set-executable 'clang-format-executable
                   '("clang-format-7" "clang-format"))
   :after cc-mode
@@ -316,12 +318,12 @@
 
 ;; Enable flycheck globally
 (use-package flycheck
-  :init
+  :config
+  (my-find-py3)
   (when python3-executable
     (setq flycheck-python-flake8-executable python3-executable
           flycheck-python-pycompile-executable python3-executable
           flycheck-python-pylint-executable python3-executable))
-  :config
   (global-flycheck-mode)
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
@@ -397,7 +399,7 @@
 
 ;; Dired setup
 (use-package dired
-  :init
+  :config
   (add-hook 'dired-mode-hook
             (lambda ()
               (load "dired-x")
@@ -408,7 +410,7 @@
 
 ;; ido-mode
 (use-package ido
-  :init
+  :config
   (setq ido-enable-flex-matching t
         ido-default-buffer-method 'selected-window)
   (ido-mode 1))
@@ -448,7 +450,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
 (use-package projectile
   :delight (projectile-mode nil "projectile")
-  :init
+  :config
   (projectile-mode 1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (require 'ffap)
