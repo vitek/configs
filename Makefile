@@ -62,6 +62,7 @@ install-emacs-configs:
 	$(INSTALL) -d $(DESTDIR)/.emacs.d/scripts
 	rm -f  $(DESTDIR)/.emacs
 	$(INSTALL) -m 0644 emacs/init.el $(DESTDIR)/.emacs.d/init.el
+	$(INSTALL) -m 0644 emacs/early-init.el $(DESTDIR)/.emacs.d/early-init.el
 	$(INSTALL) -m 0644 emacs/site-lisp/git-grep.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/google-c-style.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp

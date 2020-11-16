@@ -480,7 +480,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
 (use-package org
   :config
-  (setq org-src-fontify-natively t
+  (setq org-export-with-smart-quotes t
+        org-src-fontify-natively t
         org-startup-folded nil)
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
