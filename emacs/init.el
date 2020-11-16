@@ -505,8 +505,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
       (global-set-key [mouse-2] 'nop)
       (global-set-key [C-f9] 'recompile)))
 
+(use-package server
+  :config
+  (if window-system (server-start)))
 ;; Emacs server
-(if window-system (server-start))
 
 ;; Load machine local configuration (if available)
 (load (concat user-emacs-directory "local.el") t)
