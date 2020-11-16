@@ -12,6 +12,8 @@
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
+;; (setq use-package-verbose 'debug)
+
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 (require 'cl-lib)
@@ -106,14 +108,16 @@
   :bind (([f12] . git-grep)))
 
 (use-package yaml-mode
+  :defer t
   :config
   (setq yaml-indent-offset 4))
 
 (use-package js
+  :defer t
   :config
   (setq js-indent-level 2))
 
-(use-package find-file-in-project)
+(use-package find-file-in-project :defer t)
 (use-package mc-move
   :config
   (global-mc-move-mode))
@@ -211,41 +215,41 @@
 
 ;; whitespace
 (use-package whitespace
-   :delight (whitespace-mode nil "whitespace")
-   :config
+  :delight (whitespace-mode nil "whitespace")
+  :config
 
-   (setq whitespace-style '(face tabs)
-         whitespace-line-column 79)
+  (setq whitespace-style '(face tabs)
+        whitespace-line-column 79)
 
-   (defun my-whitespace-column-regexp()
-     (let ((line-column (or whitespace-line-column fill-column)))
-       (format
-        "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.\\).*$"
-        tab-width
-        (1- tab-width)
-        (/ line-column tab-width)
-        (let ((rem (% line-column tab-width)))
-          (if (zerop rem)
-              ""
-            (format ".\\{%d\\}" rem))))))
+  (defun my-whitespace-column-regexp()
+    (let ((line-column (or whitespace-line-column fill-column)))
+      (format
+       "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.\\).*$"
+       tab-width
+       (1- tab-width)
+       (/ line-column tab-width)
+       (let ((rem (% line-column tab-width)))
+         (if (zerop rem)
+             ""
+           (format ".\\{%d\\}" rem))))))
 
-   (defun my-highlight-column ()
-     (font-lock-add-keywords
-      nil
-      `((,(my-whitespace-column-regexp) 2 whitespace-line prepend))
-      t))
+  (defun my-highlight-column ()
+    (font-lock-add-keywords
+     nil
+     `((,(my-whitespace-column-regexp) 2 whitespace-line prepend))
+     t))
 
-   ;; Highlight whitespaces and long strings
-   (defun my-highlight-whitespaces ()
-     (when (highlight-prog)
-       (cond
-        ((fboundp 'whitespace-mode)
-         (whitespace-mode 1)
-         (setq-local show-trailing-whitespace t)
-         ;; Show single column marker
-         (my-highlight-column)))))
+  ;; Highlight whitespaces and long strings
+  (defun my-highlight-whitespaces ()
+    (when (highlight-prog)
+      (cond
+       ((fboundp 'whitespace-mode)
+        (whitespace-mode 1)
+        (setq-local show-trailing-whitespace t)
+        ;; Show single column marker
+        (my-highlight-column)))))
 
-   (add-hook 'font-lock-mode-hook 'my-highlight-whitespaces))
+  (add-hook 'font-lock-mode-hook 'my-highlight-whitespaces))
 
 (use-package recentf
   :bind (("C-x C-r" . recentf-open-files))
@@ -278,38 +282,36 @@
               ("C-c b" . ipdb-insert-set-trace)))
 
 (use-package python-black
+  :after python
   :config
   (set-executable 'python-black-command
                   '("taxi-black" "black"))
-  :after python
   :bind (:map python-mode-map ("C-c f" . python-black-buffer)))
 
 (use-package pyimpsort
+  :after python
   :config
   ;; TODO: use own patched pyimpsort.py
   (setq pyimpsort-script
         (concat user-emacs-directory "scripts/pyimpsort.py")))
 
 ;; C/C++ mode settings
-(add-hook 'c++-mode-hook
-          (lambda ()
-            (setq-local flycheck-gcc-language-standard "c++17")
-            (setq-local flycheck-clang-language-standard "c++17")))
-
 (use-package google-c-style
+  :after cc-mode
   :hook (c++-mode . (lambda ()
                       (google-set-c-style)
                       (c-set-offset 'inlambda 0))))
 
 (use-package clang-format
+  :after cc-mode
   :config
   (set-executable 'clang-format-executable
                   '("clang-format-7" "clang-format"))
-  :after cc-mode
   :bind (:map c++-mode-map ("C-c f" . clang-format-buffer)))
 
 ;; Lua
 (use-package manual-indent
+  :after lua-mode
   :hook
   (lua-mode-hook . (lambda ()
                      (setq lua-indent-level 4)
@@ -319,12 +321,21 @@
 ;; Enable flycheck globally
 (use-package flycheck
   :config
-  (my-find-py3)
-  (when python3-executable
-    (setq flycheck-python-flake8-executable python3-executable
-          flycheck-python-pycompile-executable python3-executable
-          flycheck-python-pylint-executable python3-executable))
   (global-flycheck-mode)
+
+  :hook
+  (python-mode .
+               (lambda ()
+                 (my-find-py3)
+                 (when python3-executable
+                   (setq-local
+                    flycheck-python-flake8-executable python3-executable
+                    flycheck-python-pycompile-executable python3-executable
+                    flycheck-python-pylint-executable python3-executable))))
+  (c++-mode . (lambda ()
+                (setq-local flycheck-gcc-language-standard "c++17"
+                            flycheck-clang-language-standard "c++17")))
+
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
 ;; lsp-mode setup
@@ -479,6 +490,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   ([C-f8] . gud-break))
 
 (use-package org
+  :defer t
   :config
   (setq org-export-with-smart-quotes t
         org-src-fontify-natively t
@@ -506,10 +518,11 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
       (global-set-key [mouse-2] 'nop)
       (global-set-key [C-f9] 'recompile)))
 
+;; Emacs server
 (use-package server
+  :defer 1
   :config
   (if window-system (server-start)))
-;; Emacs server
 
 ;; Load machine local configuration (if available)
 (load (concat user-emacs-directory "local.el") t)
