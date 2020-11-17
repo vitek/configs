@@ -39,6 +39,10 @@
     php-mode
     yaml-mode
 
+    ;; misc
+    gif-screencast
+    keycast
+
     ;; themes
     color-theme-modern
     monokai-theme
