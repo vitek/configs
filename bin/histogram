@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+
+import sys
+import collections
+
+
+def main():
+    metrics = collections.Counter()
+    for line in sys.stdin:
+        key = line.rstrip('\r\n')
+        metrics[key] += 1
+
+    total = sum(metrics.values())
+    print(f'total: {total}')
+    align = max(len(key) for key in metrics.keys())
+    for k, v in metrics.most_common():
+        print(f'... {k:<{align}} {100 * v/total:5.02f}% ({v})')
+
+
+if __name__ == '__main__':
+    main()
