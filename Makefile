@@ -14,8 +14,9 @@ AWESOME_FILES =					\
 	awesome/xrandr.lua
 
 BIN_FILES =					\
-	bin/xml-pp				\
+	bin/histogram				\
 	bin/json-pp				\
+	bin/xml-pp				\
 	bin/xkb-layout
 
 default:
