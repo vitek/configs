@@ -172,9 +172,12 @@
 (defun my-grep()
   (interactive)
   (let ((file (or (buffer-file-name) default-directory)))
-    (if (and file (vc-find-root  file ".git"))
-        (call-interactively 'git-grep)
-      (call-interactively 'rg))))
+    (cond
+     ((and (fboundp 'git-grep) file (vc-find-root  file ".git"))
+      (call-interactively 'git-grep))
+     ((fboundp 'rg)
+      (call-interactively 'rg))
+     (t (call-interactively 'grep)))))
 
 (defun nop() (interactive))
 
