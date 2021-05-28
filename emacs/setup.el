@@ -7,13 +7,16 @@
         ("melpa" . "http://melpa.org/packages/")))
 (defvar bootstrap-packages
   '(delight
-    find-file-in-project
+    use-package
     flycheck
+
+    ;; dev
+    find-file-in-project
     gnu-elpa-keyring-update
     helm
     magit
     projectile
-    use-package
+    rg
 
     ;; lsp related
     company-lsp

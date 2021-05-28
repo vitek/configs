@@ -104,8 +104,8 @@
   (package-initialize))
 
 ;; Require some packages
-(use-package git-grep
-  :bind (([f12] . git-grep)))
+(use-package git-grep)
+(use-package rg)
 
 (use-package yaml-mode
   :defer t
@@ -168,6 +168,13 @@
   (if (fboundp 'projectile-compile-project)
       (call-interactively 'projectile-compile-project)
     (call-interactively 'compile)))
+
+(defun my-grep()
+  (interactive)
+  (let ((file (or (buffer-file-name) default-directory)))
+    (if (and file (vc-find-root  file ".git"))
+        (call-interactively 'git-grep)
+      (call-interactively 'rg))))
 
 (defun nop() (interactive))
 
@@ -509,6 +516,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 (global-set-key [C-next] 'next-buffer)
 
 (global-set-key [f9] 'my-compile)
+(global-set-key [f12] 'my-grep)
 
 (if window-system
     (progn
@@ -523,6 +531,17 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :defer 1
   :config
   (if window-system (server-start)))
+
+(use-package vc
+  :config
+  ;; Only load vc-arc when available
+  (when (require 'vc-arc nil t)
+    (add-to-list 'vc-handled-backends 'arc)))
+
+(use-package gif-screencast
+  :config
+  (define-key gif-screencast-mode-map (kbd "<f8>") 'gif-screencast-toggle-pause)
+  (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
 
 ;; Load machine local configuration (if available)
 (load (concat user-emacs-directory "local.el") t)
