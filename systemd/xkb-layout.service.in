@@ -1,0 +1,8 @@
+[Unit]
+Description=XKB Layout Setup
+
+[Service]
+ExecStart=@HOME@/bin/xkb-layout
+
+[Install]
+WantedBy=default.target

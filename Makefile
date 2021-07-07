@@ -19,6 +19,9 @@ BIN_FILES =					\
 	bin/xml-pp				\
 	bin/xkb-layout
 
+SYSTEMD_UNITS = systemd/xkb-layout.service
+SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
+
 default:
 
 install: install-vc install-editor install-misc
@@ -140,6 +143,15 @@ install-awesome-session:
 install-logid:
 	sudo cp logid.cfg /etc/logid.cfg
 
+install-systemd-units: $(SYSTEMD_UNITS)
+	$(INSTALL) -d $(SYSTEMD_USER_PATH)
+	for unit in $(SYSTEMD_UNITS); do \
+	  $(INSTALL) -m 0644 $$unit $(SYSTEMD_USER_PATH); \
+	  systemctl --user enable $$(basename $$unit); \
+	done
+
+install-systemd: install-bin install-systemd-units
+
 .PHONY: diff
 diff:
 	@rm -rf test-config
@@ -171,3 +183,6 @@ ssh-deploy: configs.tar.gz
 		echo "Installing configs to $$hostname..."; \
 		cat $< | ssh $$hostname tar -zxf - -C ~ || exit 1; \
 	done
+
+%.service: %.service.in
+	python3 substitute.py -i $< -o $@ -- "HOME=$(DESTDIR)"

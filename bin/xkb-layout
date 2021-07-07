@@ -1,9 +1,10 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 
 import argparse
 import queue
 import re
 import subprocess
+import sys
 import threading
 import typing
 
@@ -45,6 +46,7 @@ def main():
         target=worker, args=(kbd_queue, args.command), daemon=True,
     )
     worker_thread.start()
+    sys.stdout.flush()
 
     with subprocess.Popen(
             ['stdbuf', '-oL', 'udevadm', 'monitor', '-u', '-s', 'input'],
@@ -61,6 +63,7 @@ def main():
                         and INPUT_DEVICE_RE.match(parts[3])
                 ):
                     print(f'input device added {parts[3]}')
+                    sys.stdout.flush()
                     kbd_queue.put(parts[3])
 
 
