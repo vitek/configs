@@ -40,6 +40,7 @@
     lua-mode
     nginx-mode
     php-mode
+    protobuf-mode
     yaml-mode
 
     ;; misc
