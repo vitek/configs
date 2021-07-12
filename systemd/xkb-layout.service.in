@@ -2,7 +2,7 @@
 Description=XKB Layout Setup
 
 [Service]
-ExecStart=@HOME@/bin/xkb-layout
+ExecStart=@PYTHON3@ @HOME@/bin/xkb-layout
 
 [Install]
 WantedBy=default.target

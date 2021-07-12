@@ -376,7 +376,7 @@ globalkeys = awful.util.table.join(
     -- Screenshots
     awful.key({ modkey }, "\\",
        function () end,
-       function () awful.spawn("gnome-screenshot -acB") end),
+       function () awful.spawn("gnome-screenshot -acB -e none") end),
     awful.key({ modkey, "Mod1" }, "\\",
        function () awful.spawn("gnome-screenshot -wBc") end),
     awful.key({ modkey, "Shift" }, "\\",

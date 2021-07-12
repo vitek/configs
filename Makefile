@@ -1,5 +1,6 @@
 GCONFTOOL = gconftool-2
 INSTALL   = install
+PYTHON3   = $(firstword $(shell which python3.9 python3.8 python3.7 python3))
 
 DESTDIR   = $(HOME)
 
@@ -185,4 +186,5 @@ ssh-deploy: configs.tar.gz
 	done
 
 %.service: %.service.in
-	python3 substitute.py -i $< -o $@ -- "HOME=$(DESTDIR)"
+	python3.7 substitute.py -i $< -o $@ --\
+		"HOME=$(DESTDIR)" "PYTHON3=$(PYTHON3)"
