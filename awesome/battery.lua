@@ -5,7 +5,7 @@ local wibox = require("wibox")
 
 local vicious = require("vicious")
 
-local icondir_base = "/usr/share/icons/ubuntu-mono-dark/status/22/"
+local icondir_base = "/usr/share/icons/ubuntu-mono-dark/status/22/unity-"
 local battery_icons = {
     ["charged"] =
         icondir_base .. "battery-charged.svg",
@@ -46,6 +46,7 @@ local tooltip_fmt = {
     ["+"] = "Charging %d%%, %s until charged",
     ["-"] = "Discharging %d%%, %s remaining"
 }
+local unpack = table.unpack
 
 local function round(value, div)
     local k = value / (div or 1.0)
