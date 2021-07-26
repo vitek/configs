@@ -186,5 +186,5 @@ ssh-deploy: configs.tar.gz
 	done
 
 %.service: %.service.in
-	python3.7 substitute.py -i $< -o $@ --\
+	$(PYTHON3) substitute.py -i $< -o $@ --\
 		"HOME=$(DESTDIR)" "PYTHON3=$(PYTHON3)"

@@ -89,7 +89,7 @@
 (setq vc-annotate-background "black")
 
 ;; Load custom file
-(setq custom-file (concat user-emacs-directory "custom.el"))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
 
 ;; Configure package
@@ -303,7 +303,7 @@
   :config
   ;; TODO: use own patched pyimpsort.py
   (setq pyimpsort-script
-        (concat user-emacs-directory "scripts/pyimpsort.py")))
+        (expand-file-name "scripts/pyimpsort.py" user-emacs-directory)))
 
 ;; C/C++ mode settings
 (use-package google-c-style
@@ -547,7 +547,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
 
 ;; Load machine local configuration (if available)
-(load (concat user-emacs-directory "local.el") t)
+(load (expand-file-name "local.el" user-emacs-directory) t)
 
 (message (format "gcs-done: %d" gcs-done))
 (message (format "Emacs init time: %s" (emacs-init-time)))
