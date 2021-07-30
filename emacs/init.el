@@ -129,7 +129,7 @@
 (setq kill-whole-line t)
 (setq default-input-method "russian-computer")
 (setq grep-command "grep -Eni ")
-(setq compilation-environment '("LC_ALL=C"))
+(setq compilation-environment '("LC_ALL=C" "TERM=ansi"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
 (setq-default sgml-basic-offset 2)
@@ -162,6 +162,13 @@
               solarized-use-variable-pitch nil
               solarized-use-less-bold t)
         (load-theme 'solarized-dark))))
+
+(use-package ansi-color
+  :config
+  (defun my/ansi-colorize-buffer ()
+    (let ((buffer-read-only nil))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer))
 
 (defun my-compile()
   (interactive)
