@@ -113,6 +113,10 @@ install-awesome: install-x11-utils
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
 
+install-compton:
+	$(INSTALL) -d $(DESTDIR)/.config
+	$(INSTALL) -m 0644 awesome/compton.conf $(DESTDIR)/.config/
+
 install-x11-utils:
 	$(INSTALL) -m 0644 xbindkeysrc $(DESTDIR)/.xbindkeysrc
 
