@@ -72,7 +72,7 @@ local settings = load_settings(
 })
 
 local function run_startup_script()
-   awful.spawn(gfs.get_configuration_dir() .. 'scripts/start.sh')
+   awful.spawn(gfs.get_configuration_dir() .. 'scripts/start.sh', false)
 end
 
 run_startup_script()
@@ -361,22 +361,22 @@ globalkeys = awful.util.table.join(
     awful.key({"Mod1"}, "Escape", xrandr.menu),
 
     -- Volume control
-    awful.key({ }, "XF86AudioRaiseVolume",  pulseaudio.VolumeUp),
-    awful.key({ }, "XF86AudioLowerVolume",  pulseaudio.VolumeDown),
-    awful.key({ }, "XF86AudioMute",         pulseaudio.VolumeToggleMute),
-    awful.key({ }, "XF86MonBrightnessDown", brightness.dec),
-    awful.key({ }, "XF86MonBrightnessUp", brightness.inc),
+    --awful.key({ }, "XF86AudioRaiseVolume",  pulseaudio.VolumeUp),
+    --awful.key({ }, "XF86AudioLowerVolume",  pulseaudio.VolumeDown),
+    --awful.key({ }, "XF86AudioMute",         pulseaudio.VolumeToggleMute),
+    --awful.key({ }, "XF86MonBrightnessDown", brightness.dec),
+    --awful.key({ }, "XF86MonBrightnessUp", brightness.inc),
 
-    awful.key({ modkey }, "F1", pulseaudio.VolumeToggleMute),
-    awful.key({ modkey }, "F2", pulseaudio.VolumeDown),
-    awful.key({ modkey }, "F3", pulseaudio.VolumeUp),
-    awful.key({ modkey }, "F11", brightness.dec),
-    awful.key({ modkey }, "F12", brightness.inc),
+    --awful.key({ modkey }, "F1", pulseaudio.VolumeToggleMute),
+    --awful.key({ modkey }, "F2", pulseaudio.VolumeDown),
+    --awful.key({ modkey }, "F3", pulseaudio.VolumeUp),
+    --awful.key({ modkey }, "F11", brightness.dec),
+    --awful.key({ modkey }, "F12", brightness.inc),
 
     -- Screenshots
     awful.key({ modkey }, "\\",
        function () end,
-       function () awful.spawn("gnome-screenshot -acB -e none") end),
+       function () awful.spawn("gnome-screenshot -acB") end),
     awful.key({ modkey, "Mod1" }, "\\",
        function () awful.spawn("gnome-screenshot -wBc") end),
     awful.key({ modkey, "Shift" }, "\\",
@@ -533,7 +533,8 @@ awful.rules.rules = {
           "Wpa_gui",
           "pinentry",
           "veromix",
-          "xtightvncviewer"},
+          "xtightvncviewer"
+        },
 
         name = {
           "Event Tester",  -- xev.
@@ -553,6 +554,12 @@ awful.rules.rules = {
     -- Emacs has its own keyboard switcher
     { rule_any = { class =  { "emacs", "Emacs" } },
       properties = { disable_kbd_switch = true } },
+    -- zoom
+    {
+      rule_any = { class =  { "zoom", "Zoom" }, opacity =  { 0.0 }},
+      except_any = { opacity =  { 1.0 }},
+      properties = { floating = true, hidden = true }
+    },
 
     { rule_any = { class =  { "chrome-browser",
                               "chromium-browser",

@@ -114,6 +114,7 @@ function QuakeConsole:show(client)
     client.above = true
     client.skip_taskbar = true
     client.sticky = true
+    client.opacity = 0.95
 
     self:updateGeometry(client)
 
