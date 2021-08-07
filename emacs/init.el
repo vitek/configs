@@ -361,7 +361,7 @@
   :config
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
-                  '("clangd-11" "clangd-10" "clangd-9" "clangd"))
+                  '("clangd-12" "clangd-11" "clangd-10" "clangd-9" "clangd"))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
 
   ;; pyls
@@ -395,9 +395,10 @@
   (set-executable 'lsp-gopls-server-path '("gopls" "/home/vitja/go/bin/gopls"))
 
   ;; common settings
-  (setq lsp-enable-symbol-highlighting nil)
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-enable-snippet nil)
+  (setq lsp-enable-symbol-highlighting nil
+        lsp-prefer-flymake nil
+        lsp-enable-snippet nil
+        lsp-headerline-breadcrumb-enable nil)
 
   :commands lsp
   :hook ((python-mode . lsp-deferred)
