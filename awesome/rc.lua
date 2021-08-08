@@ -400,8 +400,8 @@ clientkeys = awful.util.table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
-    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
-              {description = "move to master", group = "client"}),
+    --awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
+    --          {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
@@ -419,7 +419,17 @@ clientkeys = awful.util.table.join(
             c:raise()
         end ,
         {description = "maximize", group = "client"}),
-
+    awful.key({ modkey, "Control" }, "Return",
+       function (c)
+          local master = awful.client.getmaster(c.screen)
+          if c == master then
+             awful.client.setslave(c)
+          else
+             c:swap(master)
+             --awful.client.setmaster(c)
+          end
+       end,
+       {description = "master swap", group = "client"}),
     -- My custom keys
     awful.key({ "Mod1" }, "F4", function (c) c:kill() end)
 )
