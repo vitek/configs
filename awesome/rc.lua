@@ -656,6 +656,35 @@ end)
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
 end)
+
+-- Arrange signal handler
+-- See https://github.com/awesomeWM/awesome/issues/171#issuecomment-87880828
+for s = 1, screen.count() do screen[s]:connect_signal("arrange",
+  function ()
+    local clients = awful.client.visible(s)
+    local layout  = awful.layout.getname(awful.layout.get(s))
+
+    for _, c in pairs(clients) do
+       -- No borders with only one humanly visible client
+       if c.maximized then
+          -- NOTE: also handled in focus, but that does not cover maximizing
+          -- from a tiled state (when the client had focus).
+          c.border_width = 0
+       elseif awful.client.floating.get(c) or layout == "floating" then
+          c.border_width = beautiful.border_width
+       elseif layout == "max" or layout == "fullscreen" then
+          c.border_width = 0
+       else
+          local tiled = awful.client.tiled(c.screen)
+          if #tiled == 1 then
+             tiled[1].border_width = 0
+          else
+             c.border_width = beautiful.border_width
+          end
+       end
+    end
+  end)
+end
 -- }}}
 
 -- On screen disconnect move client to the same tag number other screen
