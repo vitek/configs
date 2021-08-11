@@ -292,18 +292,26 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
+    -- master factor
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
+    -- client factor
+    awful.key({ modkey, "Shift"   }, "l",     function () awful.client.incwfact( 0.05)          end,
+              {description = "increase client width factor", group = "layout"}),
+    awful.key({ modkey, "Shift"   }, "h",     function () awful.client.incwfact(-0.05)          end,
+              {description = "decrease client width factor", group = "layout"}),
+
+    awful.key({ modkey, "Mod1", "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
               {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
+    awful.key({ modkey, "Mod1", "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
               {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
+    awful.key({ modkey, "Mod1", "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
               {description = "increase the number of columns", group = "layout"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
+    awful.key({ modkey, "Mod1", "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
+
     awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
@@ -400,8 +408,8 @@ clientkeys = awful.util.table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
-    --awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
-    --          {description = "move to master", group = "client"}),
+    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
+              {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
@@ -419,17 +427,6 @@ clientkeys = awful.util.table.join(
             c:raise()
         end ,
         {description = "maximize", group = "client"}),
-    awful.key({ modkey, "Control" }, "Return",
-       function (c)
-          local master = awful.client.getmaster(c.screen)
-          if c == master then
-             awful.client.setslave(c)
-          else
-             c:swap(master)
-             --awful.client.setmaster(c)
-          end
-       end,
-       {description = "master swap", group = "client"}),
     -- My custom keys
     awful.key({ "Mod1" }, "F4", function (c) c:kill() end)
 )
@@ -588,7 +585,7 @@ awful.rules.rules = {
 client.connect_signal("manage", function (c)
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
-    -- if not awesome.startup then awful.client.setslave(c) end
+    if not awesome.startup then awful.client.setslave(c) end
 
     if awesome.startup
       and not c.size_hints.user_position
@@ -670,7 +667,7 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange",
           -- NOTE: also handled in focus, but that does not cover maximizing
           -- from a tiled state (when the client had focus).
           c.border_width = 0
-       elseif awful.client.floating.get(c) or layout == "floating" then
+       elseif c.floating or layout == "floating" then
           c.border_width = beautiful.border_width
        elseif layout == "max" or layout == "fullscreen" then
           c.border_width = 0
@@ -686,6 +683,11 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange",
   end)
 end
 -- }}}
+
+-- EWMH
+awful.ewmh.add_activate_filter(function(c)
+      if c.class == "zoom" then return false end
+end, "ewmh")
 
 -- On screen disconnect move client to the same tag number other screen
 client.connect_signal("request::tag", function (c, t, hints)
