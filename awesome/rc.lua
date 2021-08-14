@@ -87,6 +87,7 @@ beautiful.tooltip_bg = "#000000"
 beautiful.tooltip_fg = "#ffffff"
 beautiful.tooltip_border_width = 0
 beautiful.tooltip_align = "right"
+beautiful.border_focus = "#333333"
 
 -- @DOC_DEFAULT_APPLICATIONS@
 -- This is used later as the default terminal and editor to run.
@@ -384,14 +385,14 @@ globalkeys = awful.util.table.join(
     -- Screenshots
     awful.key({ modkey }, "\\",
        function () end,
-       function () awful.spawn("gnome-screenshot -acB") end),
+       function () awful.spawn("gnome-screenshot -acB", false) end),
     awful.key({ modkey, "Mod1" }, "\\",
-       function () awful.spawn("gnome-screenshot -wBc") end),
+       function () awful.spawn("gnome-screenshot -wBc", false) end),
     awful.key({ modkey, "Shift" }, "\\",
        function () end,
-       function () awful.spawn("gnome-screenshot -aB") end),
+       function () awful.spawn("gnome-screenshot -aB", false) end),
     awful.key({ modkey, "Shift", "Mod1" }, "\\",
-       function () awful.spawn("gnome-screenshot -wB") end),
+       function () awful.spawn("gnome-screenshot -wB", false) end),
 
     -- quakeconsole
     awful.key({ modkey }, "`", function () quakeconsole:toggle() end),
@@ -655,15 +656,14 @@ client.connect_signal("unfocus", function(c)
 end)
 
 -- Arrange signal handler
--- See https://github.com/awesomeWM/awesome/issues/171#issuecomment-87880828
-for s = 1, screen.count() do screen[s]:connect_signal("arrange",
-  function ()
+
+local arrange_screen = function (s)
     local clients = awful.client.visible(s)
     local layout  = awful.layout.getname(awful.layout.get(s))
 
     for _, c in pairs(clients) do
        -- No borders with only one humanly visible client
-       if c.maximized then
+       if c.maximized or c.no_border then
           -- NOTE: also handled in focus, but that does not cover maximizing
           -- from a tiled state (when the client had focus).
           c.border_width = 0
@@ -680,7 +680,11 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange",
           end
        end
     end
-  end)
+end
+
+-- See https://github.com/awesomeWM/awesome/issues/171#issuecomment-87880828
+for s = 1, screen.count() do
+   screen[s]:connect_signal("arrange", function () arrange_screen(s) end)
 end
 -- }}}
 
@@ -713,6 +717,8 @@ local screen_state = {
 -- Move client back to the screen and tag
 -- TODO: restore full state
 screen.connect_signal("added", function (s)
+    s:connect_signal("arrange", function () arrange_screen(s) end)
+
     for _, c in ipairs(client.get()) do
         if c.screen_evicted then
             local tag = s.tags[c.first_tag.index]

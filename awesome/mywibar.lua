@@ -71,9 +71,7 @@ function mywibar.create_wibar(s)
 
    local volumewidget = pulseaudio_widget(pulseaudio, {
       mixer = function ()
-         awful.spawn.with_shell(
-            "XDG_CURRENT_DESKTOP=Unity unity-control-center sound"
-         )
+         awful.spawn.with_shell("gnome-control-center sound")
       end
    })
    local volumewidget_tooltip = awful.tooltip({
@@ -104,7 +102,7 @@ function mywibar.create_wibar(s)
 
    -- @DOC_WIBAR@
    -- Create the wibox
-   s.mywibox = awful.wibar({ position = "top", screen = s })
+   s.mywibox = awful.wibar({ position = "top", screen = s, opacity = 0.95 })
 
    -- @DOC_SETUP_WIDGETS@
    -- Add widgets to the wibox

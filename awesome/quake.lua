@@ -108,6 +108,7 @@ function QuakeConsole:show(client)
 
     client.floating = true
     client.size_hints_honor = false
+    client.no_border = true
 
     -- Sticky and on top
     client.ontop = true
