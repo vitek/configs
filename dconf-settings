@@ -1,3 +1,11 @@
+[org/gnome/settings-daemon/plugins/media-keys]
+help=['']
+magnifier=['']
+magnifier-zoom-in=['']
+magnifier-zoom-out=['']
+rotate-video-lock-static=['']
+screenreader=['']
+
 [org/gnome/desktop/interface]
 cursor-blink=false
 enable-animations=false
@@ -7,22 +15,3 @@ ubuntu-overlay-scrollbars=false
 
 [org/gnome/desktop/background]
 show-desktop-icons=false
-
-[org/gnome/libgnomekbd/desktop]
-default-group=0
-group-per-window=true
-
-[org/gnome/libgnomekbd/keyboard]
-layouts=['us', 'ru']
-options=['grp\tgrp:shift_caps_toggle', 'grp\tgrp:alt_space_toggle']
-
-[apps/indicators/datetime]
-custom-time-format='%l:%M %p'
-show-date=true
-show-day=true
-show-seconds=false
-time-format='locale-default'
-
-[org/gnome/settings-daemon/plugins/power]
-button-sleep='nothing'
-button-suspend='nothing'
