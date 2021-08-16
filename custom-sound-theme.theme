@@ -1,0 +1,4 @@
+[Sound Theme]
+Name=__custom
+Inherits=freedesktop
+Directories=.

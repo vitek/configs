@@ -131,7 +131,12 @@ install-bin:
 install-ubuntu-extra:
 	python installpkgs.py ubuntu-packages
 
-install-dconf:
+install-sound-theme:
+	$(INSTALL) -d $(DESTDIR)/.local/share/sounds/__custom/
+	$(INSTALL) custom-sound-theme.theme $(DESTDIR)/.local/share/sounds/__custom/index.theme
+	touch $(DESTDIR)/.local/share/sounds/__custom/screen-capture.disabled
+
+install-dconf: install-sound-theme
 	dconf load / < dconf-settings
 
 install-macbook:
