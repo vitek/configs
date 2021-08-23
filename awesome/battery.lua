@@ -46,7 +46,7 @@ local tooltip_fmt = {
     ["+"] = "Charging %d%%, %s until charged",
     ["-"] = "Discharging %d%%, %s remaining"
 }
-local unpack = table.unpack
+local unpack = unpack or table.unpack
 
 local function round(value, div)
     local k = value / (div or 1.0)
