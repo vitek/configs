@@ -355,6 +355,14 @@
 
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
+;; company
+(use-package company
+  :config
+  (setq company-idle-delay 0.5)
+  (setq company-selection-wrap-around t)
+  ;;(company-tng-configure-default)
+  )
+
 ;; lsp-mode setup
 (use-package lsp-mode
   :delight (lsp-mode "/lsp" "lsp")
@@ -362,7 +370,8 @@
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
                   '("clangd-12" "clangd-11" "clangd-10" "clangd-9" "clangd"))
-  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
+  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"
+                                  "--header-insertion=never"))
 
   ;; pyls
   (set-executable 'vitja-lsp-pyls-server-command
@@ -441,8 +450,17 @@
 (use-package ido
   :config
   (setq ido-enable-flex-matching t
-        ido-default-buffer-method 'selected-window)
+        ido-default-buffer-method 'selected-window
+        ido-use-virtual-buffers t)
   (ido-mode 1))
+
+;; ;; ivy
+;; (use-package ivy
+;;   :config
+;;   (setq ivy-use-virtual-buffers t)
+;;   (setq ivy-count-format "(%d/%d) ")
+;;   (require 'counsel)
+;;   (global-set-key (kbd "M-y") 'counsel-yank-pop))
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
