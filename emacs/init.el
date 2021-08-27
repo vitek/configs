@@ -557,6 +557,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (define-key gif-screencast-mode-map (kbd "<f8>") 'gif-screencast-toggle-pause)
   (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
 
+(set-display-table-slot standard-display-table 'vertical-border ?│)
+
 ;; Load machine local configuration (if available)
 (load (expand-file-name "local.el" user-emacs-directory) t)
 
