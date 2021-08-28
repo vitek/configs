@@ -506,6 +506,11 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :config
   ;;(add-to-list 'projectile-project-root-files-bottom-up ".arc")
 
+  (setq projectile-generic-command
+        (if (executable-find "fdfind")
+            "fdfind . -0 --type f --color=never"
+          "find . -type f -print0 | cut -c3-"))
+
   (projectile-mode 1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (require 'ffap)
