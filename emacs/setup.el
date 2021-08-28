@@ -43,6 +43,12 @@
     protobuf-mode
     yaml-mode
 
+    ;; ivy
+    ivy
+    counsel
+    ivy-rich
+    ivy-posframe
+
     ;; misc
     gif-screencast
     keycast

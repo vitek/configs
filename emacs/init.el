@@ -452,21 +452,78 @@
   (setq dired-listing-switches "-alhv --group-directories-first"
         dired-isearch-filenames 'dwim))
 
-;; ido-mode
-(use-package ido
-  :config
-  (setq ido-enable-flex-matching t
-        ido-default-buffer-method 'selected-window
-        ido-use-virtual-buffers t)
-  (ido-mode 1))
-
-;; ;; ivy
-;; (use-package ivy
+;; ;; ido-mode
+;; (use-package ido
 ;;   :config
-;;   (setq ivy-use-virtual-buffers t)
-;;   (setq ivy-count-format "(%d/%d) ")
-;;   (require 'counsel)
-;;   (global-set-key (kbd "M-y") 'counsel-yank-pop))
+;;   (setq ido-enable-flex-matching t
+;;         ido-default-buffer-method 'selected-window
+;;         ido-use-virtual-buffers t)
+;;   (ido-mode 1))
+
+;; ivy
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "%d/%d ")
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-fuzzy)))
+  ;; Do not show "./" and "../" in the `counsel-find-file' completion list
+  (setq ivy-extra-directories nil)    ;Default value: ("../" "./")
+  )
+
+;; See https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-lisp/prot-ivy-deprecated-conf.el
+(use-package counsel
+  :config
+  ;;(global-set-key (kbd "M-y") 'counsel-yank-pop)
+  :after ivy
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x b" . ivy-switch-buffer)
+         ("C-x d" . counsel-dired)
+         ("C-x C-r" . counsel-recentf)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ;;("M-s r" . counsel-rg)
+         ;;("M-s g" . counsel-git-grep)
+         ;;("M-s l" . counsel-find-library)
+         ;;("M-s z" . prot/counsel-fzf-rg-files)
+         ;;:map ivy-minibuffer-map
+         ;;("C-r" . counsel-minibuffer-history)
+         ;;("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
+         ;;("C-SPC" . ivy-restrict-to-matches)))
+         ))
+
+(use-package ivy-rich
+  :ensure t
+  :config
+  (setq ivy-rich-path-style 'abbreviate)
+
+  (setcdr (assq t ivy-format-functions-alist)
+          #'ivy-format-function-line)
+  :hook (after-init . ivy-rich-mode))
+
+(use-package ivy-posframe
+  :ensure t
+  :delight
+  :config
+  ;; (setq ivy-posframe-parameters
+  ;;       '((left-fringe . 2)
+  ;;         (right-fringe . 2)
+  ;;         (internal-border-width . 2)
+  ;;         ;; (font . "Iosevka-10.75:hintstyle=hintfull")
+  ;;         ))
+  ;; (setq ivy-posframe-height-alist
+  ;;       '((swiper . 15)
+  ;;         (swiper-isearch . 15)
+  ;;         (t . 10)))
+  ;; (setq ivy-posframe-display-functions-alist
+  ;;       '((complete-symbol . ivy-posframe-display-at-point)
+  ;;         (swiper . nil)
+  ;;         (swiper-isearch . nil)
+  ;;         (t . ivy-posframe-display-at-frame-center)))
+  :hook (after-init . ivy-posframe-mode))
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
