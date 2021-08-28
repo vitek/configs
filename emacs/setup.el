@@ -46,12 +46,15 @@
     ;; misc
     gif-screencast
     keycast
+    zoom
 
     ;; themes
     color-theme-modern
     monokai-theme
     nova-theme
-    solarized-theme))
+    solarized-theme
+    zenburn-theme
+))
 
 (defun byte-compile-site-lisp ()
   (let*

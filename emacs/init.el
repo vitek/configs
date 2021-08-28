@@ -105,7 +105,12 @@
 
 ;; Require some packages
 (use-package git-grep)
-(use-package rg)
+(use-package rg
+  :config
+  (rg-define-search rg-word
+  :format literal
+  :flags ("--word-regexp")
+  :menu ("Custom" "w" "Word")))
 
 (use-package yaml-mode
   :defer t
@@ -153,15 +158,16 @@
 (use-package color-theme-modern
   :config
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-  (if window-system
-      (progn
-        ;;(load-theme 'dark-laptop)
-        ;;(load-theme 'classic)
-        (setq solarized-scale-org-headlines nil
-              solarized-scale-outline-headlines nil
-              solarized-use-variable-pitch nil
-              solarized-use-less-bold t)
-        (load-theme 'solarized-dark))))
+  (load-theme 'zenburn))
+  ;; (if window-system
+  ;;     (progn
+  ;;       ;;(load-theme 'dark-laptop)
+  ;;       ;;(load-theme 'classic)
+  ;;       (setq solarized-scale-org-headlines nil
+  ;;             solarized-scale-outline-headlines nil
+  ;;             solarized-use-variable-pitch nil
+  ;;             solarized-use-less-bold t)
+  ;;       (load-theme 'solarized-dark))))
 
 (use-package ansi-color
   :config
@@ -498,6 +504,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 (use-package projectile
   :delight (projectile-mode nil "projectile")
   :config
+  ;;(add-to-list 'projectile-project-root-files-bottom-up ".arc")
+
   (projectile-mode 1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (require 'ffap)
