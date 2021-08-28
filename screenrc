@@ -1,6 +1,8 @@
 startup_message off
 deflogin on
 
+term screen-256color
+
 vbell on
 vbell_msg "   Wuff  ----  Wuff!!  "
 
