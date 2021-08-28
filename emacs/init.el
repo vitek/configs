@@ -278,7 +278,8 @@
   :bind (("C-x C-r" . recentf-open-files))
   :config
   (setq recentf-max-menu-items 25)
-  (recentf-mode 1))
+  (recentf-mode 1)
+  (run-at-time nil (* 5 60) 'recentf-save-list))
 
 ;; Unique buffer names
 (use-package uniquify
@@ -462,6 +463,7 @@
 
 ;; ivy
 (use-package ivy
+  :delight
   :config
   (ivy-mode 1)
   (setq enable-recursive-minibuffers t)
