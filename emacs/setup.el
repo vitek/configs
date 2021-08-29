@@ -45,6 +45,7 @@
 
     ;; ivy
     ivy
+    ivy-hydra
     counsel
     ivy-rich
     ivy-posframe

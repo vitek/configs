@@ -471,14 +471,40 @@
   (setq ivy-count-format "%d/%d ")
   (setq ivy-re-builders-alist
         '((t . ivy--regex-fuzzy)))
+  (setq ivy-display-style 'fancy)
+  (setq ivy-use-selectable-prompt t)
+
   ;; Do not show "./" and "../" in the `counsel-find-file' completion list
   (setq ivy-extra-directories nil)    ;Default value: ("../" "./")
   )
+
+(use-package ivy-hydra)
 
 ;; See https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-lisp/prot-ivy-deprecated-conf.el
 (use-package counsel
   :config
   ;;(global-set-key (kbd "M-y") 'counsel-yank-pop)
+
+  ;; see https://github.com/abo-abo/swiper/issues/1333#issuecomment-436960474
+  (defun counsel-find-file-fallback-command ()
+    "Fallback to non-counsel version of current command."
+    (interactive)
+    (when (bound-and-true-p ivy-mode)
+      (ivy-mode -1)
+      (add-hook 'minibuffer-setup-hook
+                'counsel-find-file-fallback-command--enable-ivy))
+    (ivy-set-action
+     (lambda (current-path)
+       (let ((old-default-directory default-directory))
+         (let ((default-directory current-path))
+           (call-interactively 'find-file))
+         (setq default-directory old-default-directory))))
+    (ivy-immediate-done))
+
+  (defun counsel-find-file-fallback-command--enable-ivy ()
+    (remove-hook 'minibuffer-setup-hook
+                 'counsel-find-file-fallback-command--enable-ivy)
+  (ivy-mode t))
   :after ivy
   :bind (("M-x" . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
@@ -495,7 +521,8 @@
          ;;("C-r" . counsel-minibuffer-history)
          ;;("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
          ;;("C-SPC" . ivy-restrict-to-matches)))
-         ))
+         :map counsel-find-file-map
+         ("C-f" . counsel-find-file-fallback-command)))
 
 (use-package ivy-rich
   :ensure t
