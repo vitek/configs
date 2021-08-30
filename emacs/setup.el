@@ -44,11 +44,12 @@
     yaml-mode
 
     ;; ivy
+    counsel
+    flx
     ivy
     ivy-hydra
-    counsel
-    ivy-rich
     ivy-posframe
+    ivy-rich
 
     ;; misc
     gif-screencast
