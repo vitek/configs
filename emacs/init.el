@@ -537,6 +537,7 @@
   :ensure t
   :delight
   :config
+  (setq posframe-mouse-banish nil)
   ;; (setq ivy-posframe-parameters
   ;;       '((left-fringe . 2)
   ;;         (right-fringe . 2)
