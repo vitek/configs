@@ -277,7 +277,7 @@
 (use-package recentf
   :bind (("C-x C-r" . recentf-open-files))
   :config
-  (setq recentf-max-menu-items 25)
+  (setq recentf-max-menu-items 50)
   (recentf-mode 1)
   (run-at-time nil (* 5 60) 'recentf-save-list))
 
@@ -636,8 +636,21 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
 
 (use-package vterm
+  :bind
+  (:map
+   vterm-mode-map
+   ([M-right] . nil)
+   ([M-left]  . nil))
   :config
   (setq vterm-buffer-name-string "*vterm*: %s"))
+
+(use-package multi-vterm
+  :bind
+  (("C-c t" . multi-vterm)
+   :map
+   vterm-mode-map
+   ([C-prior] . multi-vterm-next)
+   ([C-next]  . multi-vterm-next)))
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
@@ -673,6 +686,19 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :config
   (define-key gif-screencast-mode-map (kbd "<f8>") 'gif-screencast-toggle-pause)
   (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
+
+(setq current-window-config nil)
+
+(defun window-config-toggle ()
+  (interactive)
+  (let ((current (current-window-configuration))
+        (old current-window-config))
+    (setq current-window-config current)
+    (if old
+        (set-window-configuration old)
+      (delete-other-windows))))
+
+(global-set-key (kbd "C-c f") 'window-config-toggle)
 
 (set-display-table-slot standard-display-table 'vertical-border ?│)
 
