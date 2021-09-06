@@ -689,10 +689,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
 (setq current-window-config nil)
 
-(defun window-config-toggle ()
-  (interactive)
+(defun window-config-toggle (&optional arg)
+  (interactive "P")
   (let ((current (current-window-configuration))
-        (old current-window-config))
+        (old (if arg nil current-window-config)))
     (setq current-window-config current)
     (if old
         (set-window-configuration old)
