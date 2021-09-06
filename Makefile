@@ -123,6 +123,7 @@ install-x11-utils:
 install-bashrc:
 	$(INSTALL) -m 0644 profile $(DESTDIR)/.profile
 	$(INSTALL) -m 0644 bashrc $(DESTDIR)/.bashrc
+	$(INSTALL) -m 0644 bashrc_vterm $(DESTDIR)/.bashrc_vterm
 
 install-bin:
 	$(INSTALL) -d $(DESTDIR)/bin

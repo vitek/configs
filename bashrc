@@ -63,9 +63,7 @@ if  ! shopt -oq posix; then
     fi
 fi
 
-if [ -f ~/bin/git-flow-completion.bash ]; then
-    . ~/bin/git-flow-completion.bash
-fi
+shopt -s direxpand
 
 # Nice editor for small configs and commit messages
 export EDITOR=vim
@@ -121,6 +119,11 @@ xterm*|rxvt*)
     ;;
 esac
 
+if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+    && [[ -n ~/.bashrc_vterm ]] \
+    && [[ -f ~/.bashrc_vterm ]]; then
+    source ~/.bashrc_vterm
+fi
 
 export LIBOVERLAY_SCROLLBAR=0
 export GTK_OVERLAY_SCROLLING=0

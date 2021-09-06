@@ -51,6 +51,10 @@
     ivy-posframe
     ivy-rich
 
+    ;; vterm
+    vterm
+    multi-vterm
+
     ;; misc
     gif-screencast
     keycast

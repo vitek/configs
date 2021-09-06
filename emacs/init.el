@@ -410,7 +410,7 @@
   ;; golang
   (set-executable 'lsp-gopls-server-path '("gopls" "/home/vitja/go/bin/gopls"))
 
-  ;; common settings
+  ;; Set https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
   (setq lsp-enable-symbol-highlighting nil
         lsp-prefer-flymake nil
         lsp-enable-snippet nil
@@ -634,6 +634,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
         '((sequence
            "TODO" "INPROGRESS" "HOLD" "|" "DONE" "DELEGATED" "CANCELLED")))
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
+
+(use-package vterm
+  :config
+  (setq vterm-buffer-name-string "*vterm*: %s"))
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
