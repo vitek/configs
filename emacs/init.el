@@ -645,12 +645,27 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (setq vterm-buffer-name-string "*vterm*: %s"))
 
 (use-package multi-vterm
+  :config
+  (defun multi-vterm-switch-to-nth (n)
+    (let ((vterm-buffer (nth n multi-vterm-buffer-list)))
+      (when vterm-buffer
+        (switch-to-buffer vterm-buffer))))
+
   :bind
   (("C-c t" . multi-vterm)
    :map
    vterm-mode-map
    ([C-prior] . multi-vterm-next)
-   ([C-next]  . multi-vterm-next)))
+   ([C-next]  . multi-vterm-next)
+   ("M-1" . (lambda () (interactive) (multi-vterm-switch-to-nth 0)))
+   ("M-2" . (lambda () (interactive) (multi-vterm-switch-to-nth 1)))
+   ("M-3" . (lambda () (interactive) (multi-vterm-switch-to-nth 2)))
+   ("M-4" . (lambda () (interactive) (multi-vterm-switch-to-nth 3)))
+   ("M-5" . (lambda () (interactive) (multi-vterm-switch-to-nth 4)))
+   ("M-6" . (lambda () (interactive) (multi-vterm-switch-to-nth 5)))
+   ("M-7" . (lambda () (interactive) (multi-vterm-switch-to-nth 6)))
+   ("M-8" . (lambda () (interactive) (multi-vterm-switch-to-nth 7)))
+   ("M-9" . (lambda () (interactive) (multi-vterm-switch-to-nth 8)))))
 
 ;; Custom keybindings
 (global-set-key (kbd "C-c #") 'comment-region)
