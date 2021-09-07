@@ -343,6 +343,10 @@
                      (electric-indent-local-mode 0))))
 
 ;; Enable flycheck globally
+(defun disable-flycheck-mode ()
+  (when (fboundp 'flycheck-mode)
+    (flycheck-mode 0)))
+
 (use-package flycheck
   :config
   (global-flycheck-mode)
@@ -359,6 +363,7 @@
   (c++-mode . (lambda ()
                 (setq-local flycheck-gcc-language-standard "c++17"
                             flycheck-clang-language-standard "c++17")))
+  (vterm-mode . disable-flycheck-mode)
 
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
