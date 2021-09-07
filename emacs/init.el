@@ -388,29 +388,31 @@
   ;; pyls
   (set-executable 'vitja-lsp-pyls-server-command
                   '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
-  (setq lsp-pyls-server-command vitja-lsp-pyls-server-command)
+  ;;(setq lsp-pyls-server-command vitja-lsp-pyls-server-command)
   (setq xref-prompt-for-identifier nil)
   (setq lsp-enable-links nil)
 
-  (add-hook
-   'hack-local-variables-hook
-   (lambda ()
-     (when (boundp 'vitja-lsp-python-path)
-       (setq-local
-        lsp-pyls-server-command
-        (list "/bin/sh" "-c"
-              (concat
-               "PYTHONPATH='"
-               (string-join
-                ;; filter out bad parts
-                (seq-filter
-                 (lambda (string)
-                   (if (string-match "['\"\\$:;]" string)
-                       (progn
-                         (message "Dangerous PYTHONPATH part %s" string) nil)
-                     t))
-                 vitja-lsp-python-path)
-                ":") "' " vitja-lsp-pyls-server-command))))))
+  ;;(lsp-headerline-breadcrumb-mode 0)
+  ;;(add-hook 'lsp-after-initialize-hook 'lsp-headerline-breadcrumb-mode)
+  ;; (add-hook
+  ;;  'hack-local-variables-hook
+  ;;  (lambda ()
+  ;;    (when (boundp 'vitja-lsp-python-path)
+  ;;      (setq-local
+  ;;       lsp-pyls-server-command
+  ;;       (list "/bin/sh" "-c"
+  ;;             (concat
+  ;;              "PYTHONPATH='"
+  ;;              (string-join
+  ;;               ;; filter out bad parts
+  ;;               (seq-filter
+  ;;                (lambda (string)
+  ;;                  (if (string-match "['\"\\$:;]" string)
+  ;;                      (progn
+  ;;                        (message "Dangerous PYTHONPATH part %s" string) nil)
+  ;;                    t))
+  ;;                vitja-lsp-python-path)
+  ;;               ":") "' " vitja-lsp-pyls-server-command))))))
 
   ;; golang
   (set-executable 'lsp-gopls-server-path '("gopls" "/home/vitja/go/bin/gopls"))
@@ -420,6 +422,8 @@
         lsp-prefer-flymake nil
         lsp-enable-snippet nil
         lsp-headerline-breadcrumb-enable nil)
+
+  ;;(setq lsp-headerline-breadcrumb-enable nil)
 
   :commands lsp
   :hook ((python-mode . lsp-deferred)
