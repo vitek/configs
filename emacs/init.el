@@ -713,6 +713,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (define-key gif-screencast-mode-map (kbd "<f8>") 'gif-screencast-toggle-pause)
   (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
 
+(use-package winner
+  :config
+  (winner-mode 1))
+
 (setq current-window-config nil)
 
 (defun window-config-toggle (&optional arg)
