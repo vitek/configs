@@ -651,6 +651,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
    ([M-right] . nil)
    ([M-left]  . nil))
   :config
+  (setq vterm-max-scrollback 100000)
+  (setq vterm-timer-delay 0.02)
   (setq vterm-buffer-name-string "*vterm*: %s"))
 
 (use-package multi-vterm
