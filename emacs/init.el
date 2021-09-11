@@ -125,7 +125,13 @@
 (use-package find-file-in-project :defer t)
 (use-package mc-move
   :config
-  (global-mc-move-mode))
+  (global-mc-move-mode)
+  :bind
+  (("M-f"   . mc-move-forward-word)
+   ("M-b"   . mc-move-backward-word)
+   ("M-d"   . mc-move-kill-word)
+   ("M-DEL" . mc-move-backward-kill-word)
+   ("M-@"   . mc-move-mark-word)))
 
 (setq c-basic-offset 4)
 (c-set-offset 'arglist-intro '+)

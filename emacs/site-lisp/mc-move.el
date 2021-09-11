@@ -1,8 +1,8 @@
-;;; mc-move.el --- Mcedit alike word movements for Emacs -*- lexical-binding: t; -*-
+;;; mc-move.el --- Mcedit alike word movements for Emacs-*- lexical-binding: t; -*-
 
 ;; Keywords: tools
 
-;; Copyright (C) 2009-2020 Victor Makarov
+;; Copyright (C) 2009-2021 Victor Makarov
 
 ;; Author: Victor Makarov <vitja.makarov@gmail.com>
 ;; URL: https://github.com/vitek/configs/tree/master/emacs/site-lisp/mc-move.el
@@ -57,23 +57,12 @@
 (defvar mc-move-upper-words "[:upper:][:digit:]")
 (defvar mc-move-lower-words "[:lower:][:digit:]")
 
-(defvar mc-move--installed nil
-  "Internal flag indicating that mc-move is installed.")
-
-(defconst mc-move--orig-forward-word (symbol-function 'forward-word))
-(defconst mc-move--orig-backward-word (symbol-function 'backward-word))
-(defconst mc-move--orig-kill-word (symbol-function 'kill-word))
-(defconst mc-move--orig-backward-kill-word
-  (symbol-function 'backward-kill-word))
-
 ;;;###autoload
 (define-minor-mode mc-move-mode
   "Toggle mc-move mode."
   :init-value nil
-  :lighter ""
-  (mc-move-install))
+  :lighter "")
 
-;;;###autoload
 (define-globalized-minor-mode global-mc-move-mode mc-move-mode mc-move-mode-on)
 
 (defun mc-move-mode-on ()
@@ -112,7 +101,7 @@ With argument ARG, do this that many times."
       (if arg
           (mc-move-by-word arg)
         (mc-move-by-word 1))
-    (funcall mc-move--orig-forward-word arg)))
+    (forward-word arg)))
 
 (defun mc-move-backward-word (&optional arg)
   "Custom version of `backword-word`.
@@ -122,7 +111,7 @@ With argument ARG, do this that many times."
       (if arg
           (mc-move-by-word (- arg))
         (mc-move-by-word -1))
-    (funcall mc-move--orig-backward-word arg)))
+    (backward-word arg)))
 
 (defun mc-move-kill-word (&optional arg)
   "Custom version of `kill-word`.
@@ -130,7 +119,7 @@ With argument ARG, do this that many times."
   (interactive "p")
   (if mc-move-mode
       (kill-region (point) (progn (mc-move-forward-word arg) (point)))
-    (funcall mc-move--orig-kill-word arg)))
+    (kill-word arg)))
 
 (defun mc-move-backward-kill-word (&optional arg)
   "Custom version of `backward-kill-word`.
@@ -138,33 +127,38 @@ With argument ARG, do this that many times."
   (interactive "p")
   (if mc-move-mode
       (mc-move-kill-word (- arg))
-    (funcall mc-move--orig-backward-kill-word arg)))
+    (backward-kill-word arg)))
 
-(defun mc-move-install ()
-  "Override Emacs 'move by word' functions with `mc-move` versions.
+(defun mc-move--mark-word (&optional arg allow-extend)
+  "Set mark ARG words away from point.
+The place mark goes is the same place \\[forward-word] would
+move to with the same argument.
+Interactively, if this command is repeated
+or (in Transient Mark mode) if the mark is active,
+it marks the next ARG words after the ones already marked."
+  (cond ((and allow-extend
+              (or (and (eq last-command this-command) (mark t))
+                  (region-active-p)))
+         (setq arg (if arg (prefix-numeric-value arg)
+                     (if (< (mark) (point)) -1 1)))
+         (set-mark
+          (save-excursion
+            (goto-char (mark))
+            (mc-move-forward-word arg)
+            (point))))
+        (t
+         (push-mark
+          (save-excursion
+            (mc-move-forward-word (prefix-numeric-value arg))
+            (point))
+          nil t))))
 
-Overrides: 'forward-word, 'backward-word, 'kill-word, 'backward-kill-word"
-  (interactive)
-  (when (not mc-move--installed)
-    (fset 'forward-word 'mc-move-forward-word)
-    (fset 'backward-word 'mc-move-backward-word)
-    (fset 'kill-word 'mc-move-kill-word)
-    (fset 'backward-kill-word 'mc-move-backward-kill-word)
-    (setq mc-move--installed t)))
 
-(defun mc-move-uninstall ()
-  "Go back to Emacs original functions overridden by 'mc-move-install."
-  (interactive)
-  (when mc-move--installed
-    (fset 'forward-word mc-move--orig-forward-word)
-    (fset 'backward-word mc-move--orig-backward-word)
-    (fset 'kill-word mc-move--orig-kill-word)
-    (fset 'backward-kill-word mc-move--orig-backward-kill-word)
-    (setq mc-move--installed nil)))
-
-(defun mc-move-unload-function ()
-  "Unload the mc-move library."
-  (mc-move-uninstall))
+(defun mc-move-mark-word (&optional arg allow-extend)
+  (interactive "P\np")
+  (if mc-move-mode
+      (mc-move--mark-word arg allow-extend)
+      (mark-word arg allow-extend)))
 
 (provide 'mc-move)
 ;;; mc-move.el ends here
