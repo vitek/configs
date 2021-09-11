@@ -548,27 +548,27 @@
           #'ivy-format-function-line)
   :hook (after-init . ivy-rich-mode))
 
-(use-package ivy-posframe
-  :ensure t
-  :delight
-  :config
-  (setq posframe-mouse-banish nil)
-  ;; (setq ivy-posframe-parameters
-  ;;       '((left-fringe . 2)
-  ;;         (right-fringe . 2)
-  ;;         (internal-border-width . 2)
-  ;;         ;; (font . "Iosevka-10.75:hintstyle=hintfull")
-  ;;         ))
-  ;; (setq ivy-posframe-height-alist
-  ;;       '((swiper . 15)
-  ;;         (swiper-isearch . 15)
-  ;;         (t . 10)))
-  ;; (setq ivy-posframe-display-functions-alist
-  ;;       '((complete-symbol . ivy-posframe-display-at-point)
-  ;;         (swiper . nil)
-  ;;         (swiper-isearch . nil)
-  ;;         (t . ivy-posframe-display-at-frame-center)))
-  :hook (after-init . ivy-posframe-mode))
+;; (use-package ivy-posframe
+;;   :ensure t
+;;   :delight
+;;   :config
+;;   (setq posframe-mouse-banish nil)
+;;   ;; (setq ivy-posframe-parameters
+;;   ;;       '((left-fringe . 2)
+;;   ;;         (right-fringe . 2)
+;;   ;;         (internal-border-width . 2)
+;;   ;;         ;; (font . "Iosevka-10.75:hintstyle=hintfull")
+;;   ;;         ))
+;;   ;; (setq ivy-posframe-height-alist
+;;   ;;       '((swiper . 15)
+;;   ;;         (swiper-isearch . 15)
+;;   ;;         (t . 10)))
+;;   ;; (setq ivy-posframe-display-functions-alist
+;;   ;;       '((complete-symbol . ivy-posframe-display-at-point)
+;;   ;;         (swiper . nil)
+;;   ;;         (swiper-isearch . nil)
+;;   ;;         (t . ivy-posframe-display-at-frame-center)))
+;;   :hook (after-init . ivy-posframe-mode))
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
