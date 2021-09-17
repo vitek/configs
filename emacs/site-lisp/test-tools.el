@@ -32,7 +32,11 @@
  (it "leading"
      (with-test-buffer "__foo-bar"
        (camelcase)
-       (expect (thing-at-point 'line t) :to-equal "__FooBar"))))
+       (expect (thing-at-point 'line t) :to-equal "__FooBar")))
+ (it "CamcelCase"
+     (with-test-buffer "FooBar"
+       (camelcase)
+       (expect (thing-at-point 'line t) :to-equal "FooBar"))))
 
 (describe
  "A underscore suite"
