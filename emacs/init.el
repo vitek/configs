@@ -133,7 +133,10 @@
    ("M-DEL" . mc-move-backward-kill-word)
    ("M-@"   . mc-move-mark-word)))
 
-(use-package tools)
+(use-package tools
+  :bind
+  (("C-c M-u" . underscore)
+   ("C-c M-c" . camelcase)))
 
 (setq c-basic-offset 4)
 (c-set-offset 'arglist-intro '+)
