@@ -71,6 +71,7 @@ install-emacs-configs:
 	$(INSTALL) -m 0644 emacs/site-lisp/git-grep.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/google-c-style.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/site-lisp/tools.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/manual-indent.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/zoom-frm.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-fns.el $(DESTDIR)/.emacs.d/site-lisp

@@ -133,6 +133,8 @@
    ("M-DEL" . mc-move-backward-kill-word)
    ("M-@"   . mc-move-mark-word)))
 
+(use-package tools)
+
 (setq c-basic-offset 4)
 (c-set-offset 'arglist-intro '+)
 (c-set-offset 'inextern-lang 0)
