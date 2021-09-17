@@ -1,0 +1,8 @@
+[Unit]
+Description=XKB Layout Setup
+
+[Service]
+ExecStart=/home/vitja/bin/xkb-layout
+
+[Install]
+WantedBy=default.target
