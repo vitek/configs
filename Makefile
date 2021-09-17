@@ -84,6 +84,9 @@ install-emacs: install-xresources install-emacs-configs
 install-emacs-norefresh: export EMACS_PACKAGES_REFRESH_SKIP=1
 install-emacs-norefresh: install-emacs
 
+test-emacs:
+	cd emacs/site-lisp && emacs -batch -f package-initialize -L . -f buttercup-run-discover
+
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
 

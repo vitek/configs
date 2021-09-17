@@ -34,6 +34,9 @@
     python-black
     cython-mode
 
+    ;; elisp
+    buttercup
+
     ;; prog modes
     go-mode
     graphviz-dot-mode
