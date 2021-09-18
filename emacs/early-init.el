@@ -27,3 +27,7 @@
 ;; compiled ahead-of-time when they are installed and site files are compiled
 ;; when gccemacs is installed.
 (setq comp-deferred-compilation nil)
+
+;; enable emacs native compilation
+(when (version<= "28" emacs-version)
+  (setq package-native-compile t))
