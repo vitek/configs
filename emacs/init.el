@@ -25,7 +25,11 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
+;; Cursor
 (blink-cursor-mode 0)
+(setq cursor-type 'bar)
+
+;; Text-mode settings
 (set-display-table-slot standard-display-table 'vertical-border ?│)
 
 ;; Modeline settings
@@ -36,7 +40,6 @@
 
 (setq
  frame-title-format "emacs: %b"
- cursor-type 'bar
  inhibit-startup-screen t
 
  use-dialog-box nil
@@ -46,10 +49,20 @@
 
  jit-lock-defer-time 0.05
 
- ;; scroll speed
- scroll-conservatively 50
- scroll-up-agressively 0
- scroll-down-agressively 0
+ ;; Localization settings
+ default-input-method "russian-computer"
+ current-language-environment "UTF-8"
+
+ ;; Search
+ case-fold-search t
+
+ ;; Edit
+ kill-whole-line t
+
+ ;; Scroll speed
+ scroll-conservatively 10
+ scroll-up-aggressively 0
+ scroll-down-aggressively 0
 
  ;; Configure window info line
  display-time-24hr-format t
@@ -59,9 +72,10 @@
  calendar-week-start-day 1
 
  ;; Handle x11 clipboard
- x-select-enable-clipboard t)
+ select-enable-clipboard t)
 
-;; builtin modes
+;; Basic emacs modes modes
+(setq font-lock-maximum-decoration t)
 (global-font-lock-mode t)
 (show-paren-mode t)
 (global-auto-revert-mode t)
@@ -72,10 +86,6 @@
 (c-set-offset 'inextern-lang 0)
 ;;(setq truncate-lines nil)
 
-(setq kill-whole-line t)
-(setq default-input-method "russian-computer")
-(setq grep-command "grep -Eni ")
-(setq compilation-environment '("LC_ALL=C" "TERM=ansi"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
 (setq-default sgml-basic-offset 2)
@@ -95,19 +105,10 @@
       )
 (setq create-lockfiles nil)
 
-;; TODO: cleanup this mess
 (setq
- load-home-init-file t
- case-fold-search t
- compile-command "make "
- current-language-environment "UTF-8"
- font-lock-maximum-decoration t
  log-edit-hook (quote ()))
 
 (custom-set-faces
- '(diff-added ((t (:foreground "Green"))) 'now)
- '(diff-removed ((t (:foreground "Red"))) 'now)
-
  '(whitespace-trailing ((t (:background "Red"))) 'now)
  '(whitespace-tab ((t (:background "#433" :inverse-video nil))) 'now)
  '(whitespace-line ((t (:background "gray"))) 'now))
@@ -133,7 +134,21 @@
 (when (< emacs-major-version 27)
   (package-initialize))
 
-;; Require some packages
+;; Color theme
+(use-package color-theme-modern
+  :config
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+  (load-theme 'zenburn))
+  ;; (if window-system
+  ;;     (progn
+  ;;       ;;(load-theme 'dark-laptop)
+  ;;       ;;(load-theme 'classic)
+  ;;       (setq solarized-scale-org-headlines nil
+  ;;             solarized-scale-outline-headlines nil
+  ;;             solarized-use-variable-pitch nil
+  ;;             solarized-use-less-bold t)
+  ;;       (load-theme 'solarized-dark))))
+
 (use-package git-grep)
 (use-package rg
   :config
@@ -170,21 +185,6 @@
    ("C-c M-u" . underscore-uppercase)
    ("C-c M-l" . underscore-lowercase)
    ("C-c M-c" . camelcase)))
-
-;; Color theme setup, 0.1s
-(use-package color-theme-modern
-  :config
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-  (load-theme 'zenburn))
-  ;; (if window-system
-  ;;     (progn
-  ;;       ;;(load-theme 'dark-laptop)
-  ;;       ;;(load-theme 'classic)
-  ;;       (setq solarized-scale-org-headlines nil
-  ;;             solarized-scale-outline-headlines nil
-  ;;             solarized-use-variable-pitch nil
-  ;;             solarized-use-less-bold t)
-  ;;       (load-theme 'solarized-dark))))
 
 (use-package ansi-color
   :config
@@ -657,22 +657,6 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (interactive "P")
   (projectile--find-file-at-point invalidate-cache))
 
-(defun my-compile()
-  (interactive)
-  (if (fboundp 'projectile-compile-project)
-      (call-interactively 'projectile-compile-project)
-    (call-interactively 'compile)))
-
-(defun my-grep()
-  (interactive)
-  (let ((file (or (buffer-file-name) default-directory)))
-    (cond
-     ((and (fboundp 'git-grep) file (vc-find-root  file ".git"))
-      (call-interactively 'git-grep))
-     ((fboundp 'rg)
-      (call-interactively 'rg))
-     (t (call-interactively 'grep)))))
-
 (defun nop() (interactive))
 
 (defun default-c-mode ()
@@ -717,15 +701,24 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (cl-intersection (derived-mode-parents major-mode)
                 '(prog-mode text-mode cmake-mode)))
 
-;; Custom keybindings
-(global-set-key (kbd "C-c #") 'comment-region)
-(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
+(use-package my
+  :config
+  ;; Grep
+  (setq grep-command "grep -Eni ")
+  ;; Compilation
+  (setq compilation-environment '("LC_ALL=C" "TERM=ansi")
+        compile-command "make ")
+  :bind
+  (("<f9>"  . my-compile)
+   ("<f12>" . my-grep)))
 
-(global-set-key [C-prior] 'previous-buffer)
-(global-set-key [C-next] 'next-buffer)
-
-(global-set-key [f9] 'my-compile)
-(global-set-key [f12] 'my-grep)
+(use-package emacs
+  :bind
+  (("C-c #"   . comment-region)
+   ("C-x C-c" . delete-frame-or-kill-emacs)
+   ;; window control
+   ([C-prior] . previous-buffer)
+   ([C-next]  . next-buffer)) )
 
 (if window-system
     (progn
