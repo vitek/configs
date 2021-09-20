@@ -29,6 +29,7 @@
      (move-end-of-line 1)
      (buffer-substring-no-properties 1 (point)))))
 
+;; Progcase tools
 (defconst progcase-separators "[_\\-]")
 
 (defmacro progcase--make-conversion (arg conversion &optional tail)
@@ -64,6 +65,18 @@
                              (when (looking-at-p "[[:alnum:]]") (insert "_"))))
 
 (defalias 'underscore 'underscore-lowercase)
+
+;; Widnow related tools
+(setq current-window-config nil)
+
+(defun window-config-toggle (&optional arg)
+  (interactive "P")
+  (let ((current (current-window-configuration))
+        (old (if arg nil current-window-config)))
+    (setq current-window-config current)
+    (if old
+        (set-window-configuration old)
+      (delete-other-windows))))
 
 (provide 'tools)
 ;;; tools.el ends here

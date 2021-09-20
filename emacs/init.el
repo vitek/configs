@@ -21,14 +21,27 @@
 (require 'seq)
 
 ;; Interface decorations
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+
+(blink-cursor-mode 0)
+(set-display-table-slot standard-display-table 'vertical-border ?│)
+
+;; Modeline settings
+(line-number-mode t)
+(column-number-mode t)
+(display-time)
+;;(display-battery)
+
 (setq
  frame-title-format "emacs: %b"
  cursor-type 'bar
  inhibit-startup-screen t
- scroll-bar-mode nil
- tool-bar-mode nil
+
  use-dialog-box nil
  use-file-dialog nil
+
  visible-bell t
 
  jit-lock-defer-time 0.05
@@ -41,7 +54,6 @@
  ;; Configure window info line
  display-time-24hr-format t
  display-time-default-load-average nil
- column-number-mode t
 
  ;; Calendar
  calendar-week-start-day 1
@@ -49,7 +61,29 @@
  ;; Handle x11 clipboard
  x-select-enable-clipboard t)
 
-(menu-bar-mode -1)
+;; builtin modes
+(global-font-lock-mode t)
+(show-paren-mode t)
+(global-auto-revert-mode t)
+(save-place-mode t)
+
+(setq c-basic-offset 4)
+(c-set-offset 'arglist-intro '+)
+(c-set-offset 'inextern-lang 0)
+;;(setq truncate-lines nil)
+
+(setq kill-whole-line t)
+(setq default-input-method "russian-computer")
+(setq grep-command "grep -Eni ")
+(setq compilation-environment '("LC_ALL=C" "TERM=ansi"))
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 8)
+(setq-default sgml-basic-offset 2)
+(setq-default py-indent-offset 4)
+(setq py-smart-indentation nil)
+
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 ;; Backup files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
@@ -60,8 +94,6 @@
       kept-old-versions 5    ; and how many of the old
       )
 (setq create-lockfiles nil)
-
-(save-place-mode 1)
 
 ;; TODO: cleanup this mess
 (setq
@@ -85,8 +117,6 @@
     (when value
       (message (format "Executable %s chosen from %s" value choices))
       (set key value))))
-
-(setq vc-annotate-background "black")
 
 ;; Load custom file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -135,36 +165,11 @@
 
 (use-package tools
   :bind
-  (("C-c M-u" . underscore-uppercase)
+  (("C-c f"   . window-config-toggle)
+
+   ("C-c M-u" . underscore-uppercase)
    ("C-c M-l" . underscore-lowercase)
    ("C-c M-c" . camelcase)))
-
-(setq c-basic-offset 4)
-(c-set-offset 'arglist-intro '+)
-(c-set-offset 'inextern-lang 0)
-;;(setq truncate-lines nil)
-(setq kill-whole-line t)
-(setq default-input-method "russian-computer")
-(setq grep-command "grep -Eni ")
-(setq compilation-environment '("LC_ALL=C" "TERM=ansi"))
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 8)
-(setq-default sgml-basic-offset 2)
-(setq-default py-indent-offset 4)
-(setq py-smart-indentation nil)
-
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-
-(global-font-lock-mode t)
-(show-paren-mode t)
-(global-auto-revert-mode)
-(blink-cursor-mode 0)
-(line-number-mode t)
-(display-time)
-;;(display-battery)
-;;(transient-mark-mode)
-;;(if window-system (global-hl-line-mode))
 
 ;; Color theme setup, 0.1s
 (use-package color-theme-modern
@@ -187,66 +192,6 @@
     (let ((buffer-read-only nil))
       (ansi-color-apply-on-region (point-min) (point-max))))
   (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer))
-
-(defun my-compile()
-  (interactive)
-  (if (fboundp 'projectile-compile-project)
-      (call-interactively 'projectile-compile-project)
-    (call-interactively 'compile)))
-
-(defun my-grep()
-  (interactive)
-  (let ((file (or (buffer-file-name) default-directory)))
-    (cond
-     ((and (fboundp 'git-grep) file (vc-find-root  file ".git"))
-      (call-interactively 'git-grep))
-     ((fboundp 'rg)
-      (call-interactively 'rg))
-     (t (call-interactively 'grep)))))
-
-(defun nop() (interactive))
-
-(defun default-c-mode ()
-  "C mode with adjusted defaults for use with the Linux kernel."
-  (interactive)
-  (c-mode)
-  (c-set-style "K&R")
-  (setq c-basic-offset 4)
-  (setq truncate-lines nil))
-
-(defun linux-c-mode ()
-  "C mode with adjusted defaults for use with the Linux kernel."
-  (interactive)
-  (c-mode)
-  (c-set-style "K&R")
-  (setq c-basic-offset 8)
-  (setq truncate-lines nil))
-
-(defun delete-frame-or-kill-emacs (&optional arg)
-  "Delete frame or kill Emacs if current frame is the last one."
-  (interactive "P")
-  (if (> (length (seq-filter 'frame-visible-p (frame-list))) 1)
-      (delete-frame)
-    (progn
-      ;; Workarond against lsp-mode server restart prompt
-      ;; see https://github.com/emacs-lsp/lsp-mode/issues/641
-      (setq lsp-restart 'ignore)
-
-      (if (y-or-n-p (format "Really want to quit emacs? "))
-          (save-buffers-kill-emacs)
-        (message "Not quiting emacs"))
-      ;;(save-some-buffers arg t)
-      ;;(kill-emacs)
-      )))
-
-(defun derived-mode-parents (mode)
-  (and mode
-       (cons mode (derived-mode-parents
-                   (get mode 'derived-mode-parent)))))
-
-(defun highlight-prog ()
-  (cl-intersection (derived-mode-parents major-mode)
-                '(prog-mode text-mode cmake-mode)))
 
 ;; whitespace
 (use-package whitespace
@@ -354,13 +299,13 @@
                      (manual-indent-mode 1)
                      (electric-indent-local-mode 0))))
 
-;; Enable flycheck globally
-(defun disable-flycheck-mode ()
-  (when (fboundp 'flycheck-mode)
-    (flycheck-mode 0)))
-
 (use-package flycheck
   :config
+  (defun disable-flycheck-mode ()
+    (when (fboundp 'flycheck-mode)
+      (flycheck-mode 0)))
+
+  ;; Enable flycheck globally
   (global-flycheck-mode)
 
   :hook
@@ -586,29 +531,6 @@
   ("<C-mouse-4>" . zoom-in)
   ("<C-mouse-5>" . zoom-out))
 
-(defun projectile--find-file-at-point (invalidate-cache &optional ff-variant)
-  "Jump to a project's file at point.
-With INVALIDATE-CACHE invalidates the cache first.  With FF-VARIANT set to a
-defun, use that instead of `find-file'.   A typical example of such a defun
-would be `find-file-other-window' or `find-file-other-frame'"
-  (interactive "P")
-  (projectile-maybe-invalidate-cache invalidate-cache)
-  (let* ((project-root (projectile-ensure-project (projectile-project-root)))
-         (file (or (ffap-file-at-point)
-                   (thing-at-point 'filename)
-                   (thing-at-point 'symbol)
-                   (read-string "No file name at point. Please provide file name:")))
-         (ff (or ff-variant #'find-file)))
-    (when file
-      (funcall ff (expand-file-name file project-root))
-      (run-hooks 'projectile-find-file-hook))))
-
-(defun projectile-find-file-at-point(&optional invalidate-cache)
-  "Jump to a project's file at point.
-With a prefix arg INVALIDATE-CACHE invalidates the cache first."
-  (interactive "P")
-  (projectile--find-file-at-point invalidate-cache))
-
 (use-package projectile
   :delight (projectile-mode nil "projectile")
   :config
@@ -690,24 +612,6 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
    ("M-8" . (lambda () (interactive) (multi-vterm-switch-to-nth 7)))
    ("M-9" . (lambda () (interactive) (multi-vterm-switch-to-nth 8)))))
 
-;; Custom keybindings
-(global-set-key (kbd "C-c #") 'comment-region)
-(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
-
-(global-set-key [C-prior] 'previous-buffer)
-(global-set-key [C-next] 'next-buffer)
-
-(global-set-key [f9] 'my-compile)
-(global-set-key [f12] 'my-grep)
-
-(if window-system
-    (progn
-      (global-set-key "\C-z" 'ignore)
-      (global-set-key [mouse-4] 'scroll-down)
-      (global-set-key [mouse-5] 'scroll-up)
-      (global-set-key [mouse-2] 'nop)
-      (global-set-key [C-f9] 'recompile)))
-
 ;; Emacs server
 (use-package server
   :defer 1
@@ -729,20 +633,107 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :config
   (winner-mode 1))
 
-(setq current-window-config nil)
-
-(defun window-config-toggle (&optional arg)
+;; Custom functions
+(defun projectile--find-file-at-point (invalidate-cache &optional ff-variant)
+  "Jump to a project's file at point.
+With INVALIDATE-CACHE invalidates the cache first.  With FF-VARIANT set to a
+defun, use that instead of `find-file'.   A typical example of such a defun
+would be `find-file-other-window' or `find-file-other-frame'"
   (interactive "P")
-  (let ((current (current-window-configuration))
-        (old (if arg nil current-window-config)))
-    (setq current-window-config current)
-    (if old
-        (set-window-configuration old)
-      (delete-other-windows))))
+  (projectile-maybe-invalidate-cache invalidate-cache)
+  (let* ((project-root (projectile-ensure-project (projectile-project-root)))
+         (file (or (ffap-file-at-point)
+                   (thing-at-point 'filename)
+                   (thing-at-point 'symbol)
+                   (read-string "No file name at point. Please provide file name:")))
+         (ff (or ff-variant #'find-file)))
+    (when file
+      (funcall ff (expand-file-name file project-root))
+      (run-hooks 'projectile-find-file-hook))))
 
-(global-set-key (kbd "C-c f") 'window-config-toggle)
+(defun projectile-find-file-at-point(&optional invalidate-cache)
+  "Jump to a project's file at point.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first."
+  (interactive "P")
+  (projectile--find-file-at-point invalidate-cache))
 
-(set-display-table-slot standard-display-table 'vertical-border ?│)
+(defun my-compile()
+  (interactive)
+  (if (fboundp 'projectile-compile-project)
+      (call-interactively 'projectile-compile-project)
+    (call-interactively 'compile)))
+
+(defun my-grep()
+  (interactive)
+  (let ((file (or (buffer-file-name) default-directory)))
+    (cond
+     ((and (fboundp 'git-grep) file (vc-find-root  file ".git"))
+      (call-interactively 'git-grep))
+     ((fboundp 'rg)
+      (call-interactively 'rg))
+     (t (call-interactively 'grep)))))
+
+(defun nop() (interactive))
+
+(defun default-c-mode ()
+  "C mode with adjusted defaults for use with the Linux kernel."
+  (interactive)
+  (c-mode)
+  (c-set-style "K&R")
+  (setq c-basic-offset 4)
+  (setq truncate-lines nil))
+
+(defun linux-c-mode ()
+  "C mode with adjusted defaults for use with the Linux kernel."
+  (interactive)
+  (c-mode)
+  (c-set-style "K&R")
+  (setq c-basic-offset 8)
+  (setq truncate-lines nil))
+
+(defun delete-frame-or-kill-emacs (&optional arg)
+  "Delete frame or kill Emacs if current frame is the last one."
+  (interactive "P")
+  (if (> (length (seq-filter 'frame-visible-p (frame-list))) 1)
+      (delete-frame)
+    (progn
+      ;; Workarond against lsp-mode server restart prompt
+      ;; see https://github.com/emacs-lsp/lsp-mode/issues/641
+      (setq lsp-restart 'ignore)
+
+      (if (y-or-n-p (format "Really want to quit emacs? "))
+          (save-buffers-kill-emacs)
+        (message "Not quiting emacs"))
+      ;;(save-some-buffers arg t)
+      ;;(kill-emacs)
+      )))
+
+(defun derived-mode-parents (mode)
+  (and mode
+       (cons mode (derived-mode-parents
+                   (get mode 'derived-mode-parent)))))
+
+(defun highlight-prog ()
+  (cl-intersection (derived-mode-parents major-mode)
+                '(prog-mode text-mode cmake-mode)))
+
+;; Custom keybindings
+(global-set-key (kbd "C-c #") 'comment-region)
+(define-key ctl-x-map "\C-c" 'delete-frame-or-kill-emacs)
+
+(global-set-key [C-prior] 'previous-buffer)
+(global-set-key [C-next] 'next-buffer)
+
+(global-set-key [f9] 'my-compile)
+(global-set-key [f12] 'my-grep)
+
+(if window-system
+    (progn
+      (global-set-key "\C-z" 'ignore)
+      (global-set-key [mouse-4] 'scroll-down)
+      (global-set-key [mouse-5] 'scroll-up)
+      (global-set-key [mouse-2] 'nop)
+      (global-set-key [C-f9] 'recompile)))
 
 ;; Load machine local configuration (if available)
 (load (expand-file-name "local.el" user-emacs-directory) t)
