@@ -29,33 +29,41 @@
      (move-end-of-line 1)
      (buffer-substring-no-properties 1 (point)))))
 
+(defconst progcase-separators "[_\\-]")
+
+(defmacro progcase--make-conversion (arg conversion &optional tail)
+  `(dotimes (_ (or ,arg 1))
+     (skip-chars-forward mc-move-delims)
+     (skip-chars-forward mc-move-specials)
+     (let (start)
+       (while
+           (progn
+             (setq start (point))
+             (> (+ (skip-chars-forward mc-move-upper-words)
+                   (skip-chars-forward mc-move-lower-words))
+                0))
+         ,conversion
+         (delete-backward-char (skip-chars-forward progcase-separators))
+         ,(when tail tail)))))
+
 (defun camelcase (&optional arg)
   (interactive "p")
-  (dotimes (_ (or arg 1))
-    (skip-chars-forward mc-move-delims)
-    (skip-chars-forward mc-move-specials)
-    (while
-        (let ((start (point)))
-          (when (> (+ (skip-chars-forward mc-move-upper-words)
-                      (skip-chars-forward mc-move-lower-words))
-                   0)
-            (capitalize-region start (point)) t))
-      (delete-backward-char (skip-chars-forward mc-move-specials)))))
+  (progcase--make-conversion arg
+                             (capitalize-region start (point))))
 
-(defun underscore (&optional arg)
+(defun underscore-lowercase (&optional arg)
   (interactive "p")
-  (dotimes (_ (or arg 1))
-    (skip-chars-forward mc-move-delims)
-    (skip-chars-forward mc-move-specials)
-    (while
-        (let ((start (point)))
-          (when (> (+ (skip-chars-forward mc-move-upper-words)
-                      (skip-chars-forward mc-move-lower-words))
-                   0)
-            (downcase-region start (point)) t))
-      (delete-backward-char (skip-chars-forward mc-move-specials))
-      (when (looking-at-p "[[:alnum:]]")
-        (insert "_")))))
+  (progcase--make-conversion arg
+                             (downcase-region start (point))
+                             (when (looking-at-p "[[:alnum:]]") (insert "_"))))
+
+(defun underscore-uppercase (&optional arg)
+  (interactive "p")
+  (progcase--make-conversion arg
+                             (upcase-region start (point))
+                             (when (looking-at-p "[[:alnum:]]") (insert "_"))))
+
+(defalias 'underscore 'underscore-lowercase)
 
 (provide 'tools)
 ;;; tools.el ends here

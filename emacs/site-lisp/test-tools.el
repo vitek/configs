@@ -47,6 +47,10 @@
  (it "upper part"
      (with-test-buffer "FooBAR"
        (underscore)
-       (expect (thing-at-point 'line t) :to-equal "foo_bar"))))
+       (expect (thing-at-point 'line t) :to-equal "foo_bar")))
+ (it "separators"
+     (with-test-buffer "FooBar,Maurice"
+       (underscore)
+       (expect (thing-at-point 'line t) :to-equal "foo_bar,Maurice"))))
 
  (provide 'test-tools)

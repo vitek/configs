@@ -135,7 +135,8 @@
 
 (use-package tools
   :bind
-  (("C-c M-u" . underscore)
+  (("C-c M-u" . underscore-uppercase)
+   ("C-c M-l" . underscore-lowercase)
    ("C-c M-c" . camelcase)))
 
 (setq c-basic-offset 4)
