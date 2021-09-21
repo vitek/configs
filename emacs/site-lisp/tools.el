@@ -44,7 +44,7 @@
                    (skip-chars-forward mc-move-lower-words))
                 0))
          ,conversion
-         (delete-backward-char (skip-chars-forward progcase-separators))
+         (delete-char (- (skip-chars-forward progcase-separators)))
          ,(when tail tail)))))
 
 (defun camelcase (&optional arg)
