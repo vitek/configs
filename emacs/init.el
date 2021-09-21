@@ -170,6 +170,7 @@
 
 (use-package find-file-in-project :defer t)
 (use-package mc-move
+  :defer t
   :config
   (global-mc-move-mode)
   :bind
@@ -180,6 +181,7 @@
    ("M-@"   . mc-move-mark-word)))
 
 (use-package tools
+  :defer t
   :bind
   (("C-c f"   . window-config-toggle)
 
@@ -327,6 +329,7 @@
 
 ;; company
 (use-package company
+  :defer t
   :config
   (setq company-idle-delay 0.5)
   (setq company-selection-wrap-around t)
@@ -335,6 +338,7 @@
 
 ;; lsp-mode setup
 (use-package lsp-mode
+  :defer t
   :delight (lsp-mode "/lsp" "lsp")
   :config
   ;; clangd
@@ -401,6 +405,7 @@
 
 ;; Go support
 (use-package go-mode
+  :defer t
   :hook
   (go-mode
    . (lambda ()
@@ -580,6 +585,7 @@
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
 
 (use-package vterm
+  :defer t
   :bind
   (:map
    vterm-mode-map
@@ -591,6 +597,7 @@
   (setq vterm-buffer-name-string "*vterm*: %s"))
 
 (use-package multi-vterm
+  :defer t
   :config
   (defun multi-vterm-switch-to-nth (n)
     (let ((vterm-buffer (nth n multi-vterm-buffer-list)))
@@ -626,6 +633,7 @@
     (add-to-list 'vc-handled-backends 'arc)))
 
 (use-package gif-screencast
+  :defer t
   :config
   (define-key gif-screencast-mode-map (kbd "<f8>") 'gif-screencast-toggle-pause)
   (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
@@ -712,6 +720,21 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :bind
   (("<f9>"  . my-compile)
    ("<f12>" . my-grep)))
+
+(use-package telega
+  :defer t
+  :config
+  (setq telega-emoji-company-backend 'telega-company-emoji)
+  (defun my-telega-chat-mode ()
+    (set (make-local-variable 'company-backends)
+         (append (list telega-emoji-company-backend
+                       'telega-company-username
+                       'telega-company-hashtag)
+                 (when (telega-chat-bot-p telega-chatbuf--chat)
+                   '(telega-company-botcmd))))
+    (company-mode 1))
+
+  (add-hook 'telega-chat-mode-hook 'my-telega-chat-mode))
 
 (use-package emacs
   :bind

@@ -65,6 +65,7 @@
     gif-screencast
     keycast
     zoom
+    telega
 
     ;; themes
     color-theme-modern
