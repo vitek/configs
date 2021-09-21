@@ -135,19 +135,20 @@
   (package-initialize))
 
 ;; Color theme
-(use-package color-theme-modern
-  :config
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-  (load-theme 'zenburn))
-  ;; (if window-system
-  ;;     (progn
-  ;;       ;;(load-theme 'dark-laptop)
-  ;;       ;;(load-theme 'classic)
-  ;;       (setq solarized-scale-org-headlines nil
-  ;;             solarized-scale-outline-headlines nil
-  ;;             solarized-use-variable-pitch nil
-  ;;             solarized-use-less-bold t)
-  ;;       (load-theme 'solarized-dark))))
+(load-theme 'zenburn t)
+;; (use-package color-theme-modern
+;;   :init
+;;   ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+;;   (load-theme 'zenburn))
+;;   ;; (if window-system
+;;   ;;     (progn
+;;   ;;       ;;(load-theme 'dark-laptop)
+;;   ;;       ;;(load-theme 'classic)
+;;   ;;       (setq solarized-scale-org-headlines nil
+;;   ;;             solarized-scale-outline-headlines nil
+;;   ;;             solarized-use-variable-pitch nil
+;;   ;;             solarized-use-less-bold t)
+;;   ;;       (load-theme 'solarized-dark))))
 
 (use-package git-grep)
 (use-package rg
