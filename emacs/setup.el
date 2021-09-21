@@ -1,3 +1,5 @@
+;;; setup.el --- Emacs configuration -*- lexical-binding: t -*-
+
 (require 'bytecomp)
 (require 'package)
 
@@ -48,7 +50,8 @@
 
     ;; ivy
     counsel
-    flx
+    ;;flx
+    amx
     ivy
     ivy-hydra
     ivy-posframe
@@ -96,3 +99,4 @@
 
 (install-packages)
 (byte-compile-site-lisp)
+;;; setup.el ends here
