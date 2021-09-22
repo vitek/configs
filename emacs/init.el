@@ -725,6 +725,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :defer t
   :config
   (setq telega-emoji-company-backend 'telega-company-emoji)
+  (setq telega-symbol-telegram "tg:")
+  (setq telega-symbol-mode "")
+  (setq telega-completing-read-function 'ivy-completing-read)
+  (setq telega-chat-input-complete-function 'counsel-company)
   (defun my-telega-chat-mode ()
     (set (make-local-variable 'company-backends)
          (append (list telega-emoji-company-backend
@@ -733,8 +737,12 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
                  (when (telega-chat-bot-p telega-chatbuf--chat)
                    '(telega-company-botcmd))))
     (company-mode 1))
-
-  (add-hook 'telega-chat-mode-hook 'my-telega-chat-mode))
+  :bind-keymap
+  (("C-c e" . telega-prefix-map))
+  :delight
+  (telega-chat-mode "Chat" "chat")
+  :hook
+  ((telega-chat-mode . my-telega-chat-mode)))
 
 (use-package emacs
   :bind
