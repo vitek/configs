@@ -754,6 +754,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
     (company-mode 1))
   :bind-keymap
   (("C-c e" . telega-prefix-map))
+  :bind
+  (:map telega-msg-button-map
+        ("к" . telega-msg-reply)
+        ("у" . telega-msg-edit))
   :delight
   (telega-chat-mode "Chat" "chat")
   :hook
