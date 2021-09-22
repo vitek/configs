@@ -190,11 +190,26 @@
    ("C-c M-c" . camelcase)))
 
 (use-package ansi-color
+  :defer t
   :config
+  (setq ansi-color-names-vector
+        ["#555555" "#CC9393" "#7F9F7F" "#F0DFAF"
+         "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
   (defun my/ansi-colorize-buffer ()
     (let ((buffer-read-only nil))
       (ansi-color-apply-on-region (point-min) (point-max))))
   (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer))
+
+(use-package term
+  :after ansi-color
+  :config
+  (seq-map-indexed
+   (lambda (color idx)
+     (let ((color-name (elt ansi-term-color-vector (1+ idx))))
+       (custom-set-faces
+        `(,color-name
+          ((t (:foreground ,color :background ,color))) 'now))))
+   ansi-color-names-vector))
 
 ;; whitespace
 (use-package whitespace
