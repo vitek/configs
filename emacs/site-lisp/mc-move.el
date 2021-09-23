@@ -1,4 +1,4 @@
-;;; mc-move.el --- Mcedit alike word movements for Emacs-*- lexical-binding: t; -*-
+;;; mc-move.el --- Mcedit alike word movements for Emacs -*- lexical-binding: t; -*-
 
 ;; Keywords: tools
 
@@ -57,9 +57,14 @@
 (defvar mc-move-upper-words "[:upper:][:digit:]")
 (defvar mc-move-lower-words "[:lower:][:digit:]")
 
+(defgroup mc-move nil
+  "Smart movements by word parts."
+  :group 'convenience)
+
 ;;;###autoload
 (define-minor-mode mc-move-mode
   "Toggle mc-move mode."
+  :group mc-move
   :init-value nil
   :lighter "")
 
