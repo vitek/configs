@@ -67,7 +67,7 @@
 (defalias 'underscore 'underscore-lowercase)
 
 ;; Widnow related tools
-(setq current-window-config nil)
+(defvar current-window-config nil)
 
 (defun window-config-toggle (&optional arg)
   (interactive "P")

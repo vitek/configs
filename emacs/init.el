@@ -88,6 +88,8 @@
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
+(setq-default fill-column 79)
+
 (setq-default sgml-basic-offset 2)
 (setq-default py-indent-offset 4)
 (setq py-smart-indentation nil)
@@ -170,7 +172,6 @@
 
 (use-package find-file-in-project :defer t)
 (use-package mc-move
-  :defer t
   :config
   (global-mc-move-mode)
   :bind
@@ -181,7 +182,6 @@
    ("M-@"   . mc-move-mark-word)))
 
 (use-package tools
-  :defer t
   :bind
   (("C-c f"   . window-config-toggle)
 
@@ -243,9 +243,11 @@
       (cond
        ((fboundp 'whitespace-mode)
         (whitespace-mode 1)
+        (display-fill-column-indicator-mode 1)
         (setq-local show-trailing-whitespace t)
         ;; Show single column marker
-        (my-highlight-column)))))
+        ;;(my-highlight-column)
+        ))))
 
   (add-hook 'font-lock-mode-hook 'my-highlight-whitespaces))
 
@@ -318,15 +320,10 @@
                      (electric-indent-local-mode 0))))
 
 (use-package flycheck
-  :config
-  (defun disable-flycheck-mode ()
-    (when (fboundp 'flycheck-mode)
-      (flycheck-mode 0)))
-
-  ;; Enable flycheck globally
-  (global-flycheck-mode)
-
+  :ensure t
+  :commands flycheck-mode
   :hook
+  (prog-mode . flycheck-mode)
   (python-mode .
                (lambda ()
                  (my-find-py3)
@@ -338,16 +335,18 @@
   (c++-mode . (lambda ()
                 (setq-local flycheck-gcc-language-standard "c++17"
                             flycheck-clang-language-standard "c++17")))
-  (vterm-mode . disable-flycheck-mode)
 
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
 ;; company
 (use-package company
-  :defer t
+  :ensure t
+  :commands (global-company-mode company-mode company-complete-common)
   :config
   (setq company-idle-delay 0.5)
   (setq company-selection-wrap-around t)
+  (set-executable 'company-clang-executable
+                  '("clang-12" "clang-11" "clang-10" "clang-7"))
   ;;(company-tng-configure-default)
   )
 
@@ -415,7 +414,8 @@
              (eldoc-mode nil "eldoc")
              (yas-minor-mode nil "yasnippet")
              ;; File mode specification error: (wrong-type-argument stringp (inhibit-mode-name-delight C++//l c++))
-             ;;(c++-mode "c++" "cc-mode")
+             (c++-mode "C++" "cc-mode")
+             (lsp-mode "/lsp" "lsp-mode")
              )))
 
 ;; Go support
@@ -457,9 +457,14 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "%d/%d ")
   (setq ivy-re-builders-alist
-        '((t . ivy--regex-fuzzy)))
+        '(;;(counsel-find-file . ivy--regex-plus)
+          (t . ivy--regex-fuzzy)))
+  ;; (setq ivy-initial-inputs-alist
+  ;;       `((counsel-find-file . "^")
+  ;;         ,@ivy-initial-inputs-alist))
   (setq ivy-display-style 'fancy)
   (setq ivy-use-selectable-prompt t)
+  (setq ivy--recompute-index-inhibit t)
 
   ;; Do not show "./" and "../" in the `counsel-find-file' completion list
   (setq ivy-extra-directories nil)    ;Default value: ("../" "./")
@@ -519,6 +524,11 @@
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
   :hook (after-init . ivy-rich-mode))
+
+(use-package ivy-pass
+  :ensure t
+  :bind
+  ("C-c C-p" . ivy-pass))
 
 ;; (use-package ivy-posframe
 ;;   :ensure t

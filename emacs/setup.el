@@ -50,8 +50,8 @@
 
     ;; ivy
     counsel
-    ;;flx
-    amx
+    flx
+    ;;amx
     ivy
     ivy-hydra
     ivy-posframe
@@ -66,6 +66,8 @@
     keycast
     zoom
     telega
+    ivy-pass
+    pass
 
     ;; themes
     color-theme-modern

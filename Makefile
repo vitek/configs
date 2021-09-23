@@ -1,6 +1,7 @@
 GCONFTOOL = gconftool-2
 INSTALL   = install
 PYTHON3   = $(firstword $(shell which python3.9 python3.8 python3.7 python3))
+EMACS     = emacs
 
 DESTDIR   = $(HOME)
 
@@ -80,13 +81,13 @@ install-emacs-configs:
 	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
 
 install-emacs: install-xresources install-emacs-configs
-	emacs --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
+	$(EMACS) --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
 
 install-emacs-norefresh: export EMACS_PACKAGES_REFRESH_SKIP=1
 install-emacs-norefresh: install-emacs
 
 test-emacs:
-	cd emacs/site-lisp && emacs -batch -f package-initialize -L . -f buttercup-run-discover
+	cd emacs/site-lisp && $(EMACS) -batch -f package-initialize -L . -f buttercup-run-discover
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
