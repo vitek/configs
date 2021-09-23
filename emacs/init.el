@@ -12,7 +12,17 @@
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
-;; (setq use-package-verbose 'debug)
+(when (string-equal (getenv "EMACS_DEBUG_STARTUP") "1")
+  (setq use-package-verbose t)
+  (setq use-package-minimum-reported-time 0.005)
+
+  (defun my-message-with-timestamp (old-func fmt-string &rest args)
+    "Prepend current timestamp (with microsecond precision) to a message"
+    (apply old-func
+           (concat (format-time-string "[%F %T.%3N %Z] ")
+                   fmt-string)
+           args))
+  (advice-add 'message :around #'my-message-with-timestamp))
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
@@ -152,13 +162,17 @@
 ;;   ;;             solarized-use-less-bold t)
 ;;   ;;       (load-theme 'solarized-dark))))
 
-(use-package git-grep)
+(use-package git-grep
+  :commands (git-grep)
+  :defer t)
 (use-package rg
+  :commands (rg)
+  :defer t
   :config
   (rg-define-search rg-word
-  :format literal
-  :flags ("--word-regexp")
-  :menu ("Custom" "w" "Word")))
+    :format literal
+    :flags ("--word-regexp")
+    :menu ("Custom" "w" "Word")))
 
 (use-package yaml-mode
   :defer t
@@ -198,9 +212,12 @@
   (defun my/ansi-colorize-buffer ()
     (let ((buffer-read-only nil))
       (ansi-color-apply-on-region (point-min) (point-max))))
-  (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer))
+
+  :hook
+  ((compilation-filter-hook . my/ansi-colorize-buffer)))
 
 (use-package term
+  :defer t
   :after ansi-color
   :config
   (seq-map-indexed
@@ -248,8 +265,8 @@
         ;; Show single column marker
         ;;(my-highlight-column)
         ))))
-
-  (add-hook 'font-lock-mode-hook 'my-highlight-whitespaces))
+  :hook
+  ((font-lock-mode . my-highlight-whitespaces)))
 
 (use-package recentf
   :bind (("C-x C-r" . recentf-open-files))
@@ -420,7 +437,6 @@
 
 ;; Go support
 (use-package go-mode
-  :defer t
   :hook
   (go-mode
    . (lambda ()
@@ -431,14 +447,16 @@
 
 ;; Dired setup
 (use-package dired
+  :commands (dired)
   :config
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              (load "dired-x")
-              (if window-system (hl-line-mode 1))
-              (dired-omit-mode 1)))
   (setq dired-listing-switches "-alhv --group-directories-first"
-        dired-isearch-filenames 'dwim))
+        dired-isearch-filenames 'dwim)
+  (defun my-dired-mode-hook ()
+    (load "dired-x")
+    (if window-system (hl-line-mode 1))
+    (dired-omit-mode 1))
+  :hook
+  ((dired-mode . my-dired-mode-hook)))
 
 ;; ;; ido-mode
 ;; (use-package ido
@@ -450,6 +468,7 @@
 
 ;; ivy
 (use-package ivy
+  :defer t
   :delight
   :config
   (ivy-mode 1)
@@ -470,7 +489,8 @@
   (setq ivy-extra-directories nil)    ;Default value: ("../" "./")
   )
 
-(use-package ivy-hydra)
+(use-package ivy-hydra
+  :defer t)
 
 ;; See https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-lisp/prot-ivy-deprecated-conf.el
 (use-package counsel
@@ -607,7 +627,10 @@
   (setq org-todo-keywords
         '((sequence
            "TODO" "INPROGRESS" "HOLD" "|" "DONE" "DELEGATED" "CANCELLED")))
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
+  :hook
+  ((org-mode . visual-fill-column-mode)
+   (org-mode . visual-line-mode)
+   (org-after-todo-statistics . org-summary-todo)))
 
 (use-package vterm
   :defer t
@@ -651,7 +674,7 @@
   :config
   (if window-system (server-start)))
 
-(use-package vc
+(use-package vc-hooks
   :config
   ;; Only load vc-arc when available
   (when (require 'vc-arc nil t)
