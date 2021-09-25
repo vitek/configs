@@ -775,8 +775,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (setq telega-emoji-company-backend 'telega-company-emoji)
   (setq telega-symbol-telegram "tg:")
   (setq telega-symbol-mode "")
+  ;;(setq telega-symbol-reply "<-")
   (setq telega-completing-read-function 'ivy-completing-read)
   (setq telega-chat-input-complete-function 'counsel-company)
+  (add-to-list 'telega-symbols-emojify 'reply)
   (defun my-telega-chat-mode ()
     (set (make-local-variable 'company-backends)
          (append (list telega-emoji-company-backend

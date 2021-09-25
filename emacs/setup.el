@@ -40,6 +40,7 @@
     buttercup
 
     ;; prog modes
+    visual-fill-column
     go-mode
     graphviz-dot-mode
     lua-mode
@@ -49,9 +50,9 @@
     yaml-mode
 
     ;; ivy
+    amx
     counsel
     flx
-    ;;amx
     ivy
     ivy-hydra
     ivy-posframe
