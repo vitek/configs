@@ -420,8 +420,9 @@
 
   :commands lsp
   :hook ((python-mode . lsp-deferred)
-         (c++-mode . lsp-deferred)
-         (go-mode . lsp-deferred)))
+         (c++-mode    . lsp-deferred)
+         (c-mode      . lsp-deferred)
+         (go-mode     . lsp-deferred)))
 
 ;; delight, tune minor mode bar
 (use-package delight
