@@ -135,13 +135,14 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
 
+;; Don't initialize later as well
+(setq package-enable-at-startup nil)
+
 ;; Configure package
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("stable.melpa" . "http://stable.melpa.org/packages/")
-        ("melpa" . "http://melpa.org/packages/"))
-                                        ; Don't initialize later as well
-      package-enable-at-startup nil)
+        ("melpa" . "http://melpa.org/packages/")))
 
 (when (< emacs-major-version 27)
   (package-initialize))

@@ -7,6 +7,11 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("stable.melpa" . "http://stable.melpa.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
+;; (setq package-archive-priorities
+;;       '(("stable.melpa" . 10)
+;;         ("gnu"          . 5)
+;;         ("melpa"        . 0)))
+
 (defvar bootstrap-packages
   '(delight
     use-package
@@ -21,7 +26,8 @@
     rg
 
     ;; lsp related
-    company-lsp
+    company
+    ;;company-lsp
     lsp-mode
     ;;lsp-treemacs
     ;;lsp-ui
@@ -63,6 +69,9 @@
     multi-vterm
 
     ;; misc
+    all-the-icons
+    all-the-icons-ivy
+    all-the-icons-ivy-rich
     gif-screencast
     keycast
     zoom
