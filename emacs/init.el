@@ -197,6 +197,7 @@
    ("M-@"   . mc-move-mark-word)))
 
 (use-package tools
+  :commands (insert-date insert-python-datetime insert-rfc-datetime)
   :bind
   (("C-c f"   . window-config-toggle)
 
