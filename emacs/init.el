@@ -150,6 +150,27 @@
 (when (< emacs-major-version 27)
   (package-initialize))
 
+;; Install binary dependencies
+(let ((build-timestamp-dir
+       (expand-file-name ".build-deps/" user-emacs-directory))
+      (do-build-deps :ask))
+  (defmacro build-action (name body)
+    `(let ((build-timestamp (concat build-timestamp-dir (symbol-name ,name))))
+       (when (not (file-exists-p build-timestamp))
+         (when (if (eq do-build-deps :ask)
+                   (setq do-build-deps (yes-or-no-p "Build dependencies? "))
+                 do-build-deps)
+           (message (format "Performing build action [%s]..." ,name))
+           (progn ,body)
+           (with-temp-buffer (write-file build-timestamp))))))
+  (make-directory build-timestamp-dir :parents)
+  (build-action 'vterm
+                (vterm-module-compile))
+  (build-action 'all-the-icons
+                (all-the-icons-install-fonts t))
+  (build-action 'pdf-tools
+                (pdf-tools-install t)))
+
 ;; Color theme
 (load-theme 'zenburn t)
 ;; (use-package color-theme-modern

@@ -72,6 +72,7 @@
     all-the-icons
     all-the-icons-ivy
     all-the-icons-ivy-rich
+    pdf-tools
     gif-screencast
     keycast
     zoom
