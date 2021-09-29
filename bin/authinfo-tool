@@ -47,11 +47,11 @@ def authinfo_tool_main():
         match_rules['machine'] = args.machine
     if args.login:
         match_rules['login'] = args.login
-    if args.login:
+    if args.port:
         match_rules['port'] = args.port
 
     for entry in parse_authinfo(output.splitlines()):
-        for key, value in match_rules:
+        for key, value in match_rules.items():
             if entry.get(key) != value:
                 break
         else:
