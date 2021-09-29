@@ -219,7 +219,7 @@
       (ansi-color-apply-on-region (point-min) (point-max))))
 
   :hook
-  ((compilation-filter-hook . my/ansi-colorize-buffer)))
+  ((compilation-filter . my/ansi-colorize-buffer)))
 
 (use-package term
   :defer t
@@ -542,21 +542,18 @@
          :map counsel-find-file-map
          ("C-f" . counsel-find-file-fallback-command)))
 
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
+
 (use-package ivy-rich
   :ensure t
-  :config
+  :init
   (setq ivy-rich-path-style 'abbreviate)
 
   (setcdr (assq t ivy-format-functions-alist)
-          #'ivy-format-function-line))
-
-(use-package all-the-icons-ivy-rich
-  :ensure t
-  :hook
-  ((ivy-rich . (lambda () (all-the-icons-ivy-rich-mode 1)))))
-
-
-
+          #'ivy-format-function-line)
+  (ivy-rich-mode 1))
 
 (use-package ivy-pass
   :ensure t
