@@ -19,7 +19,8 @@ BIN_FILES =					\
 	bin/histogram				\
 	bin/json-pp				\
 	bin/xml-pp				\
-	bin/xkb-layout
+	bin/xkb-layout				\
+	bin/authinfo-tool
 
 SYSTEMD_UNITS = systemd/xkb-layout.service
 SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/

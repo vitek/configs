@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+import argparse
+import pathlib
+import subprocess
+
+
+def pairs(seq, default_value=None):
+    seq = iter(seq)
+    while True:
+        try:
+            item = next(seq)
+        except StopIteration:
+            break
+        yield item, next(seq, default_value)
+
+
+def parse_authinfo(stream):
+    for line in stream:
+        line = line.strip()
+        if line.startswith('#'):
+            continue
+        rows = line.split()
+        yield {
+            key: value
+            for key, value in pairs(rows, default_value='')
+        }
+
+
+def authinfo_tool_main():
+    parser = argparse.ArgumentParser(description="Authinfo file parse tool")
+    parser.add_argument(
+        "--authinfo-path",
+        default=pathlib.Path("~/.authinfo.gpg").expanduser(),
+        help="Path to authinfo.gpg file (default: %(default)s)",
+    )
+    parser.add_argument("--machine", help="Match specified machine")
+    parser.add_argument("--login", help="Match specified login")
+    parser.add_argument("--port", help="Match specified port")
+    args = parser.parse_args()
+
+    output = subprocess.check_output(
+        ["gpg", "--use-agent", "--quiet", "--batch", "-d", args.authinfo_path],
+        encoding="utf-8",
+    )
+    match_rules = {}
+    if args.machine:
+        match_rules['machine'] = args.machine
+    if args.login:
+        match_rules['login'] = args.login
+    if args.login:
+        match_rules['port'] = args.port
+
+    for entry in parse_authinfo(output.splitlines()):
+        for key, value in match_rules:
+            if entry.get(key) != value:
+                break
+        else:
+            print(entry['password'])
+            break
+
+
+if __name__ == "__main__":
+    authinfo_tool_main()
