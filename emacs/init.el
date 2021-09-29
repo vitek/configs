@@ -273,7 +273,7 @@
 (use-package recentf
   :bind (("C-x C-r" . recentf-open-files))
   :config
-  (setq recentf-max-menu-items 50)
+  (setq recentf-max-menu-items 100)
   (recentf-mode 1)
   (run-at-time nil (* 5 60) 'recentf-save-list))
 
@@ -545,8 +545,15 @@
   (setq ivy-rich-path-style 'abbreviate)
 
   (setcdr (assq t ivy-format-functions-alist)
-          #'ivy-format-function-line)
-  :hook (after-init . ivy-rich-mode))
+          #'ivy-format-function-line))
+
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :hook
+  ((ivy-rich . (lambda () (all-the-icons-ivy-rich-mode 1)))))
+
+
+
 
 (use-package ivy-pass
   :ensure t
