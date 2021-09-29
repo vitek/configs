@@ -12,6 +12,9 @@
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
+;; Enlarge process buffer
+(setq read-process-output-max (* 1024 256))
+
 (when (string-equal (getenv "EMACS_DEBUG_STARTUP") "1")
   (setq use-package-verbose t)
   (setq use-package-minimum-reported-time 0.005)
