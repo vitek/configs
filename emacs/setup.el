@@ -80,6 +80,9 @@
     ivy-pass
     pass
 
+    ;; org-mode
+    org-bullets
+
     ;; themes
     color-theme-modern
     monokai-theme

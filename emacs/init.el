@@ -101,7 +101,7 @@
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 8)
-(setq-default fill-column 79)
+(setq-default fill-column 80)
 
 (setq-default sgml-basic-offset 2)
 (setq-default py-indent-offset 4)
@@ -322,6 +322,9 @@
 
 (use-package python
   :delight (python-mode "py" "python-mode")
+  :hook
+  (python-mode . (lambda ()
+                   (setq-local fill-column 79)))
   :bind (:map python-mode-map
               ("C-c b" . ipdb-insert-set-trace)))
 
@@ -480,7 +483,7 @@
         dired-isearch-filenames 'dwim)
   (defun my-dired-mode-hook ()
     (load "dired-x")
-    (if window-system (hl-line-mode 1))
+    (when window-system (hl-line-mode 1))
     (dired-omit-mode 1))
   :hook
   ((dired-mode . my-dired-mode-hook)))
@@ -648,19 +651,30 @@
 (use-package org
   :defer t
   :config
+  ;; Disable box around checkbox causing screen flickering
+  (custom-set-faces
+   '(org-checkbox ((t (:box nil :inherit org-checkbox)))))
   (setq org-export-with-smart-quotes t
         org-src-fontify-natively t
         org-startup-folded nil)
+  (setq org-log-done 'time)
+
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
     (let (org-log-done org-log-states)   ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
   (setq org-todo-keywords
         '((sequence
-           "TODO" "INPROGRESS" "HOLD" "|" "DONE" "DELEGATED" "CANCELLED")))
+           "TODO(t)" "INPROGRESS(p)" "HOLD(h)" "|"
+           "DONE(d)" "DELEGATED(D)" "CANCELLED(C)")))
   :hook
-  ((org-mode . visual-fill-column-mode)
-   (org-mode . visual-line-mode)
+  ((org-mode . (lambda ()
+                 (setq-local fill-column 90)
+                 (visual-fill-column-mode 1)
+                 (visual-line-mode 1)))
+   (org-agenda-mode . (lambda ()
+                        (when window-system (hl-line-mode 1))))
    (org-after-todo-statistics . org-summary-todo)))
 
 (use-package vterm
