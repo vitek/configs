@@ -167,9 +167,7 @@
   (build-action 'vterm
                 (vterm-module-compile))
   (build-action 'all-the-icons
-                (all-the-icons-install-fonts t))
-  (build-action 'pdf-tools
-                (pdf-tools-install t)))
+                (all-the-icons-install-fonts t)))
 
 ;; Color theme
 (load-theme 'zenburn t)
@@ -676,6 +674,9 @@
    (org-agenda-mode . (lambda ()
                         (when window-system (hl-line-mode 1))))
    (org-after-todo-statistics . org-summary-todo)))
+
+(use-package pdf-tools
+  :hook (doc-view-mode . pdf-tools-install))
 
 (use-package vterm
   :defer t
