@@ -4,9 +4,9 @@
 (require 'package)
 
 (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("stable.melpa" . "http://stable.melpa.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("stable.melpa" . "https://stable.melpa.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")))
 ;; (setq package-archive-priorities
 ;;       '(("stable.melpa" . 10)
 ;;         ("gnu"          . 5)
