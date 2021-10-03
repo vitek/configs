@@ -72,6 +72,7 @@
     all-the-icons
     all-the-icons-ivy
     all-the-icons-ivy-rich
+    flyspell-correct-ivy
     pdf-tools
     gif-screencast
     keycast

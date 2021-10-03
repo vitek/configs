@@ -382,6 +382,13 @@
 
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+
+(use-package flyspell-correct-ivy
+  :after flyspell-correct)
+
 ;; company
 (use-package company
   :ensure t
@@ -650,11 +657,14 @@
   :defer t
   :config
   ;; Disable box around checkbox causing screen flickering
+  (defvar my-org-agenda-map (make-sparse-keymap))
   (custom-set-faces
    '(org-checkbox ((t (:box nil :inherit org-checkbox)))))
   (setq org-export-with-smart-quotes t
         org-src-fontify-natively t
         org-startup-folded nil)
+  (set-face-underline 'org-ellipsis nil)
+  (setq org-ellipsis "…")
   (setq org-log-done 'time)
 
   (defun org-summary-todo (n-done n-not-done)
@@ -666,11 +676,20 @@
         '((sequence
            "TODO(t)" "INPROGRESS(p)" "HOLD(h)" "|"
            "DONE(d)" "DELEGATED(D)" "CANCELLED(C)")))
+
+  :bind (:map my-org-agenda-map
+              ("a" . org-agenda-list)
+              ("t" . org-todo-list))
+  :bind-keymap
+  ("C-c a" . my-org-agenda-map)
+
   :hook
   ((org-mode . (lambda ()
                  (setq-local fill-column 90)
                  (visual-fill-column-mode 1)
-                 (visual-line-mode 1)))
+                 (visual-line-mode 1)
+                 (when (> emacs-major-version 27)
+                   (org-bullets-mode 1))))
    (org-agenda-mode . (lambda ()
                         (when window-system (hl-line-mode 1))))
    (org-after-todo-statistics . org-summary-todo)))
