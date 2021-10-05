@@ -188,14 +188,9 @@
 (use-package git-grep
   :commands (git-grep)
   :defer t)
+
 (use-package rg
-  :commands (rg)
-  :defer t
-  :config
-  (rg-define-search rg-word
-    :format literal
-    :flags ("--word-regexp")
-    :menu ("Custom" "w" "Word")))
+  :commands (rg))
 
 (use-package yaml-mode
   :defer t
