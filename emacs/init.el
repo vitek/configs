@@ -862,9 +862,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :bind
   (("C-c #"   . comment-region)
    ("C-x C-c" . delete-frame-or-kill-emacs)
+   ("C-c w"   . browse-url-at-point)
    ;; window control
    ([C-prior] . previous-buffer)
-   ([C-next]  . next-buffer)) )
+   ([C-next]  . next-buffer)))
 
 (if window-system
     (progn
