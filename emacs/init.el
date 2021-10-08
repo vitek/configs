@@ -668,6 +668,7 @@
   (set-face-underline 'org-ellipsis nil)
   (setq org-ellipsis "…")
   (setq org-log-done 'time)
+  (setq org-adapt-indentation t)
 
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
