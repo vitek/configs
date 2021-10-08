@@ -321,6 +321,14 @@
   :bind (:map python-mode-map
               ("C-c b" . ipdb-insert-set-trace)))
 
+(use-package elpy
+  :ensure t
+  :config
+  (delete 'elpy-module-highlight-indentation elpy-modules)
+  (delete 'elpy-module-django elpy-modules)
+  :hook
+  (python-mode . elpy-enable))
+
 (use-package python-black
   :after python
   :config
@@ -448,8 +456,7 @@
   ;;(setq lsp-headerline-breadcrumb-enable nil)
 
   :commands lsp
-  :hook ((python-mode . lsp-deferred)
-         (c++-mode    . lsp-deferred)
+  :hook ((c++-mode    . lsp-deferred)
          (c-mode      . lsp-deferred)
          (go-mode     . lsp-deferred)))
 
