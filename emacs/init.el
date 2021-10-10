@@ -387,10 +387,14 @@
 
 (use-package flyspell-correct
   :after flyspell
+  :config
+  (setq ispell-dictionary "russian")
   :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
 
 (use-package flyspell-correct-ivy
-  :after flyspell-correct)
+  :after flyspell-correct
+  :config
+  (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
 ;; company
 (use-package company
