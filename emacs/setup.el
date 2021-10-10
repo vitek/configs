@@ -38,6 +38,7 @@
     cmake-mode
 
     ;; python related
+    elpy
     pyimpsort
     python-black
     cython-mode
