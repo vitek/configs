@@ -70,6 +70,7 @@
     multi-vterm
 
     ;; misc
+    ace-window
     all-the-icons
     all-the-icons-ivy
     all-the-icons-ivy-rich
