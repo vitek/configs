@@ -385,10 +385,18 @@
 
   :delight (flycheck-mode "/flycheck" "flycheck"))
 
-(use-package flyspell-correct
-  :after flyspell
+(use-package flyspell
+  :hook (org-mode . flyspell-mode)
   :config
   (setq ispell-dictionary "russian")
+  :bind (
+         ([f5]   . (lambda ()
+                     (interactive)
+                     (ispell-change-dictionary "english")))))
+
+
+(use-package flyspell-correct
+  :after flyspell
   :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
 
 (use-package flyspell-correct-ivy
