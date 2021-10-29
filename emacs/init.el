@@ -388,12 +388,23 @@
 (use-package flyspell
   :hook (org-mode . flyspell-mode)
   :config
-  (setq ispell-dictionary "russian")
-  :bind (
-         ([f5]   . (lambda ()
-                     (interactive)
-                     (ispell-change-dictionary "english")))))
+  (defconst my-spell-dictionaries '("russian" "english"))
+  (setq ispell-dictionary (car my-spell-dictionaries))
 
+  (defun my-find-cell (lst item)
+    (cond
+     ((equal item (car lst)) lst)
+     ((not lst) nil)
+     (t (my-find-cell (cdr lst) item))))
+  (defun my-rotate (seq lang)
+    (car (or (cdr (find-cell seq lang)) seq)))
+
+  :bind (([f5]   .
+          (lambda ()
+            (interactive)
+            (ispell-change-dictionary
+             (my-rotate my-spell-dictionaries
+                        (or ispell-local-dictionary ispell-dictionary)))))))
 
 (use-package flyspell-correct
   :after flyspell
