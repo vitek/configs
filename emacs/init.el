@@ -865,6 +865,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   ;; Compilation
   (setq compilation-environment '("LC_ALL=C" "TERM=ansi")
         compile-command "make ")
+  (setq compilation-scroll-output 'first-error)
+
   :bind
   (("<f9>"  . my-compile)
    ("<f12>" . my-grep)))
