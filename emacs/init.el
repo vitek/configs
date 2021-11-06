@@ -72,6 +72,13 @@
  ;; Edit
  kill-whole-line t
 
+ ;; Scrolling
+ scroll-preserve-screen-position 'always
+ scroll-margin 1
+ mouse-wheel-scroll-amount '(1
+                             ((shift) . 1)
+                             ((meta))
+                             ((control) . text-scale))
  ;; Scroll speed
  scroll-conservatively 10
  scroll-up-aggressively 0
@@ -294,7 +301,7 @@
   (recentf-mode 1)
   (run-at-time nil (* 5 60)
                (lambda ()
-                 (let ((save-silently t))
+                 (let ((inhibit-message t))
                    (recentf-save-list)))))
 
 ;; Unique buffer names
