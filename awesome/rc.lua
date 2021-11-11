@@ -21,10 +21,11 @@ local keyboard_layout = require("keyboard_layout")
 local utils = require("utils")
 local mywibar = require("mywibar")
 
-local pulseaudio = require('apw.pulseaudio')
-local brightness = require("brightness")
 local quake = require("quake")
 local xrandr = require("xrandr")
+
+require('apw.pulseaudio')
+require("brightness")
 
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
@@ -204,11 +205,43 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 local function mypromptbox_run ()
    local mypromptbox =
-      awful.screen.focused().mypromptbox or screen[1].mypromptbox
+      awful.screen.focused().mypromptbox
+
+   if not mypromptbox then
+      for s in screen do
+         if s.mywibar then
+            mypromptbox = s.mywibar.mypromptbox
+            break
+         end
+      end
+   end
+
    if mypromptbox then
       mypromptbox:run()
    else
       awful.spawn("gnome-panel-control --run-dialog")
+   end
+end
+
+
+local wibar_update = function ()
+   if not settings.enable_wibar then
+      return
+   end
+
+   local bests = nil
+   for s in screen do
+      if bests ==  nil or s.geometry.x < bests.geometry.x then
+         bests = s
+      end
+   end
+
+   for s in screen do
+      if s == bests then
+         mywibar.screen_add(s)
+      else
+         mywibar.screen_remove(s)
+      end
    end
 end
 
@@ -220,15 +253,10 @@ awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
     awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s,
         awful.layout.layouts[1])
-
-    if settings.enable_wibar then
-        -- only enable wibar on the main screen
-        if s.index == 1 then
-            mywibar.create_wibar(s)
-        end
-    end
 end)
 -- }}}
+
+wibar_update()
 
 -- {{{ Mouse bindings
 -- @DOC_ROOT_BUTTONS@
@@ -661,6 +689,8 @@ local arrange_screen = function (s)
     local clients = awful.client.visible(s)
     local layout  = awful.layout.getname(awful.layout.get(s))
 
+    wibar_update()
+
     for _, c in pairs(clients) do
        -- No borders with only one humanly visible client
        if c.maximized or c.no_border then
@@ -684,7 +714,7 @@ end
 
 -- See https://github.com/awesomeWM/awesome/issues/171#issuecomment-87880828
 for s = 1, screen.count() do
-   screen[s]:connect_signal("arrange", function () arrange_screen(s) end)
+   screen[s]:connect_signal("arrange", function (s) arrange_screen(s) end)
 end
 -- }}}
 
@@ -717,7 +747,7 @@ local screen_state = {
 -- Move client back to the screen and tag
 -- TODO: restore full state
 screen.connect_signal("added", function (s)
-    s:connect_signal("arrange", function () arrange_screen(s) end)
+    s:connect_signal("arrange", function (s) arrange_screen(s) end)
 
     for _, c in ipairs(client.get()) do
         if c.screen_evicted then
