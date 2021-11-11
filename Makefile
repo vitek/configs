@@ -120,6 +120,9 @@ install-awesome: install-x11-utils
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
 
+restart-awesome: install-awesome
+	make install-awesome && awesome -k && awesome --replace
+
 install-compton:
 	$(INSTALL) -d $(DESTDIR)/.config
 	$(INSTALL) -m 0644 awesome/compton.conf $(DESTDIR)/.config/
