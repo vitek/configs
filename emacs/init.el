@@ -401,20 +401,14 @@
   (defconst my-spell-dictionaries '("russian" "english"))
   (setq ispell-dictionary (car my-spell-dictionaries))
 
-  (defun my-find-cell (lst item)
-    (cond
-     ((equal item (car lst)) lst)
-     ((not lst) nil)
-     (t (my-find-cell (cdr lst) item))))
-  (defun my-rotate (seq lang)
-    (car (or (cdr (find-cell seq lang)) seq)))
-
-  :bind (([f5]   .
-          (lambda ()
-            (interactive)
-            (ispell-change-dictionary
-             (my-rotate my-spell-dictionaries
-                        (or ispell-local-dictionary ispell-dictionary)))))))
+  :bind
+  (([f5]   .
+    (lambda ()
+      (interactive)
+      (let ((current-language (or ispell-local-dictionary ispell-dictionary)))
+        (ispell-change-dictionary
+         (car (or (cdr (member current-language my-spell-dictionaries))
+                  my-spell-dictionaries))))))))
 
 (use-package flyspell-correct
   :after flyspell
@@ -442,6 +436,16 @@
   :defer t
   :delight (lsp-mode "/lsp" "lsp")
   :config
+
+  (defun my-lsp-force-reconnect ()
+    (interactive)
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (and lsp-mode
+                   (member major-mode '(c-mode cc-mode)))
+          (lsp-disconnect)
+          (lsp +1)))))
+
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
                   '("clangd-12" "clangd-11" "clangd-10" "clangd-9" "clangd"))
