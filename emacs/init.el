@@ -708,6 +708,7 @@
   (setq org-ellipsis "…")
   (setq org-log-done 'time)
   (setq org-adapt-indentation t)
+  (setq org-default-notes-file (expand-file-name "~/nda/org/notes.org"))
 
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
