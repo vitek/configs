@@ -921,6 +921,16 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
    ([C-prior] . previous-buffer)
    ([C-next]  . next-buffer)))
 
+(use-package goto-addr
+  :config
+  (setq goto-address-url-face 'underline)
+  ;; :bind
+  ;; (:map goto-address-highlight-keymap
+  ;;       ("C-c C-o" . goto-address-at-point))
+  :hook
+  ((vterm-mode eshell-mode shell-mode) . goto-address-mode)
+  (prog-mode . goto-address-prog-mode))
+
 (if window-system
     (progn
       (global-set-key "\C-z" 'ignore)
