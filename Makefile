@@ -121,7 +121,8 @@ install-awesome: install-x11-utils
 	fi
 
 restart-awesome: install-awesome
-	make install-awesome && awesome -k && awesome --replace
+	awesome -k
+	awesome --replace
 
 install-compton:
 	$(INSTALL) -d $(DESTDIR)/.config
