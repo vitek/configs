@@ -35,7 +35,6 @@ local mytextclock = wibox.widget.textclock(" %a %b %d, %H:%M:%S ", 1)
 local mykeyboardlayout = awful.widget.keyboardlayout()
 
 function mywibar.create_wibar(s)
-
    local vicious = require("vicious")
    --local cpuwidget = wibox.widget.textbox()
 
@@ -88,32 +87,32 @@ function mywibar.create_wibar(s)
    end)
 
    -- Create a promptbox for each screen
-   s.mypromptbox = awful.widget.prompt()
+   local mypromptbox = awful.widget.prompt()
    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
    -- We need one layoutbox per screen.
-   s.mylayoutbox = awful.widget.layoutbox(s)
-   s.mylayoutbox:buttons(awful.util.table.join(
+   local mylayoutbox = awful.widget.layoutbox(s)
+   mylayoutbox:buttons(awful.util.table.join(
                             awful.button({ }, 1, function () awful.layout.inc( 1) end),
                             awful.button({ }, 3, function () awful.layout.inc(-1) end),
                             awful.button({ }, 4, function () awful.layout.inc( 1) end),
                             awful.button({ }, 5, function () awful.layout.inc(-1) end)))
    -- Create a taglist widget
-   s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
+   local mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
 
    -- @DOC_WIBAR@
    -- Create the wibox
-   s.mywibox = awful.wibar({ position = "top", screen = s, opacity = 0.95 })
+   local mywibox = awful.wibar({ position = "top", screen = s, opacity = 0.95 })
 
    -- @DOC_SETUP_WIDGETS@
    -- Add widgets to the wibox
-   s.mywibox:setup {
+   mywibox:setup {
       layout = wibox.layout.align.horizontal,
       { -- Left widgets
          layout = wibox.layout.fixed.horizontal,
-         s.mytaglist,
+         mytaglist,
          wibox.container.margin(cpuwidget, 1),
          wibox.container.margin(memwidget, 1),
-         s.mypromptbox,
+         mypromptbox,
       },
       nil,
       { -- Right widgets
@@ -124,8 +123,24 @@ function mywibar.create_wibar(s)
          wibox.widget.systray(),
          mytextclock,
          mylauncher,
-         --s.mylayoutbox,
+         --mylayoutbox,
       },
    }
+   mywibox.mypromptbox = mypromptbox
+   return mywibox
 end
+
+mywibar.screen_add = function (s)
+   if s.mywibar == nil then
+      s.mywibar = mywibar.create_wibar(s)
+   end
+end
+
+mywibar.screen_remove = function (s)
+   if s.mywibar ~= nil then
+      s.mywibar:remove()
+      s.mywibar = nil
+   end
+end
+
 return mywibar
