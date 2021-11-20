@@ -30,7 +30,7 @@
     ;;company-lsp
     lsp-mode
     ;;lsp-treemacs
-    ;;lsp-ui
+    lsp-ui
 
     ;; c/c++ related
     clang-format
