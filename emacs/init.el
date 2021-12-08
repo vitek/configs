@@ -686,10 +686,10 @@
 
 (use-package windmove
   :bind
-  ([M-left]  . windmove-left)
-  ([M-right] . windmove-right)
-  ([M-up]    . windmove-up)
-  ([M-down]  . windmove-down))
+  ([S-left]  . windmove-left)
+  ([S-right] . windmove-right)
+  ([S-up]    . windmove-up)
+  ([S-down]  . windmove-down))
 
 (use-package gud
   :bind
