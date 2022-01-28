@@ -448,7 +448,7 @@
 
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
-                  '("clangd-12" "clangd-11" "clangd-10" "clangd-9" "clangd"))
+                  '("clangd-13" "clangd-12" "clangd-11" "clangd-10" "clangd-9" "clangd"))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"
                                   "--header-insertion=never"))
 
@@ -686,10 +686,10 @@
 
 (use-package windmove
   :bind
-  ([S-left]  . windmove-left)
-  ([S-right] . windmove-right)
-  ([S-up]    . windmove-up)
-  ([S-down]  . windmove-down))
+  ([M-left]  . windmove-left)
+  ([M-right] . windmove-right)
+  ([M-up]    . windmove-up)
+  ([M-down]  . windmove-down))
 
 (use-package gud
   :bind
