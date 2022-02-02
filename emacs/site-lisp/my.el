@@ -10,10 +10,10 @@
   (interactive)
   (let ((file (or (buffer-file-name) default-directory)))
     (cond
-     ((and (fboundp 'git-grep) file (vc-find-root  file ".git"))
-      (call-interactively 'git-grep))
-     ((fboundp 'rg)
-      (call-interactively 'rg))
+     ((and (fboundp 'counsel-git-grep) file (vc-find-root  file ".git"))
+      (call-interactively 'counsel-git-grep))
+     ((fboundp 'counsel-rg)
+      (call-interactively 'counsel-rg))
      (t (call-interactively 'grep)))))
 
 (provide 'my)
