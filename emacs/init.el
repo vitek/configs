@@ -343,7 +343,7 @@
   :after python
   :config
   (set-executable 'python-black-command
-                  '("taxi-black" "black"))
+                  '("my-taxi-black" "taxi-black" "black"))
   :bind (:map python-mode-map ("C-c f" . python-black-buffer)))
 
 (use-package pyimpsort
@@ -496,6 +496,14 @@
   :hook ((c++-mode    . lsp-deferred)
          (c-mode      . lsp-deferred)
          (go-mode     . lsp-deferred)))
+
+
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs
+        '("~/nda/emacs/snippets"))
+  (yas-global-mode 1) ;; or M-x yas-reload-all if you've started YASnippet already.
+)
 
 ;; delight, tune minor mode bar
 (use-package delight
