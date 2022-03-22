@@ -32,6 +32,8 @@
     ;;lsp-treemacs
     lsp-ui
 
+    yasnippet
+
     ;; c/c++ related
     clang-format
     cmake-ide
