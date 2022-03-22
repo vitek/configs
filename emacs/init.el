@@ -60,7 +60,7 @@
 
  visible-bell t
 
- jit-lock-defer-time 0.05
+ jit-lock-defer-time 0.01
 
  ;; Localization settings
  default-input-method "russian-computer"

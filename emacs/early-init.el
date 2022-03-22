@@ -33,9 +33,13 @@
   (setq package-native-compile t))
 
 ;; Workaround for startup interface flickering
+;; (add-to-list 'default-frame-alist
+;;              '(background-color . "#3F3F3F"))
+;; (add-to-list 'default-frame-alist
+;;              '(foreground-color . "#DCDCCC"))
 (add-to-list 'default-frame-alist
-             '(background-color . "#3F3F3F"))
+             '(background-color . "#000000"))
 (add-to-list 'default-frame-alist
-             '(foreground-color . "#DCDCCC"))
+             '(foreground-color . "#FFFFFF"))
 
 ;;; early-init.el ends here
