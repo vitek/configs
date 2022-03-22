@@ -92,6 +92,7 @@
     nova-theme
     solarized-theme
     zenburn-theme
+    modus-themes
 ))
 
 (defun byte-compile-site-lisp ()
