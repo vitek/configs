@@ -177,7 +177,7 @@
                 (all-the-icons-install-fonts t)))
 
 ;; Color theme
-;; (load-theme 'zenburn t)
+(load-theme 'zenburn t)
 ;; (use-package color-theme-modern
 ;;   :init
 ;;   ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -928,11 +928,12 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
    ;; window control
    ([C-prior] . previous-buffer)
    ([C-next]  . next-buffer)
-   ("M-<f5>"  . modus-themes-toggle))
+   ;;("M-<f5>"  . modus-themes-toggle)
+   )
   :config
-  (setq
-   modus-themes-mode-line '(borderless (padding . 1) (height . 0.9)))
-  (load-theme 'modus-vivendi t)  ;; OR (load-theme 'modus-operandi)
+  ;; (setq
+  ;;  modus-themes-mode-line '(borderless (padding . 1) (height . 0.9)))
+  ;; (load-theme 'modus-vivendi t)  ;; OR (load-theme 'modus-operandi)
 )
 
 (use-package goto-addr
