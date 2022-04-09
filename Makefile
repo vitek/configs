@@ -32,7 +32,6 @@ install: install-vc install-editor install-misc
 install-vc: install-git install-hg install-bzr
 install-editor: install-emacs install-vim
 
-
 install-all: 					\
 	install-awesome				\
 	install-bashrc				\
@@ -44,6 +43,7 @@ install-all: 					\
 	install-git				\
 	install-hg				\
 	install-misc				\
+	install-sway				\
 	install-vc				\
 	install-vim				\
 	install-xresources
@@ -119,6 +119,16 @@ install-awesome: install-x11-utils
 		$(INSTALL) -m 0755 awesome/scripts/start.sh		\
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
+
+
+install-waybar:
+	$(INSTALL) -d $(DESTDIR)/.config/waybar
+	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
+	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
+
+install-sway: install-waybar
+	$(INSTALL) -d $(DESTDIR)/.config/sway
+	$(INSTALL) -m 0644 wayland/sway/config $(DESTDIR)/.config/sway/
 
 restart-awesome: install-awesome
 	awesome -k
