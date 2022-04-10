@@ -448,7 +448,8 @@
 
   ;; clangd
   (set-executable 'lsp-clients-clangd-executable
-                  '("clangd-13" "clangd-12" "clangd-11" "clangd-10" "clangd-9" "clangd"))
+                  '("clangd-chooser" "clangd-13" "clangd-12"
+                    "clangd-11" "clangd-10" "clangd-9" "clangd"))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"
                                   "--header-insertion=never"))
 

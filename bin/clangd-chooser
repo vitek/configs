@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+
+import os
+import pathlib
+import shutil
+import sys
+
+CLANGD_VERSIONS = (14, 13, 12, 11, 10)
+
+
+def read_config(config_path):
+    clangd_args = config_path.read_text().splitlines()
+    if not clangd_args:
+        raise RuntimeError('Empty clangd args')
+    return clangd_args
+
+
+def guess_clangd():
+    for version in CLANGD_VERSIONS:
+        command = shutil.which(f'clangd-{version}')
+        if command:
+            return command
+    raise RuntimeError('No clangd binary found.')
+
+
+def main():
+    for config_path in (
+            pathlib.Path('.clangd-chooser'),
+            pathlib.Path('~/.clangd-chooser')
+    ):
+        config_path = config_path.expanduser().absolute()
+        if config_path.exists():
+            clangd_args = read_config(config_path)
+            clangd_binary = clangd_args[0]
+            break
+    else:
+        clangd_binary = guess_clangd()
+        clangd_args = ['clangd']
+    args = [*clangd_args, *sys.argv[1:]]
+    os.execvp(clangd_binary, args)
+
+
+if __name__ == '__main__':
+    main()

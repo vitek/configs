@@ -16,11 +16,13 @@ AWESOME_FILES =					\
 	awesome/xrandr.lua
 
 BIN_FILES =					\
+	bin/authinfo-tool			\
+	bin/captive.sh				\
+	bin/clangd-chooser			\
 	bin/histogram				\
 	bin/json-pp				\
-	bin/xml-pp				\
 	bin/xkb-layout				\
-	bin/authinfo-tool
+	bin/xml-pp
 
 SYSTEMD_UNITS = systemd/xkb-layout.service
 SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
