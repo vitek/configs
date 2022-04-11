@@ -1,3 +1,4 @@
+# -*- mode: i3wm-config -*-
 # Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
@@ -5,13 +6,45 @@
 # Read `man 5 sway` for a complete reference.
 
 # autostart
-# Fix D-Bus activation
-exec dbus-update-activation-environment --systemd --all
+exec {
+     systemctl --user import-environment \
+         SWAYSOCK                        \
+         WAYLAND_DISPLAY
 
-# GNOME Keyring and SSH agent
-exec gnome-keyring-daemon
+     # Fix D-Bus activation
+     dbus-update-activation-environment --systemd --all
 
-exec nm-applet --indicator
+     # GNOME Keyring and SSH agent
+     gnome-keyring-daemon
+
+     nm-applet --indicator
+
+     # per-window layout
+     swaykbdd
+}
+
+# Theme setup
+set {
+    # Interfaces
+    $gnome-interface org.gnome.desktop.interface
+    $gnome-sound org.gnome.desktop.sound
+
+    $gtk_font 'Hack Nerd Font 16'
+    $icon_theme Acid-green-folder
+}
+
+# exec_always {
+#     gsettings set $gnome-interface cursor-theme        'capitaine-cursors'
+#     gsettings set $gnome-interface cursor-size         30
+#     gsettings set $gnome-interface document-font-name  $gtk_font
+#     gsettings set $gnome-interface font-name           $gtk_font
+#     gsettings set $gnome-interface gtk-theme           'Gruvbox-glass'
+#     gsettings set $gnome-interface gtk-color-theme     'Gruvbox-glass'
+#     gsettings set $gnome-interface icon-theme          '$icon_theme'
+#     gsettings set $gnome-interface monospace-font-name $gtk_font
+#     gsettings set $gnome-interface text-scaling-factor 1.0
+#     gsettings set $gnome-sound     theme-name          'deepin'
+# }
 
 ### Variables
 #
@@ -56,14 +89,16 @@ output * bg $bg_image fill
 # resumed. It will also lock your screen before your computer goes to sleep.
 
 set $lock_bg $bg_image
+set $lock_cmd 'swaylock -f -c 000000 -i $lock_bg'
 
 bindsym --to-code Mod1+Control+l exec swaylock -i $lock_bg
 
 exec swayidle -w \
-         timeout 300  'swaylock -f -c 000000 -i $lock_bg' \
-         timeout 600  'swaymsg "output * dpms off"' \
-         resume       'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f -c 000000 -i $lock_bg'
+         lock         $lock_cmd \
+         before-sleep $lock_cmd \
+         timeout 300  $lock_cmd  \
+         timeout 150  'swaymsg "output * dpms off"' \
+         resume       'swaymsg "output * dpms on"'
 
 
 ### Input configuration
@@ -85,7 +120,6 @@ exec swayidle -w \
 input "*" xkb_layout "us,ru"
 #input "*" xkb_options "grp:alt_space_toggle"
 bindsym --to-code Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
-exec swaykbdd
 
 ### Key bindings
 #
@@ -252,8 +286,16 @@ bar {
     swaybar_command waybar
 }
 
-bindsym --to-code $mod+Left workspace prev_on_output
-bindsym --to-code $mod+Right workspace next_on_output
+bindsym --to-code {
+    $mod+Left workspace prev_on_output
+    $mod+Right workspace next_on_output
+}
+
+# Take screenshots
+bindsym --to-code {
+    $mod+Backslash exec grimshot copy area
+}
+
 
 include /etc/sway/config.d/*
 

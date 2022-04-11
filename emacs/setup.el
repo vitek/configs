@@ -77,13 +77,14 @@
     all-the-icons-ivy
     all-the-icons-ivy-rich
     flyspell-correct-ivy
-    pdf-tools
     gif-screencast
-    keycast
-    zoom
-    telega
+    i3wm-config-mode
     ivy-pass
+    keycast
     pass
+    pdf-tools
+    telega
+    zoom
 
     ;; org-mode
     org-bullets

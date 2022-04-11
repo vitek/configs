@@ -131,6 +131,7 @@ install-waybar:
 install-sway: install-waybar
 	$(INSTALL) -d $(DESTDIR)/.config/sway
 	$(INSTALL) -m 0644 wayland/sway/config $(DESTDIR)/.config/sway/
+	$(INSTALL) -m 0755 wayland/grimshot $(DESTDIR)/bin/
 
 restart-awesome: install-awesome
 	awesome -k
