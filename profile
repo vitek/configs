@@ -19,14 +19,4 @@ else
     ENV=$HOME/.shrc; export ENV
 fi
 
-
-# set PATH so it includes user's private bin if it exists
-OPTIONAL_PATHS="/Applications/Xcode.app/Contents/Developer/usr/bin"
-
-for path in $OPTIONAL_PATHS; do
-    if [ -d "$path" ]; then
-        PATH="$PATH:$path"
-    fi
-done
-
-PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
+PATH="$PATH:$HOME/bin:$HOME/.local/bin"

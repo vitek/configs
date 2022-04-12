@@ -117,6 +117,16 @@ exec swayidle -w \
 
 
 # input
+## laptop options
+input "1:1:AT_Translated_Set_2_keyboard" xkb_options "caps:ctrl_modifier"
+input "1267:12679:ELAN0672:00_04F3:3187_Touchpad" {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
+## laptop options
+
 input "*" xkb_layout "us,ru"
 #input "*" xkb_options "grp:alt_space_toggle"
 bindsym --to-code Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
@@ -125,55 +135,64 @@ bindsym --to-code Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
 #
 # Basics:
 #
+bindsym --to-code {
     # Start a terminal
-    bindsym --to-code $mod+Return exec $term
+    $mod+Return exec $term
 
     # # Start a editor
-    # bindsym --to-code $mod+e exec emacs
+    # $mod+e exec emacs
 
     # kill focused window
-    bindsym --to-code $mod+Shift+q kill
+    $mod+Shift+c kill
 
     # Start your launcher
-    bindsym --to-code $mod+d exec $menu
-
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
-    floating_modifier $mod normal
+    $mod+r exec $menu
 
     # Reload the configuration file
-    bindsym --to-code $mod+Shift+c reload
+    $mod+Shift+r reload
+}
 
-    # Exit sway (logs you out of your Wayland session)
-    #bindsym --to-code $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+# Change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+floating_modifier $mod normal
+
+
+# Exit sway (logs you out of your Wayland session)
+#bindsym --to-code $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
 #
 # Moving around:
 #
-    # Move your focus around
-    bindsym --to-code $mod+$left focus left
-    bindsym --to-code $mod+$down focus down
-    bindsym --to-code $mod+$up focus up
-    bindsym --to-code $mod+$right focus right
+
+# Move your focus around
+bindsym --to-code {
+    $mod+$left focus left
+    $mod+$down focus down
+    $mod+$up focus up
+    $mod+$right focus right
     # # Or use $mod+[up|down|left|right]
-    # bindsym --to-code $mod+Left focus left
-    # bindsym --to-code $mod+Down focus down
-    # bindsym --to-code $mod+Up focus up
-    # bindsym --to-code $mod+Right focus right
+    # $mod+Left focus left
+    # $mod+Down focus down
+    # $mod+Up focus up
+    # $mod+Right focus right
+}
 
-    # Move the focused window with the same, but add Shift
-    bindsym --to-code $mod+Shift+$left move left
-    bindsym --to-code $mod+Shift+$down move down
-    bindsym --to-code $mod+Shift+$up move up
-    bindsym --to-code $mod+Shift+$right move right
-
+# Move the focused window with the same, but add Shift
+bindsym --to-code {
+    $mod+Shift+$left move left
+    $mod+Shift+$down move down
+    $mod+Shift+$up move up
+    $mod+Shift+$right move right
     # # Ditto, with arrow keys
-    # bindsym --to-code $mod+Shift+Left move left
-    # bindsym --to-code $mod+Shift+Down move down
-    # bindsym --to-code $mod+Shift+Up move up
-    # bindsym --to-code $mod+Shift+Right move right
+    # $mod+Shift+Left move left
+    # $mod+Shift+Down move down
+    # $mod+Shift+Up move up
+    # $mod+Shift+Right move right
+}
+
 #
 # Workspaces:
 #
@@ -241,27 +260,41 @@ bindsym --to-code Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
 #
 # Resizing containers:
 #
-mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym --to-code $left resize shrink width 10px
-    bindsym --to-code $down resize grow height 10px
-    bindsym --to-code $up resize shrink height 10px
-    bindsym --to-code $right resize grow width 10px
+# mode "resize" {
+#     # left will shrink the containers width
+#     # right will grow the containers width
+#     # up will shrink the containers height
+#     # down will grow the containers height
+#     bindsym --to-code $left resize shrink width 10px
+#     bindsym --to-code $down resize grow height 10px
+#     bindsym --to-code $up resize shrink height 10px
+#     bindsym --to-code $right resize grow width 10px
+
+#     # Ditto, with arrow keys
+#     bindsym --to-code Left resize shrink width 10px
+#     bindsym --to-code Down resize grow height 10px
+#     bindsym --to-code Up resize shrink height 10px
+#     bindsym --to-code Right resize grow width 10px
+
+#     # Return to default mode
+#     bindsym --to-code Return mode "default"
+#     bindsym --to-code Escape mode "default"
+# }
+# bindsym --to-code $mod+r mode "resize"
+
+bindsym --to-code {
+    $mod+Control+$left resize shrink width 10px
+    $mod+Control+$down resize grow height 10px
+    $mod+Control+$up resize shrink height 10px
+    $mod+Control+$right resize grow width 10px
 
     # Ditto, with arrow keys
-    bindsym --to-code Left resize shrink width 10px
-    bindsym --to-code Down resize grow height 10px
-    bindsym --to-code Up resize shrink height 10px
-    bindsym --to-code Right resize grow width 10px
-
-    # Return to default mode
-    bindsym --to-code Return mode "default"
-    bindsym --to-code Escape mode "default"
+    $mod+Control+Left resize shrink width 10px
+    $mod+Control+Down resize grow height 10px
+    $mod+Control+Up resize shrink height 10px
+    $mod+Control+Right resize grow width 10px
 }
-bindsym --to-code $mod+r mode "resize"
+
 
 #
 # Status Bar:
