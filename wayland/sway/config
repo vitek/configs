@@ -33,18 +33,18 @@ set {
     $icon_theme Acid-green-folder
 }
 
-# exec_always {
-#     gsettings set $gnome-interface cursor-theme        'capitaine-cursors'
-#     gsettings set $gnome-interface cursor-size         30
+exec_always {
+     gsettings set $gnome-interface cursor-theme        'DMZ-White'
+     gsettings set $gnome-interface cursor-size         24
 #     gsettings set $gnome-interface document-font-name  $gtk_font
 #     gsettings set $gnome-interface font-name           $gtk_font
-#     gsettings set $gnome-interface gtk-theme           'Gruvbox-glass'
+     gsettings set $gnome-interface gtk-theme           'Adwaita-dark'
 #     gsettings set $gnome-interface gtk-color-theme     'Gruvbox-glass'
 #     gsettings set $gnome-interface icon-theme          '$icon_theme'
 #     gsettings set $gnome-interface monospace-font-name $gtk_font
 #     gsettings set $gnome-interface text-scaling-factor 1.0
 #     gsettings set $gnome-sound     theme-name          'deepin'
-# }
+}
 
 ### Variables
 #
@@ -119,17 +119,27 @@ exec swayidle -w \
 # input
 ## laptop options
 input "1:1:AT_Translated_Set_2_keyboard" xkb_options "caps:ctrl_modifier"
-input "1267:12679:ELAN0672:00_04F3:3187_Touchpad" {
+input type:touchpad {
+    accel_profile flat
+    click_method button_areas
+    click_method clickfinger
+    drag enabled
     dwt enabled
-    tap enabled
-    natural_scroll enabled
+    events disabled_on_external_mouse
     middle_emulation enabled
+    pointer_accel 0.8
+    scroll_method two_finger
+    tap enabled
+    natural_scroll disabled
 }
 ## laptop options
 
 input "*" xkb_layout "us,ru"
 #input "*" xkb_options "grp:alt_space_toggle"
-bindsym --to-code Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
+bindsym --to-code {
+    #Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
+    Mod1+space exec sway-switch-layout
+}
 
 ### Key bindings
 #
@@ -282,19 +292,32 @@ bindsym --to-code {
 # }
 # bindsym --to-code $mod+r mode "resize"
 
-bindsym --to-code {
-    $mod+Control+$left resize shrink width 10px
-    $mod+Control+$down resize grow height 10px
-    $mod+Control+$up resize shrink height 10px
-    $mod+Control+$right resize grow width 10px
-
-    # Ditto, with arrow keys
-    $mod+Control+Left resize shrink width 10px
-    $mod+Control+Down resize grow height 10px
-    $mod+Control+Up resize shrink height 10px
-    $mod+Control+Right resize grow width 10px
+set {
+    $resize_step 10px
+    $resize_step2 20px
 }
 
+bindsym --to-code {
+    $mod+Control+$left resize shrink width $resize_step
+    $mod+Control+$down resize grow height $resize_step
+    $mod+Control+$up resize shrink height $resize_step
+    $mod+Control+$right resize grow width $resize_step
+
+    $mod+Control+Left resize shrink width $resize_step
+    $mod+Control+Down resize grow height $resize_step
+    $mod+Control+Up resize shrink height $resize_step
+    $mod+Control+Right resize grow width $resize_step
+
+    $mod+Control+Shift+$left resize shrink width $resize_step2
+    $mod+Control+Shift+$down resize grow height $resize_step2
+    $mod+Control+Shift+$up resize shrink height $resize_step2
+    $mod+Control+Shift+$right resize grow width $resize_step2
+
+    $mod+Control+Shift+Left resize shrink width $resize_step2
+    $mod+Control+Shift+Down resize grow height $resize_step2
+    $mod+Control+Shift+Up resize shrink height $resize_step2
+    $mod+Control+Shift+Right resize grow width $resize_step2
+}
 
 #
 # Status Bar:

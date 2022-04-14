@@ -110,7 +110,7 @@ if [ "$ACTION" = "check" ] ; then
   check notify-send
   exit
 elif [ "$SUBJECT" = "area" ] ; then
-  GEOM=$(slurp -d)
+  GEOM=$(slurp -b '#00000000')
   # Check if user exited slurp without selecting the area
   if [ -z "$GEOM" ]; then
     exit 1
