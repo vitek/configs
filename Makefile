@@ -17,6 +17,7 @@ AWESOME_FILES =					\
 
 BIN_FILES =					\
 	bin/authinfo-tool			\
+	bin/brightnessctl.sh			\
 	bin/captive.sh				\
 	bin/clangd-chooser			\
 	bin/histogram				\

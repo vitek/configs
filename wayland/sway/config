@@ -130,7 +130,7 @@ input type:touchpad {
     pointer_accel 0.8
     scroll_method two_finger
     tap enabled
-    natural_scroll disabled
+    natural_scroll enabled
 }
 ## laptop options
 
@@ -139,6 +139,13 @@ input "*" xkb_layout "us,ru"
 bindsym --to-code {
     #Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
     Mod1+space exec sway-switch-layout
+}
+
+### Brightness
+exec_always brightnessctl.sh restore
+bindsym --to-code --locked {
+    XF86MonBrightnessUp exec brightnessctl.sh up
+    XF86MonBrightnessDown exec brightnessctl.sh down
 }
 
 ### Key bindings
