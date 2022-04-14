@@ -20,3 +20,7 @@ else
 fi
 
 PATH="$PATH:$HOME/bin:$HOME/.local/bin"
+
+if [ "x$XDG_RUNTIME_DIR" != "x" ]; then
+    EMACS_SOCKET_NAME=$XDG_RUNTIME_DIR/emacs/server
+fi

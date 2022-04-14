@@ -12,6 +12,8 @@
 ##
 ## See `man 1 grimshot` or `grimshot usage` for further details.
 
+SLURP="slurp -b '#00000000' -c '#33333388' -s '#55555555'"
+
 getTargetDirectory() {
   test -f ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs && \
     . ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs
@@ -110,7 +112,7 @@ if [ "$ACTION" = "check" ] ; then
   check notify-send
   exit
 elif [ "$SUBJECT" = "area" ] ; then
-  GEOM=$(slurp -b '#00000000')
+  GEOM=$($SLURP -b '#00000000')
   # Check if user exited slurp without selecting the area
   if [ -z "$GEOM" ]; then
     exit 1
@@ -129,7 +131,7 @@ elif [ "$SUBJECT" = "output" ] ; then
   OUTPUT=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused)' | jq -r '.name')
   WHAT="$OUTPUT"
 elif [ "$SUBJECT" = "window" ] ; then
-  GEOM=$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)
+  GEOM=$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | $SLURP)
   # Check if user exited slurp without selecting the area
   if [ -z "$GEOM" ]; then
    exit 1
