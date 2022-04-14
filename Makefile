@@ -24,6 +24,10 @@ BIN_FILES =					\
 	bin/xkb-layout				\
 	bin/xml-pp
 
+SWAY_BIN_FILES =				\
+	wayland/grimshot			\
+	wayland/sway-switch-layout
+
 SYSTEMD_UNITS = systemd/xkb-layout.service
 SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
 
@@ -128,10 +132,13 @@ install-waybar:
 	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
 	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
 
+
+
+
 install-sway: install-waybar
 	$(INSTALL) -d $(DESTDIR)/.config/sway
 	$(INSTALL) -m 0644 wayland/sway/config $(DESTDIR)/.config/sway/
-	$(INSTALL) -m 0755 wayland/grimshot $(DESTDIR)/bin/
+	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
 
 restart-awesome: install-awesome
 	awesome -k

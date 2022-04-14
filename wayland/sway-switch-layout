@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if swaymsg -t get_tree |
+        jq -e \
+           '.. |
+            select(.type?) |
+            select(.focused==true and
+                   .app_id=="emacs")' > /dev/null; then
+    exec swaymsg 'input "*" xkb_switch_layout 0'
+else
+    exec swaymsg 'input "*" xkb_switch_layout next'
+fi
