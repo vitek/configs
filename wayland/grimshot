@@ -12,7 +12,7 @@
 ##
 ## See `man 1 grimshot` or `grimshot usage` for further details.
 
-SLURP="slurp -b '#00000000' -c '#33333388' -s '#55555555'"
+SLURP="slurp -b #00000000 -c #33333388 -s #55555555"
 
 getTargetDirectory() {
   test -f ${XDG_CONFIG_HOME:-~/.config}/user-dirs.dirs && \
@@ -112,7 +112,7 @@ if [ "$ACTION" = "check" ] ; then
   check notify-send
   exit
 elif [ "$SUBJECT" = "area" ] ; then
-  GEOM=$($SLURP -b '#00000000')
+  GEOM=$($SLURP)
   # Check if user exited slurp without selecting the area
   if [ -z "$GEOM" ]; then
     exit 1

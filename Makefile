@@ -27,7 +27,8 @@ BIN_FILES =					\
 
 SWAY_BIN_FILES =				\
 	wayland/grimshot			\
-	wayland/sway-switch-layout
+	wayland/sway-switch-layout		\
+	wayland/sway-lock.sh
 
 SYSTEMD_UNITS = systemd/xkb-layout.service
 SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/

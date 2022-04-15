@@ -89,9 +89,9 @@ output * bg $bg_image fill
 # resumed. It will also lock your screen before your computer goes to sleep.
 
 set $lock_bg $bg_image
-set $lock_cmd 'swaylock -f -c 000000 -i $lock_bg'
+set $lock_cmd "sway-lock.sh -f -c 000000 -i $lock_bg"
 
-bindsym --to-code Mod1+Control+l exec swaylock -i $lock_bg
+bindsym --to-code Mod1+Control+l exec $lock_cmd
 
 exec swayidle -w \
          lock         $lock_cmd \
@@ -118,14 +118,15 @@ exec swayidle -w \
 
 # input
 ## laptop options
-input "1:1:AT_Translated_Set_2_keyboard" xkb_options "caps:ctrl_modifier"
+#input "1:1:AT_Translated_Set_2_keyboard" xkb_options "caps:ctrl_modifier"
 input type:touchpad {
     accel_profile flat
     click_method button_areas
     click_method clickfinger
     drag enabled
     dwt enabled
-    events disabled_on_external_mouse
+    #events disabled_on_external_mouse
+    events enabled
     middle_emulation enabled
     pointer_accel 0.8
     scroll_method two_finger
@@ -134,9 +135,13 @@ input type:touchpad {
 }
 ## laptop options
 
-input "*" xkb_layout "us,ru"
-#input "*" xkb_options "grp:alt_space_toggle"
-bindsym --to-code {
+input "*" {
+    xkb_layout "us,ru"
+    xkb_options "caps:ctrl_modifier"
+    #xkb_options "grp:alt_space_toggle"
+}
+
+bindsym --to-code --locked {
     #Mod1+space exec swaymsg 'input "*" xkb_switch_layout next'
     Mod1+space exec sway-switch-layout
 }
