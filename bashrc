@@ -105,6 +105,12 @@ else
 fi
 unset color_prompt force_color_prompt
 
+if ! declare -F __git_ps1 > /dev/null; then
+    if [ -f /usr/share/git/git-prompt.sh ]; then
+        . /usr/share/git/git-prompt.sh
+    fi
+fi
+
 if declare -F __git_ps1 > /dev/null; then
     if [ "$color_prompt" = yes ]; then
         PS1='$(__git_ps1 "(%s) ")${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '

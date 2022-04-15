@@ -22,5 +22,6 @@ fi
 PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 if [ "x$XDG_RUNTIME_DIR" != "x" ]; then
-    EMACS_SOCKET_NAME=$XDG_RUNTIME_DIR/emacs/server
+    export EMACS_SOCKET_NAME=$XDG_RUNTIME_DIR/emacs/server
+    export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/keyring/ssh
 fi
