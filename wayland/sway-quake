@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import uuid
+
+import i3ipc
+
+
+MARK = 'sway-quake'
+
+OPTIONS = (
+    'floating enable,'
+    'sticky enable,'
+    'border none,'
+    'resize set width 100ppt height 30ppt,'
+    'move absolute position 0px 0px,'
+    'opacity 0.95'
+)
+
+def exec_command(args):
+    os.execvp(args[0], args)
+
+
+def quake_start_terminal():
+    title = f'quake-{uuid.uuid4().hex}'
+    exec_command([
+        'gnome-terminal',
+        '-t',
+        title,
+        '--',
+        'sway-quake',
+        'spawn',
+        title
+    ])
+
+def quake_toggle():
+    ipc = i3ipc.Connection()
+    tree = ipc.get_tree()
+    windows = tree.find_marked(MARK)
+    if not windows:
+        quake_start_terminal()
+    else:
+        if windows[0].ipc_data['visible']:
+            ipc.command(f'[con_mark="{MARK}"] move scratchpad')
+        else:
+            ipc.command(
+                f'[con_mark="{MARK}"] scratchpad show, {OPTIONS}'
+            )
+
+def quake_spawn():
+    ipc = i3ipc.Connection()
+    title = sys.argv[2]
+    ipc.command(f'[title="{title}"] mark {MARK}, {OPTIONS}')
+    exec_command(['bash'])
+
+
+def main():
+    if sys.argv[1] == 'toggle':
+        quake_toggle()
+    elif sys.argv[1] == 'spawn':
+        quake_spawn()
+    else:
+        raise RuntimeError(f'Unknown command {sys.argv[1]}')
+
+
+if __name__ == '__main__':
+    main()

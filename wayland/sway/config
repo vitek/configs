@@ -374,6 +374,11 @@ bindsym --to-code {
     $mod+Backslash exec grimshot copy area
 }
 
+bindsym --to-code {
+    $mod+Escape exec sway-quake toggle
+    $mod+Grave exec sway-quake toggle
+}
+
 
 include /etc/sway/config.d/*
 
