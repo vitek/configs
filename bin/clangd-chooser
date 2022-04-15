@@ -5,7 +5,14 @@ import pathlib
 import shutil
 import sys
 
-CLANGD_VERSIONS = (14, 13, 12, 11, 10)
+CLANGDS = (
+    'clangd-14',
+    'clangd-13',
+    'clangd-12',
+    'clangd-11',
+    'clangd-10',
+    'clangd',
+)
 
 
 def read_config(config_path):
@@ -16,8 +23,8 @@ def read_config(config_path):
 
 
 def guess_clangd():
-    for version in CLANGD_VERSIONS:
-        command = shutil.which(f'clangd-{version}')
+    for binary in CLANGDS:
+        command = shutil.which(binary)
         if command:
             return command
     raise RuntimeError('No clangd binary found.')
