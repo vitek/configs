@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
+import getpass
 import os
+import pwd
 import sys
-import uuid
 
 import i3ipc
 
 
 MARK = 'sway-quake'
+TITLE = '__sway_quake__'
 
 OPTIONS = (
     'floating enable,'
@@ -23,15 +25,13 @@ def exec_command(args):
 
 
 def quake_start_terminal():
-    title = f'quake-{uuid.uuid4().hex}'
     exec_command([
         'gnome-terminal',
         '-t',
-        title,
+        TITLE,
         '--',
         'sway-quake',
         'spawn',
-        title
     ])
 
 def quake_toggle():
@@ -50,9 +50,10 @@ def quake_toggle():
 
 def quake_spawn():
     ipc = i3ipc.Connection()
-    title = sys.argv[2]
-    ipc.command(f'[title="{title}"] mark {MARK}, {OPTIONS}')
-    exec_command(['bash'])
+    ipc.command(f'[title="{TITLE}"] mark {MARK}')
+    ipc.command(f'[con_mark="{MARK}"] scratchpad show, {OPTIONS}')
+    shell = pwd.getpwnam(getpass.getuser()).pw_shell
+    exec_command([shell])
 
 
 def main():

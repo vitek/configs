@@ -1,7 +1,7 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
+    font-family: Monospace Regular, Ubuntu Regular, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
 }
 
 window#waybar {
@@ -108,8 +108,8 @@ window#waybar.chromium {
 }
 
 #battery.charging, #battery.plugged {
-    color: #ffffff;
-    background-color: #26A65B;
+    /*color: #ffffff;
+    background-color: #26A65B;*/
 }
 
 @keyframes blink {
