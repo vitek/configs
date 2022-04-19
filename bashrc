@@ -139,7 +139,11 @@ export GTK_OVERLAY_SCROLLING=0
 # https://ubuntuforums.org/showthread.php?t=2390362
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
-alias e="emacsclient -n"
+if [ "x$EMACS_SOCKET_NAME" != "x" ]; then
+    alias e="emacsclient -n --socket-name $EMACS_SOCKET_NAME"
+else
+    alias e="emacsclient -n"
+fi
 
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local

@@ -678,6 +678,11 @@
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (require 'ffap)
 
+  ;; To slow on arc tree
+  (advice-remove
+   'compilation-find-file
+   #'compilation-find-file-projectile-find-compilation-buffer)
+
   :bind (("C-c p 1" . 'projectile-find-file-at-point)
          ("C-c p 0" . (lambda ()
                         (interactive)
