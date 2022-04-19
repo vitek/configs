@@ -15,14 +15,13 @@ OPTIONS = (
     'floating enable,'
     'sticky enable,'
     'border none,'
-    'resize set width 100ppt height 30ppt,'
-    'move absolute position 0px 0px,'
+    'resize set width 100 ppt height 30 ppt,'
+    'move absolute position 0 0,'
     'opacity 0.95'
 )
 
 def exec_command(args):
     os.execvp(args[0], args)
-
 
 def quake_start_terminal():
     exec_command([
@@ -47,6 +46,7 @@ def quake_toggle():
             ipc.command(
                 f'[con_mark="{MARK}"] scratchpad show, {OPTIONS}'
             )
+
 
 def quake_spawn():
     ipc = i3ipc.Connection()
