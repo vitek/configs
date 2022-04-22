@@ -14,10 +14,10 @@ TITLE = '__sway_quake__'
 OPTIONS = (
     'floating enable,'
     'sticky enable,'
-    'border none,'
-    'resize set width 100 ppt height 30 ppt,'
-    'move absolute position 0 0,'
-    'opacity 0.95'
+    'border pixel,'
+    'resize set width 80 ppt height 80 ppt,'
+    'move position center,'
+    'opacity 1.0'
 )
 
 def exec_command(args):

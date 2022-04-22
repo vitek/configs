@@ -159,6 +159,7 @@ bindsym --to-code --locked {
 ### Sound
 bindsym --to-code {
     XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+    XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
     XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
     XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 }
@@ -398,5 +399,12 @@ hide_edge_borders both
 output HDMI-A-2 scale 2
 
 for_window [title="__sway_quake__"] move scratchpad
+
+for_window [app_id="Telegram_Desktop"] move window to workspace 1
+for_window [app_id="emacs"] move window to workspace 2
+
+
+exec emacsclient -c
+exec mako
 
 include /etc/sway/config.d/*
