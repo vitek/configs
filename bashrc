@@ -140,9 +140,9 @@ export GTK_OVERLAY_SCROLLING=0
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
 if [ "x$EMACS_SOCKET_NAME" != "x" ]; then
-    alias e="emacsclient -n --socket-name $EMACS_SOCKET_NAME"
+    alias e="emacsclient -r -n --socket-name $EMACS_SOCKET_NAME"
 else
-    alias e="emacsclient -n"
+    alias e="emacsclient -r -n"
 fi
 
 if [ -f ~/.bashrc_local ]; then
