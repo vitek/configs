@@ -319,10 +319,6 @@ default_border pixel 1
 default_floating_border pixel 1
 hide_edge_borders both
 
-#for_window [app_id="Telegram_Desktop"] move window to workspace 1
-#for_window [app_id="emacs"] move window to workspace 2
-
-
 exec emacsclient -c
 exec mako
 
