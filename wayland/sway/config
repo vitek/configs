@@ -385,20 +385,10 @@ bindsym --to-code {
     $mod+Backslash exec grimshot copy area
 }
 
-bindsym --to-code {
-    $mod+Escape exec sway-quake toggle
-    $mod+Grave exec sway-quake toggle
-}
-
 # hide title bar
 default_border pixel 1
 default_floating_border pixel 1
 hide_edge_borders both
-
-# hidpi
-output HDMI-A-2 scale 2
-
-for_window [title="__sway_quake__"] move scratchpad
 
 for_window [app_id="Telegram_Desktop"] move window to workspace 1
 for_window [app_id="emacs"] move window to workspace 2
@@ -407,4 +397,5 @@ for_window [app_id="emacs"] move window to workspace 2
 exec emacsclient -c
 exec mako
 
-include /etc/sway/config.d/*
+include ~/.config/sway/config.d/*.conf
+include ~/.config/sway/hostname.d/$(hostname).conf
