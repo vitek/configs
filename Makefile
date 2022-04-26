@@ -147,6 +147,8 @@ install-sway: install-waybar
 install-qt:
 	$(INSTALL) -d $(DESTDIR)/.config/qt5ct
 	$(INSTALL) -m 0644 qt/qt5ct.conf $(DESTDIR)/.config/qt5ct/
+	$(INSTALL) -d $(DESTDIR)/.icons/default/
+	$(INSTALL) -m 0644 icons/index.theme $(DESTDIR)/.icons/default/
 
 restart-awesome: install-awesome
 	awesome -k
