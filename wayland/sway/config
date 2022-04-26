@@ -378,6 +378,8 @@ bar {
 bindsym --to-code {
     $mod+Left workspace prev_on_output
     $mod+Right workspace next_on_output
+    Mod1+Control+Left workspace prev_on_output
+    Mod1+Control+Right workspace next_on_output
 }
 
 # Take screenshots
