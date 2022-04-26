@@ -144,6 +144,10 @@ install-sway: install-waybar
 	$(INSTALL) -m 0644 wayland/sway/config.d/*.conf $(DESTDIR)/.config/sway/config.d/
 	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
 
+install-qt:
+	$(INSTALL) -d $(DESTDIR)/.config/qt5ct
+	$(INSTALL) -m 0644 qt/qt5ct.conf $(DESTDIR)/.config/qt5ct/
+
 restart-awesome: install-awesome
 	awesome -k
 	awesome --replace
