@@ -205,6 +205,12 @@ install-systemd-units: $(SYSTEMD_UNITS)
 
 install-systemd: install-bin install-systemd-units
 
+install-ya:
+	$(INSTALL) -d $(DESTDIR)/bin
+	$(INSTALL) -m 0755 ya/arc $(DESTDIR)/bin/
+	$(INSTALL) -d $(DESTDIR)/.config/systemd/user/
+	$(INSTALL) -m 0644 ya/arc.service $(DESTDIR)/.config/systemd/user/
+
 .PHONY: diff
 diff:
 	@rm -rf test-config

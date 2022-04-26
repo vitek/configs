@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# SCHROOT_SESSION_DIR=$HOME/.config/schroot
+# SCHROOT_SESSION_PATH=$SCHROOT_SESSION_DIR/.bionic
+
+# schroot --begin-session -c bionic -n bionic
+# schroot --exclude-aliases  --end-session -c bionic
+
+SCHROOT_SESSION_ID=bionic
+exec schroot -r -c "$SCHROOT_SESSION_ID" -- "$@"

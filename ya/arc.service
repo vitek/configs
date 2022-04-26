@@ -1,0 +1,14 @@
+[Unit]
+Description=Arcadia ARC FUSE service
+Documentation=https://wiki.yandex-team.ru/arcadia/arc/
+After=arc.service
+
+[Service]
+Nice=10
+ExecStart=/home/vitja/bin/arc mount -F -m /home/vitja/arcadia -S /home/vitja/.arcadia-store
+ExecStop=fusermount -uz /home/vitja/arcadia
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
