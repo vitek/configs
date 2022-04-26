@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec schroot --exclude-aliases --end-session -c "$1"

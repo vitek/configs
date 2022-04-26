@@ -6,5 +6,11 @@
 # schroot --begin-session -c bionic -n bionic
 # schroot --exclude-aliases  --end-session -c bionic
 
-SCHROOT_SESSION_ID=bionic
+SCHROOT_SESSION_ID="$(basename $0)"
+SCHROOT_DIR="/run/schroot/mount/$SCHROOT_SESSION_ID"
+
+if [ ! -d "$SCHROOT_DIR" ]; then
+    schroot --begin-session -c "${SCHROOT_SESSION_ID}" -n "${SCHROOT_SESSION_ID}"
+fi
+
 exec schroot -r -c "$SCHROOT_SESSION_ID" -- "$@"

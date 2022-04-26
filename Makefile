@@ -211,6 +211,15 @@ install-ya:
 	$(INSTALL) -d $(DESTDIR)/.config/systemd/user/
 	$(INSTALL) -m 0644 ya/arc.service $(DESTDIR)/.config/systemd/user/
 
+install-schroot:
+	$(INSTALL) -d $(DESTDIR)/bin
+	$(INSTALL) -m 0755 ya/schroot-session-helper $(DESTDIR)/bin/
+	$(INSTALL) -m 0755 ya/schroot-session-end $(DESTDIR)/bin/
+	ln -sf schroot-session-helper $(DESTDIR)/bin/bionic
+	ln -sf schroot-session-helper $(DESTDIR)/bin/xenial
+	ln -sf schroot-session-helper $(DESTDIR)/bin/focal
+	sudo $(INSTALL) -m 0755 ya/schroot-mount.sh /etc/schroot/setup.d/99mount-home
+
 .PHONY: diff
 diff:
 	@rm -rf test-config

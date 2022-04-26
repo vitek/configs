@@ -1,10 +1,17 @@
 #!/bin/sh
 
+set -ex
 
-SCHROOT=/run/schroot/mount/${1}/
+. "$SETUP_DATA_DIR/common-data"
+. "$SETUP_DATA_DIR/common-functions"
+. "$SETUP_DATA_DIR/common-config"
 
-mount --rbind /home $SCHROOT/home
-mount --make-rslave $SCHROOT/home
+if [ $STAGE = "setup-start" ] || [ $STAGE = "setup-recover" ]; then
+    mkdir -p "$CHROOT_PATH/home" "$CHROOT_PATH/run/user"
 
-mount --rbind /run/user $SCHROOT/run/user
-mount --make-rslave $SCHROOT/run/user
+    mount --rbind /home "$CHROOT_PATH/home"
+    mount --make-rslave "$CHROOT_PATH/home"
+
+    mount --rbind /run/user "$CHROOT_PATH/run/user"
+    mount --make-rslave "$CHROOT_PATH/run/user"
+fi
