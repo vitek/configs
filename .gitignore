@@ -1,2 +1,5 @@
 *.pyc
 *.elc
+
+ya/arc
+ya/arc-bash-completion

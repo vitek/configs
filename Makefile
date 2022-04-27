@@ -166,6 +166,7 @@ install-bashrc:
 	$(INSTALL) -m 0644 profile $(DESTDIR)/.profile
 	$(INSTALL) -m 0644 bashrc $(DESTDIR)/.bashrc
 	$(INSTALL) -m 0644 bashrc_vterm $(DESTDIR)/.bashrc_vterm
+	$(INSTALL) -m 0644 bash_completion $(DESTDIR)/.bash_completion
 
 install-bin:
 	$(INSTALL) -d $(DESTDIR)/bin
@@ -205,10 +206,25 @@ install-systemd-units: $(SYSTEMD_UNITS)
 
 install-systemd: install-bin install-systemd-units
 
-install-ya:
+install-ya: install-arc
+
+install-arc: ya/arc
 	$(INSTALL) -d $(DESTDIR)/bin
+	$(INSTALL) -m 0755 ya/arc $(DESTDIR)/bin
 	$(INSTALL) -d $(DESTDIR)/.config/systemd/user/
 	$(INSTALL) -m 0644 ya/arc.service $(DESTDIR)/.config/systemd/user/
+
+ya/arc:
+	wget https://nda.ya.ru/t/LWWdfZJB52kkx7 -O $@.tmp
+	chmod +x $@.tmp
+	mv $@.tmp $@
+
+ya/arc-bash-completion: ya/arc
+	ya/arc completion bash > $@.tmp
+	mv $@.tmp $@
+
+clean-arc:
+	rm -f ya/arc ya/arc-bash-completion
 
 install-schroot:
 	$(INSTALL) -d $(DESTDIR)/bin
@@ -254,3 +270,5 @@ ssh-deploy: configs.tar.gz
 %.service: %.service.in
 	$(PYTHON3) substitute.py -i $< -o $@ --\
 		"HOME=$(DESTDIR)" "PYTHON3=$(PYTHON3)"
+
+clean: clean-arc
