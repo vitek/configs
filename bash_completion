@@ -1,4 +1,6 @@
+# -*- mode: shell-script; -*-
 for bcfile in ~/.bash_completion.d/* ; do
-  source $bcfile
+    if [ -a "$bcfile" ]; then
+        source "$bcfile"
+    fi
 done
-

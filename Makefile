@@ -167,6 +167,8 @@ install-bashrc:
 	$(INSTALL) -m 0644 bashrc $(DESTDIR)/.bashrc
 	$(INSTALL) -m 0644 bashrc_vterm $(DESTDIR)/.bashrc_vterm
 	$(INSTALL) -m 0644 bash_completion $(DESTDIR)/.bash_completion
+	$(INSTALL) -d $(DESTDIR)/.bash.d
+	$(INSTALL) -m 0644 bash.d/*.bash $(DESTDIR)/.bash.d
 
 install-bin:
 	$(INSTALL) -d $(DESTDIR)/bin
@@ -208,11 +210,15 @@ install-systemd: install-bin install-systemd-units
 
 install-ya: install-arc
 
-install-arc: ya/arc
+install-arc: ya/arc ya/arc-bash-completion
 	$(INSTALL) -d $(DESTDIR)/bin
 	$(INSTALL) -m 0755 ya/arc $(DESTDIR)/bin
 	$(INSTALL) -d $(DESTDIR)/.config/systemd/user/
 	$(INSTALL) -m 0644 ya/arc.service $(DESTDIR)/.config/systemd/user/
+	$(INSTALL) -d $(DESTDIR)/.bash_completion.d
+	$(INSTALL) -m 0644 ya/arc-bash-completion $(DESTDIR)/.bash_completion.d
+	$(INSTALL) -d $(DESTDIR)/.bash.d
+	$(INSTALL) -m 0644 ya/arc-prompt.sh $(DESTDIR)/.bash.d/00-arc-prompt.sh
 
 ya/arc:
 	wget https://nda.ya.ru/t/LWWdfZJB52kkx7 -O $@.tmp
