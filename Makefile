@@ -166,7 +166,6 @@ install-bashrc:
 	$(INSTALL) -m 0644 profile $(DESTDIR)/.profile
 	$(INSTALL) -m 0644 bashrc $(DESTDIR)/.bashrc
 	$(INSTALL) -m 0644 bashrc_vterm $(DESTDIR)/.bashrc_vterm
-	$(INSTALL) -m 0644 bash_completion $(DESTDIR)/.bash_completion
 	$(INSTALL) -d $(DESTDIR)/.bash.d
 	$(INSTALL) -m 0644 bash.d/*.bash $(DESTDIR)/.bash.d
 
@@ -215,8 +214,8 @@ install-arc: ya/arc ya/arc-bash-completion
 	$(INSTALL) -m 0755 ya/arc $(DESTDIR)/bin
 	$(INSTALL) -d $(DESTDIR)/.config/systemd/user/
 	$(INSTALL) -m 0644 ya/arc.service $(DESTDIR)/.config/systemd/user/
-	$(INSTALL) -d $(DESTDIR)/.bash_completion.d
-	$(INSTALL) -m 0644 ya/arc-bash-completion $(DESTDIR)/.bash_completion.d
+	$(INSTALL) -d $(DESTDIR)/.local/share/bash-completion/completions/
+	$(INSTALL) -m 0644 ya/arc-bash-completion $(DESTDIR)/.local/share/bash-completion/completions/arc
 	$(INSTALL) -d $(DESTDIR)/.bash.d
 	$(INSTALL) -m 0644 ya/arc-prompt.sh $(DESTDIR)/.bash.d/00-arc-prompt.sh
 
