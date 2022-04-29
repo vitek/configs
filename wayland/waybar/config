@@ -35,13 +35,15 @@
         }
     },
     "tray": {
-        // "icon-size": 21,
-        "spacing": 0
+        "icon-size": 21,
+        "spacing": 2
     },
     "clock": {
-        // "timezone": "America/New_York",
+        "timezone": "Europe/Moscow",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
+        "interval": 1,
+        "format": "{:%a %d %b, %H:%M:%S}",
+        "format-alt": "{:%H:%M:%S}"
     },
     "cpu": {
         "format": "{usage}% ",

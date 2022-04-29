@@ -191,6 +191,8 @@ label:focus {
 }
 
 #tray {
+    padding: 0px 5px;
+
 /*    background-color: #2980b9;*/
 }
 
