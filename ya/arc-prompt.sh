@@ -10,7 +10,7 @@ __arc_ps1 () {
     esac
     local arc
     local repo_info
-    arc=$(which ~/.arc/current/arc arc | head -1)
+    arc=$(which ~/.arc/current/arc arc 2> /dev/null | head -1)
     if [ "x$arc" = "x" ]; then
         return $exit
     fi
