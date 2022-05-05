@@ -135,7 +135,7 @@ install-waybar:
 	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
 	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
 
-install-sway: install-waybar
+install-sway: install-waybar install-wob install-desktopctl
 	$(INSTALL) -d $(DESTDIR)/.config/sway
 	$(INSTALL) -d $(DESTDIR)/.config/sway/config.d
 	$(INSTALL) -d $(DESTDIR)/.config/sway/hostname.d
@@ -143,6 +143,19 @@ install-sway: install-waybar
 	$(INSTALL) -m 0644 wayland/sway/hostname.d/*.conf $(DESTDIR)/.config/sway/hostname.d/
 	$(INSTALL) -m 0644 wayland/sway/config.d/*.conf $(DESTDIR)/.config/sway/config.d/
 	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
+
+install-wob:
+	$(INSTALL) -d $(SYSTEMD_USER_PATH)
+	$(INSTALL) -m 0644 wayland/wob/wob.socket wayland/wob/wob.service \
+			$(SYSTEMD_USER_PATH)
+
+reinstall-wob: install-wob
+	systemctl --user daemon-reload
+	systemctl --user restart wob.service
+
+install-desktopctl:
+	$(INSTALL) -d $(DESTDIR)/bin
+	$(INSTALL) -m 0755 wayland/desktopctl $(DESTDIR)/bin
 
 install-qt:
 	$(INSTALL) -d $(DESTDIR)/.config/qt5ct

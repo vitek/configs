@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+
+import argparse
+import dataclasses
+import os
+import pathlib
+import subprocess
+
+import pulsectl
+
+
+BRIGHTNESS_STATE = pathlib.Path('~/.config/brightnessctl.state')
+
+
+def notify_osd(value):
+    value = int(value)
+    wob_socket = pathlib.Path(os.environ['XDG_RUNTIME_DIR']) / 'wob.sock'
+    if not wob_socket.exists():
+        return
+    with wob_socket.open('w') as fp:
+        fp.write(f'{value}\n')
+
+
+def volume_notify(sink):
+    print(sink.mute, sink.volume)
+    if sink.mute:
+        value = 0
+    else:
+        value = sink.volume.value_flat * 100
+    notify_osd(value)
+
+
+def volume_inc(delta):
+    with pulsectl.Pulse('desktopctl') as pulse:
+        server_info = pulse.server_info()
+        sink = pulse.get_sink_by_name(server_info.default_sink_name)
+        volume = max(min(sink.volume.value_flat + delta, 1.5), 0)
+        pulse.volume_set_all_chans(sink, volume)
+        volume_notify(sink)
+
+
+def volume_up():
+    volume_inc(0.05)
+
+
+def volume_down():
+    volume_inc(-0.05)
+
+
+def volume_mute_toggle():
+    with pulsectl.Pulse('desktopctl') as pulse:
+        server_info = pulse.server_info()
+        sink = pulse.get_sink_by_name(server_info.default_sink_name)
+        pulse.mute(sink, not sink.mute)
+        volume_notify(sink)
+
+
+def mic_mute_toggle():
+    with pulsectl.Pulse('desktopctl') as pulse:
+        server_info = pulse.server_info()
+        sink = pulse.get_source_by_name(server_info.default_source_name)
+        pulse.mute(sink, not sink.mute)
+        volume_notify(sink)
+
+
+@dataclasses.dataclass(frozen=True)
+class BrightnessState:
+    value: int
+    value_max: int
+
+
+def brightness_get() -> BrightnessState:
+    output = subprocess.check_output(
+        ['brightnessctl', 'get'], encoding='utf-8')
+    value = int(output)
+    output = subprocess.check_output(
+        ['brightnessctl', 'max'], encoding='utf-8')
+    value_max = int(output)
+    return BrightnessState(value=value, value_max=value_max)
+
+
+def brightness_notify(state: BrightnessState):
+    notify_osd(100 * state.value / state.value_max)
+
+
+def brightness_save(state: BrightnessState):
+    state_path = BRIGHTNESS_STATE.expanduser()
+    with state_path.open('w') as fp:
+        fp.write(f'{state.value}\n')
+
+
+def brightness_up():
+    subprocess.check_output(['brightnessctl', '-q', 'set', '+10%'])
+    state = brightness_get()
+    brightness_save(state)
+    brightness_notify(state)
+
+
+def brightness_down():
+    subprocess.check_output(['brightnessctl', '-q', 'set', '10%-'])
+    state = brightness_get()
+    brightness_save(state)
+    brightness_notify(state)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(required=True)
+
+    command_parser = subparsers.add_parser('volume-up')
+    command_parser.set_defaults(handler=volume_up)
+
+    command_parser = subparsers.add_parser('volume-down')
+    command_parser.set_defaults(handler=volume_down)
+
+    command_parser = subparsers.add_parser('volume-mute-toggle')
+    command_parser.set_defaults(handler=volume_mute_toggle)
+
+    command_parser = subparsers.add_parser('mic-mute-toggle')
+    command_parser.set_defaults(handler=mic_mute_toggle)
+
+    command_parser = subparsers.add_parser('brightness-up')
+    command_parser.set_defaults(handler=brightness_up)
+
+    command_parser = subparsers.add_parser('brightness-down')
+    command_parser.set_defaults(handler=brightness_down)
+
+    args = parser.parse_args()
+    args.handler()
+
+
+
+if __name__ == '__main__':
+    main()

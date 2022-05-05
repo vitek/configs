@@ -79,16 +79,16 @@ output * bg $bg_image fill
 ### Brightness
 exec_always brightnessctl.sh restore
 bindsym --to-code --locked {
-    XF86MonBrightnessUp exec brightnessctl.sh up
-    XF86MonBrightnessDown exec brightnessctl.sh down
+    XF86MonBrightnessUp exec desktopctl brightness-up
+    XF86MonBrightnessDown exec desktopctl brightness-down
 }
 
 ### Sound
 bindsym --to-code {
-    XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-    XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-    XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-    XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+    XF86AudioMute exec desktopctl volume-mute-toggle
+    XF86AudioRaiseVolume exec desktopctl volume-up
+    XF86AudioLowerVolume exec desktopctl volume-down
+    XF86AudioMicMute exec desktopctl mic-mute-toggle
 }
 
 ### Key bindings
