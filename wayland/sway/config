@@ -89,6 +89,8 @@ bindsym --to-code {
     XF86AudioRaiseVolume exec desktopctl volume-up
     XF86AudioLowerVolume exec desktopctl volume-down
     XF86AudioMicMute exec desktopctl mic-mute-toggle
+    Shift+XF86AudioRaiseVolume exec desktopctl mic-up
+    Shift+XF86AudioLowerVolume exec desktopctl mic-down
 }
 
 ### Key bindings

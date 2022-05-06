@@ -11,56 +11,77 @@ import pulsectl
 
 BRIGHTNESS_STATE = pathlib.Path('~/.config/brightnessctl.state')
 
+WOB_COLORS = {
+    # '#background_color', '#border_color', '#bar_color'
+    '__default__': '#000000aa #FFFFFFaa #FFFFFFaa',
+    'volume': '#000000aa #FFFFFFaa #55ff55aa',
+    'brightness': '#000000aa #FFFFFFaa #5555FFaa',
+    'mic': '#000000aa #FFFFFFaa #ff5555aa',
+}
 
-def notify_osd(value):
+def notify_osd(value, role='__default__'):
     value = int(value)
     wob_socket = pathlib.Path(os.environ['XDG_RUNTIME_DIR']) / 'wob.sock'
     if not wob_socket.exists():
         return
+
+    if role in WOB_COLORS:
+        colors = WOB_COLORS[role]
+    else:
+        colors = WOB_COLORS['__default__']
     with wob_socket.open('w') as fp:
-        fp.write(f'{value}\n')
+        fp.write(f'{value} {colors}\n')
 
 
-def volume_notify(sink):
+def volume_notify(sink, role='volume'):
     print(sink.mute, sink.volume)
     if sink.mute:
         value = 0
     else:
         value = sink.volume.value_flat * 100
-    notify_osd(value)
+    notify_osd(value, role=role)
 
 
-def volume_inc(delta):
+VOLUME_DELTA = 0.05
+
+def sound_cmd(*, role, delta=None):
     with pulsectl.Pulse('desktopctl') as pulse:
         server_info = pulse.server_info()
-        sink = pulse.get_sink_by_name(server_info.default_sink_name)
-        volume = max(min(sink.volume.value_flat + delta, 1.5), 0)
-        pulse.volume_set_all_chans(sink, volume)
-        volume_notify(sink)
+        if role == 'volume':
+            obj = pulse.get_sink_by_name(server_info.default_sink_name)
+        else:
+            obj = pulse.get_source_by_name(server_info.default_source_name)
+        if delta:
+            volume = max(min(obj.volume.value_flat + delta, 1.5), 0)
+            pulse.volume_set_all_chans(obj, volume)
+        else:
+            pulse.mute(obj, not obj.mute)
+        volume_notify(obj, role)
 
 
 def volume_up():
-    volume_inc(0.05)
+    sound_cmd(role='volume', delta=VOLUME_DELTA)
 
 
 def volume_down():
-    volume_inc(-0.05)
+    sound_cmd(role='volume', delta=-VOLUME_DELTA)
 
 
 def volume_mute_toggle():
-    with pulsectl.Pulse('desktopctl') as pulse:
-        server_info = pulse.server_info()
-        sink = pulse.get_sink_by_name(server_info.default_sink_name)
-        pulse.mute(sink, not sink.mute)
-        volume_notify(sink)
+    sound_cmd(role='volume', delta=None)
+
+
+def mic_up():
+    sound_cmd(role='mic', delta=VOLUME_DELTA)
+
+
+def mic_down():
+    sound_cmd(role='mic', delta=-VOLUME_DELTA)
 
 
 def mic_mute_toggle():
-    with pulsectl.Pulse('desktopctl') as pulse:
-        server_info = pulse.server_info()
-        sink = pulse.get_source_by_name(server_info.default_source_name)
-        pulse.mute(sink, not sink.mute)
-        volume_notify(sink)
+    sound_cmd(role='mic', delta=None)
+
 
 
 @dataclasses.dataclass(frozen=True)
@@ -80,7 +101,7 @@ def brightness_get() -> BrightnessState:
 
 
 def brightness_notify(state: BrightnessState):
-    notify_osd(100 * state.value / state.value_max)
+    notify_osd(100 * state.value / state.value_max, role='brightness')
 
 
 def brightness_save(state: BrightnessState):
@@ -90,14 +111,14 @@ def brightness_save(state: BrightnessState):
 
 
 def brightness_up():
-    subprocess.check_output(['brightnessctl', '-q', 'set', '+10%'])
+    subprocess.check_output(['brightnessctl', '-q', 'set', '+5%'])
     state = brightness_get()
     brightness_save(state)
     brightness_notify(state)
 
 
 def brightness_down():
-    subprocess.check_output(['brightnessctl', '-q', 'set', '10%-'])
+    subprocess.check_output(['brightnessctl', '-q', 'set', '5%-'])
     state = brightness_get()
     brightness_save(state)
     brightness_notify(state)
@@ -115,6 +136,12 @@ def main():
 
     command_parser = subparsers.add_parser('volume-mute-toggle')
     command_parser.set_defaults(handler=volume_mute_toggle)
+
+    command_parser = subparsers.add_parser('mic-up')
+    command_parser.set_defaults(handler=mic_up)
+
+    command_parser = subparsers.add_parser('mic-down')
+    command_parser.set_defaults(handler=mic_down)
 
     command_parser = subparsers.add_parser('mic-mute-toggle')
     command_parser.set_defaults(handler=mic_mute_toggle)
