@@ -76,23 +76,6 @@ output * bg $bg_image fill
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
-### Brightness
-exec_always brightnessctl.sh restore
-bindsym --to-code --locked {
-    XF86MonBrightnessUp exec desktopctl brightness-up
-    XF86MonBrightnessDown exec desktopctl brightness-down
-}
-
-### Sound
-bindsym --to-code {
-    XF86AudioMute exec desktopctl volume-mute-toggle
-    XF86AudioRaiseVolume exec desktopctl volume-up
-    XF86AudioLowerVolume exec desktopctl volume-down
-    XF86AudioMicMute exec desktopctl mic-mute-toggle
-    Shift+XF86AudioRaiseVolume exec desktopctl mic-up
-    Shift+XF86AudioLowerVolume exec desktopctl mic-down
-}
-
 ### Key bindings
 #
 # Basics:
@@ -311,18 +294,13 @@ bindsym --to-code {
     Mod1+Control+Right workspace next_on_output
 }
 
-# Take screenshots
-bindsym --to-code {
-    $mod+Backslash exec grimshot copy area
-}
-
 # hide title bar
 default_border pixel 1
 default_floating_border pixel 1
 hide_edge_borders both
 
-exec emacsclient -c
-exec mako
+# Focus new floating windows in fullscreen mode
+for_window [floating=true] focus
 
 include ~/.config/sway/config.d/*.conf
 include ~/.config/sway/hostname.d/$(hostname).conf
