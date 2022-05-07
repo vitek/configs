@@ -294,7 +294,7 @@ bindsym --to-code {
     Mod1+Control+Right workspace next_on_output
 }
 
-# hide title bar
+# Hide title bar
 default_border pixel 1
 default_floating_border pixel 1
 hide_edge_borders both
