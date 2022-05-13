@@ -238,7 +238,7 @@ label:focus {
     /*padding: 0 5px;
     margin: 0 5px;
     min-width: 16px;*/
-    font-family: Liberation Mono;
+    font-family: Noto Sans Mono;
 }
 
 #keyboard-state {
