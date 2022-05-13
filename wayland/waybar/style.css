@@ -1,6 +1,6 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: Font Awesome, Noto Mono;
+    font-family: Font Awesome, Noto Sans;
     font-size: 18px;
 }
 
@@ -100,7 +100,7 @@ window#waybar.chromium {
 
 #clock {
     /*background-color: #64727D;*/
-    font-family: Font Awesome, Noto Mono;
+    /* font-family: Font Awesome, Mono;*/
 }
 
 #battery {
@@ -235,9 +235,10 @@ label:focus {
 #language {
 /*    background: #00b093;
     color: #740864; */
-    padding: 0 5px;
+    /*padding: 0 5px;
     margin: 0 5px;
-    min-width: 16px;
+    min-width: 16px;*/
+    font-family: Liberation Mono;
 }
 
 #keyboard-state {
