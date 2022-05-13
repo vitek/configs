@@ -1,6 +1,6 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: Ubuntu Mono;
+    font-family: Font Awesome, Noto Mono;
     font-size: 18px;
 }
 
@@ -100,6 +100,7 @@ window#waybar.chromium {
 
 #clock {
     /*background-color: #64727D;*/
+    font-family: Font Awesome, Noto Mono;
 }
 
 #battery {
