@@ -19,6 +19,7 @@
 
     ;; dev
     find-file-in-project
+    git-grep
     gnu-elpa-keyring-update
     helm
     magit
@@ -38,6 +39,7 @@
     clang-format
     cmake-ide
     cmake-mode
+    google-c-style
 
     ;; python related
     elpy

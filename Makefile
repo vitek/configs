@@ -80,8 +80,6 @@ install-emacs-configs:
 	rm -f  $(DESTDIR)/.emacs
 	$(INSTALL) -m 0644 emacs/init.el $(DESTDIR)/.emacs.d/init.el
 	$(INSTALL) -m 0644 emacs/early-init.el $(DESTDIR)/.emacs.d/early-init.el
-	$(INSTALL) -m 0644 emacs/site-lisp/git-grep.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/google-c-style.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/tools.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/my.el $(DESTDIR)/.emacs.d/site-lisp
@@ -90,6 +88,8 @@ install-emacs-configs:
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-fns.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-cmds.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
+	rm -f $(DESTDIR)/.emacs.d/site-lisp/git-grep.el* \
+		$(DESTDIR)/.emacs.d/site-lisp/google-c-style.el*
 
 install-emacs: install-xresources install-emacs-configs
 	$(EMACS) --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
