@@ -171,6 +171,19 @@ bindsym --to-code {
 }
 
 #
+# Move workspace to output:
+#
+set {
+    $output_prefix Mod1+Mod4+Shift
+}
+bindsym --to-code {
+    $output_prefix+Left move workspace to output left
+    $output_prefix+Right move workspace to output right
+    $output_prefix+Up move workspace to output up
+    $output_prefix+Down move workspace to output down
+}
+
+#
 # Layout stuff:
 #
 bindsym --to-code {
