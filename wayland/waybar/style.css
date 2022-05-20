@@ -1,7 +1,7 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: Font Awesome, Noto Sans;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 window#waybar {
@@ -86,6 +86,11 @@ window#waybar.chromium {
 #window,
 #workspaces {
     margin: 0 4px;
+}
+
+#window {
+    font-family: Font Awesome, Noto Sans Extrabold;
+    font-size: 16px;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
