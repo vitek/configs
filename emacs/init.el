@@ -926,6 +926,14 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :hook
   ((telega-chat-mode . my-telega-chat-mode)))
 
+(use-package which-key
+  :delight (which-key-mode nil "whitespace")
+  :config
+  (setq which-key-idle-delay 1.5)
+  (which-key-setup-side-window-right-bottom)
+  ;;(which-key-setup-minibuffer)
+  (which-key-mode))
+
 (use-package emacs
   :bind
   (("C-c #"   . comment-region)

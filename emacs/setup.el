@@ -86,6 +86,7 @@
     pass
     pdf-tools
     telega
+    which-key
     zoom
 
     ;; org-mode
