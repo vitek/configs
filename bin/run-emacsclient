@@ -1,0 +1,15 @@
+#!/bin/sh
+# -*- mode: shell-script; -*-
+
+EMACSCLIENT_VERSION=$(emacsclient --version | grep -oE '[0-9]+' | head -1)
+EMACSCLIENT_ARGS="-n"
+
+if [ "x$EMACS_SOCKET_NAME" != "x" ]; then
+   EMACSCLIENT_ARGS="$EMACSCLIENT_ARGS --socket-name $EMACS_SOCKET_NAME"
+fi
+
+if [ "$EMACSCLIENT_VERSION" -ge "28" ]; then
+    EMACSCLIENT_ARGS="$EMACSCLIENT_ARGS -r"
+fi
+
+exec emacsclient $EMACSCLIENT_ARGS "$@"
