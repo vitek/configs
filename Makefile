@@ -137,7 +137,7 @@ install-waybar:
 	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
 	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
 
-install-sway: install-waybar install-wob install-desktopctl
+install-sway: install-waybar install-wob install-desktopctl install-dunst
 	$(INSTALL) -d $(DESTDIR)/.config/sway
 	$(INSTALL) -d $(DESTDIR)/.config/sway/config.d
 	$(INSTALL) -d $(DESTDIR)/.config/sway/hostname.d
@@ -158,6 +158,10 @@ reinstall-wob: install-wob
 install-desktopctl:
 	$(INSTALL) -d $(DESTDIR)/bin
 	$(INSTALL) -m 0755 wayland/desktopctl $(DESTDIR)/bin
+
+install-dunst:
+	$(INSTALL) -d $(DESTDIR)/.config/dunst/
+	$(INSTALL) -m 0644 wayland/dunstrc $(DESTDIR)/.config/dunst/dunstrc
 
 install-qt:
 	$(INSTALL) -d $(DESTDIR)/.config/qt5ct
