@@ -137,7 +137,7 @@ install-waybar:
 	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
 	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
 
-install-sway: install-waybar install-wob install-desktopctl install-dunst
+install-sway: install-waybar install-wob install-desktopctl install-dunst install-kitty
 	$(INSTALL) -d $(DESTDIR)/.config/sway
 	$(INSTALL) -d $(DESTDIR)/.config/sway/config.d
 	$(INSTALL) -d $(DESTDIR)/.config/sway/hostname.d
@@ -150,6 +150,10 @@ install-wob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
 	$(INSTALL) -m 0644 wayland/wob/wob.socket wayland/wob/wob.service \
 			$(SYSTEMD_USER_PATH)
+
+install-kitty:
+	$(INSTALL) -d $(DESTDIR)/.config/kitty
+	$(INSTALL) -m 0644 kitty/kitty.conf $(DESTDIR)/.config/kitty
 
 reinstall-wob: install-wob
 	systemctl --user daemon-reload
