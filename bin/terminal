@@ -1,0 +1,13 @@
+#!/bin/sh
+# -*- mode: shell-script; -*-
+
+case $(cat ~/.config/terminal 2> /dev/null) in
+    kitty)
+        TERMINAL="kitty -1"
+        ;;
+    gnome-terminal|*)
+        TERMINAL="gnome-terminal"
+        ;;
+esac
+
+exec $TERMINAL "$@"
