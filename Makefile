@@ -22,6 +22,7 @@ BIN_FILES =					\
 	bin/clangd-chooser			\
 	bin/histogram				\
 	bin/json-pp				\
+	bin/terminal				\
 	bin/run-emacsclient			\
 	bin/xkb-layout				\
 	bin/xml-pp
