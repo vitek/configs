@@ -61,7 +61,7 @@ set {
     # Your preferred application launcher
     # Note: pass the final command to swaymsg so that the resulting window can be opened
     # on the original workspace that the command was run on.
-    $menu dmenu_path | dmenu | xargs swaymsg exec --
+    $menu dmenu_path | dmenu -fn 'Noto Sans-12' | xargs swaymsg exec --
     $bg_image /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 }
 
