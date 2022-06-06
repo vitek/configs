@@ -9,6 +9,16 @@
 SCHROOT_SESSION_ID="$(basename $0)"
 SCHROOT_DIR="/run/schroot/mount/$SCHROOT_SESSION_ID"
 
+if [ "$SCHROOT_CHROOT_NAME" = "$SCHROOT_SESSION_ID" ]; then
+    exec "$@"
+fi
+
+if [ -n "$SCHROOT_CHROOT_NAME" ]; then
+    exec >&2
+    echo "Already running other schroot session: $SCHROOT_CHROOT_NAME"
+    exit 1
+fi
+
 if [ ! -d "$SCHROOT_DIR" ]; then
     schroot --begin-session -c "${SCHROOT_SESSION_ID}" -n "${SCHROOT_SESSION_ID}"
 fi
