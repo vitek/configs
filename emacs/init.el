@@ -960,6 +960,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   ((vterm-mode eshell-mode shell-mode) . goto-address-mode)
   (prog-mode . goto-address-prog-mode))
 
+(use-package wgrep
+  :config
+  (setq wgrep-auto-save-buffer t))
+
 (if window-system
     (progn
       (global-set-key "\C-z" 'ignore)
