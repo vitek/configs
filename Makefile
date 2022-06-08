@@ -105,12 +105,16 @@ test-emacs:
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
 
-install-misc:
-	$(INSTALL) -m 0644 screenrc $(DESTDIR)/.screenrc
-	$(INSTALL) -m 0644 tmux.conf $(DESTDIR)/.tmux.conf
+install-misc: install-screen install-tmux
 	$(INSTALL) -m 0644 pylintrc $(DESTDIR)/.pylintrc
 	$(INSTALL) -d $(DESTDIR)/.config
 	$(INSTALL) -m 0644 flake8 $(DESTDIR)/.config/flake8
+
+install-screen:
+	$(INSTALL) -m 0644 screenrc $(DESTDIR)/.screenrc
+
+install-tmux:
+	$(INSTALL) -m 0644 tmux.conf $(DESTDIR)/.tmux.conf
 
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
