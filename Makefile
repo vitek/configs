@@ -107,6 +107,7 @@ install-vim:
 
 install-misc:
 	$(INSTALL) -m 0644 screenrc $(DESTDIR)/.screenrc
+	$(INSTALL) -m 0644 tmux.conf $(DESTDIR)/.tmux.conf
 	$(INSTALL) -m 0644 pylintrc $(DESTDIR)/.pylintrc
 	$(INSTALL) -d $(DESTDIR)/.config
 	$(INSTALL) -m 0644 flake8 $(DESTDIR)/.config/flake8
