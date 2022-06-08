@@ -71,6 +71,7 @@
 
  ;; Edit
  kill-whole-line t
+ require-final-newline t
 
  ;; Scrolling
  scroll-preserve-screen-position 'always
