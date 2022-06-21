@@ -9,7 +9,8 @@
 exec {
      systemctl --user import-environment \
          SWAYSOCK                        \
-         WAYLAND_DISPLAY
+         WAYLAND_DISPLAY                 \
+         PATH
 
      # Fix D-Bus activation
      dbus-update-activation-environment --systemd --all
