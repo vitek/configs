@@ -510,6 +510,10 @@
 ;; delight, tune minor mode bar
 (use-package delight
   :config
+
+  ;; https://www.emacswiki.org/emacs/DelightedModes
+  (advice-add 'c-update-modeline :override #'ignore)
+
   (delight '((abbrev-mode nil "abbrev")
              (company-mode nil "company")
              (eldoc-mode nil "eldoc")
