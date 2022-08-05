@@ -8,6 +8,7 @@
 
 SCHROOT_SESSION_ID="$(basename $0)"
 SCHROOT_DIR="/run/schroot/mount/$SCHROOT_SESSION_ID"
+SCHROOT_SESSION_FILE="/var/lib/schroot/session/$SCHROOT_SESSION_ID"
 
 if [ "$SCHROOT_CHROOT_NAME" = "$SCHROOT_SESSION_ID" ]; then
     exec "$@"
@@ -20,6 +21,9 @@ if [ -n "$SCHROOT_CHROOT_NAME" ]; then
 fi
 
 if [ ! -d "$SCHROOT_DIR" ]; then
+    if [ -f "$SCHROOT_SESSION_FILE" ]; then
+        schroot-session-end "$SCHROOT_SESSION_ID"
+    fi
     schroot --begin-session -c "${SCHROOT_SESSION_ID}" -n "${SCHROOT_SESSION_ID}"
 fi
 
