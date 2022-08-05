@@ -15,6 +15,8 @@ exec {
      # Fix D-Bus activation
      dbus-update-activation-environment --systemd --all
 
+     systemctl --user start emacs-29-vcs.service
+
      # GNOME Keyring and SSH agent
      gnome-keyring-daemon
 
