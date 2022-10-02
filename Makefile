@@ -5,6 +5,8 @@ EMACS     = emacs
 
 DESTDIR   = $(HOME)
 
+I3_DESTDIR = $(DESTDIR)/.config/i3
+
 AWESOME_FILES =					\
 	awesome/rc.lua				\
 	awesome/mywibar.lua			\
@@ -137,6 +139,22 @@ install-awesome: install-x11-utils
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
 
+install-i3: install-xob install-i3status install-polybar
+	$(INSTALL) -d $(I3_DESTDIR)
+	$(INSTALL) -d $(I3_DESTDIR)/config.d
+	$(INSTALL) -d $(I3_DESTDIR)/hostname.d
+	$(INSTALL) -m 0644 i3/config $(I3_DESTDIR)
+	$(INSTALL) -m 0644 i3/hostname.d/*.conf $(I3_DESTDIR)/hostname.d/
+	$(INSTALL) -m 0644 i3/config.d/*.conf $(I3_DESTDIR)/config.d/
+	$(INSTALL) -m 0755 i3/xkb-layout.py $(DESTDIR)/bin/i3-xkb-layout
+
+install-i3status:
+	$(INSTALL) -d $(DESTDIR)/.config/i3status
+	$(INSTALL) -m 0644 i3/status/config $(DESTDIR)/.config/i3status/
+
+install-polybar:
+	$(INSTALL) -d $(DESTDIR)/.config/polybar
+	$(INSTALL) -m 0644 polybar.ini $(DESTDIR)/.config/polybar/config.ini
 
 install-waybar:
 	$(INSTALL) -d $(DESTDIR)/.config/waybar
@@ -155,6 +173,11 @@ install-sway: install-waybar install-wob install-desktopctl install-dunst instal
 install-wob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
 	$(INSTALL) -m 0644 wayland/wob/wob.socket wayland/wob/wob.service \
+			$(SYSTEMD_USER_PATH)
+
+install-xob:
+	$(INSTALL) -d $(SYSTEMD_USER_PATH)
+	$(INSTALL) -m 0644 xob.socket xob.service \
 			$(SYSTEMD_USER_PATH)
 
 install-kitty:

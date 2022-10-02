@@ -19,7 +19,7 @@ WOB_COLORS = {
     'mic': '#000000aa #FFFFFFaa #ff5555aa',
 }
 
-def notify_osd(value, role='__default__'):
+def notify_osd_wob(value, role='__default__'):
     value = int(value)
     wob_socket = pathlib.Path(os.environ['XDG_RUNTIME_DIR']) / 'wob.sock'
     if not wob_socket.exists():
@@ -31,6 +31,23 @@ def notify_osd(value, role='__default__'):
         colors = WOB_COLORS['__default__']
     with wob_socket.open('w') as fp:
         fp.write(f'{value} {colors}\n')
+
+
+def notify_osd_xob(value, role='__default__'):
+    value = int(value)
+    wob_socket = pathlib.Path(os.environ['XDG_RUNTIME_DIR']) / 'xob.sock'
+    if not wob_socket.exists():
+        return
+
+    with wob_socket.open('w') as fp:
+        fp.write(f'{value}\n')
+
+
+def notify_osd(value, role='__default__'):
+    if 'WAYLAND_DISPLAY' in os.environ:
+        notify_osd_wob(value, role)
+    else:
+        notify_osd_xob(value, role)
 
 
 def volume_notify(sink, role='volume'):

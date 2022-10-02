@@ -1,0 +1,14 @@
+[Unit]
+Description=xob
+Documentation=man:xob(1)
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=DISPLAY
+#ConditionEnvironment=!WAYLAND_DISPLAY
+
+[Service]
+StandardInput=socket
+ExecStart=/usr/bin/xob -c /etc/xob/styles.cfg
+
+[Install]
+WantedBy=graphical-session.target
