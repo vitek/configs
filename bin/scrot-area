@@ -1,0 +1,7 @@
+#!/bin/sh
+
+SCROT_DIR="/tmp/.scrot-$USER"
+mkdir -p $SCROT_DIR
+cd $SCROT_DIR
+
+exec scrot -fzs -e 'xclip -selection clipboard -t image/png -i "$f"; rm -f "$f"'

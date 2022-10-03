@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if i3-msg -t get_tree | \
+        jq -e '.. |
+               select(.type?) |
+               select(.focused==true) |
+               select(.window_properties.class|test("(?i)^emacs.*"))' > /dev/null; then
+    exec xkblayout-state set 0
+else
+    exec xkblayout-state set +1
+fi
