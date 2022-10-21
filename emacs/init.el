@@ -50,7 +50,6 @@
 (column-number-mode t)
 (display-time)
 ;;(display-battery)
-
 (setq
  frame-title-format "emacs: %b"
  inhibit-startup-screen t
@@ -128,8 +127,10 @@
       )
 (setq create-lockfiles nil)
 
-(setq
- log-edit-hook (quote ()))
+;; https://www.reddit.com/r/emacs/comments/y92y4b
+(setq remote-file-name-inhibit-locks t)
+
+(setq log-edit-hook (quote ()))
 
 (custom-set-faces
  '(whitespace-trailing ((t (:background "Red"))) 'now)
