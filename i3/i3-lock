@@ -1,0 +1,5 @@
+#!/bin/sh
+
+(xkblayout-state set 0; sleep 1; xkblayout-state set 0;)&
+i3lock -n "$@"
+

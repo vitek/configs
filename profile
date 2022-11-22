@@ -23,5 +23,11 @@ PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 if [ "x$XDG_RUNTIME_DIR" != "x" ]; then
     export EMACS_SOCKET_NAME=$XDG_RUNTIME_DIR/emacs/server
-    export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/keyring/ssh
+
+    if [ -x /usr/local/bin/skotty ]; then
+        SSH_AUTH_SOCK="$HOME/.skotty/sock/default.sock"
+    else
+        SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/keyring/ssh
+    fi
+    export SSH_AUTH_SOCK
 fi

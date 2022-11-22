@@ -10,7 +10,7 @@ import i3ipc
 log = logging.getLogger()
 log_handler = logging.StreamHandler(sys.stdout)
 log.addHandler(log_handler)
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.INFO)
 
 
 class LRU(OrderedDict):
@@ -85,6 +85,7 @@ def window_change(conn, e):
 
     # Restore layout to current window
     cur_window_id = e.container.id
+
     if not cur_window_id in windows:
         # If there was no layout for this window
         # before = not doing anything, just create

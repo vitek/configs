@@ -1,7 +1,21 @@
 #!/bin/sh
 
+#!/bin/sh
+
 SCROT_DIR="/tmp/.scrot-$USER"
 mkdir -p $SCROT_DIR
 cd $SCROT_DIR
 
-exec scrot -fzs -e 'xclip -selection clipboard -t image/png -i "$f"; rm -f "$f"'
+for i in $(seq 10); do
+    RESULT=$(scrot -fzs -e 'xclip -selection clipboard -t image/png -i "$f"; rm -f "$f"' 2>&1)
+    if [ $? = 0 ]; then
+        exit
+    fi
+    echo $RESULT
+    if echo "$RESULT" | grep -q "couldn't grab pointer"; then
+        sleep .1
+    else
+        echo $RESULT >&2
+        exit 1
+    fi
+done

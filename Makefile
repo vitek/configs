@@ -139,7 +139,7 @@ install-awesome: install-x11-utils
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
 
-install-i3: install-xob install-i3status install-polybar
+install-i3: install-xob install-i3status install-polybar install-x11-utils install-picom
 	$(INSTALL) -d $(I3_DESTDIR)
 	$(INSTALL) -d $(I3_DESTDIR)/config.d
 	$(INSTALL) -d $(I3_DESTDIR)/hostname.d
@@ -147,10 +147,16 @@ install-i3: install-xob install-i3status install-polybar
 	$(INSTALL) -m 0644 i3/hostname.d/*.conf $(I3_DESTDIR)/hostname.d/
 	$(INSTALL) -m 0644 i3/config.d/*.conf $(I3_DESTDIR)/config.d/
 	$(INSTALL) -m 0755 i3/xkb-layout.py $(DESTDIR)/bin/i3-xkb-layout
+	$(INSTALL) -m 0755 i3/i3-switch-layout $(DESTDIR)/bin/
+	$(INSTALL) -m 0755 i3/i3-lock $(DESTDIR)/bin/
 
 install-i3status:
 	$(INSTALL) -d $(DESTDIR)/.config/i3status
 	$(INSTALL) -m 0644 i3/status/config $(DESTDIR)/.config/i3status/
+
+install-picom:
+	$(INSTALL) -d $(DESTDIR)/.config/
+	$(INSTALL) -m 0644 picom.conf $(DESTDIR)/.config/picom.conf
 
 install-polybar:
 	$(INSTALL) -d $(DESTDIR)/.config/polybar
@@ -211,7 +217,9 @@ install-compton:
 	$(INSTALL) -m 0644 awesome/compton.conf $(DESTDIR)/.config/
 
 install-x11-utils:
+	$(INSTALL) -d $(DESTDIR)/bin
 	$(INSTALL) -m 0644 xbindkeysrc $(DESTDIR)/.xbindkeysrc
+	$(INSTALL) -m 0755 bin/scrot-area $(DESTDIR)/bin
 
 install-bashrc:
 	$(INSTALL) -m 0644 inputrc $(DESTDIR)/.inputrc

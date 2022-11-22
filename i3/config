@@ -11,8 +11,10 @@ exec --no-startup-id systemctl --user import-environment \
 exec --no-startup-id dbus-update-activation-environment --systemd --all
 exec --no-startup-id systemctl --user start emacs-29-vcs.service
 exec --no-startup-id gnome-keyring-daemon
-exec --no-startup-id nm-applet --indicator
 exec --no-startup-id picom
+exec --no-startup-id nm-applet --indicator
+exec --no-startup-id /usr/libexec/gsd-xsettings
+exec --no-startup-id xset b off
 
 # Theme setup
 set $gnome-interface org.gnome.desktop.interface
@@ -21,11 +23,11 @@ set $gnome-sound org.gnome.desktop.sound
 set $gtk_font 'Hack Nerd Font 16'
 set $icon_theme Acid-green-folder
 
-exec_always --no-startup-id gsettings set $gnome-interface cursor-theme        'DMZ-White'
-exec --no-startup-id gsettings set $gnome-interface cursor-size         24
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-theme        'DMZ-White'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-size         24
 #exec --no-startup-id gsettings set $gnome-interface document-font-name  $gtk_font
 #exec --no-startup-id gsettings set $gnome-interface font-name           $gtk_font
-exec --no-startup-id gsettings set $gnome-interface gtk-theme           'Adwaita-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme           'Adwaita-dark'
 #gsettings set $gnome-interface gtk-color-theme     'Gruvbox-glass'
 #gsettings set $gnome-interface icon-theme          '$icon_theme'
 #gsettings set $gnome-interface monospace-font-name $gtk_font
@@ -46,7 +48,7 @@ set $term terminal
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | dmenu -fn 'Noto Sans-12' | xargs swaymsg exec --
+set $menu dmenu_path | dmenu -fn 'Noto Sans-12' | xargs i3-msg exec --
 set $bg_image /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 
 ### Key bindings
@@ -63,7 +65,7 @@ bindsym $mod+Return exec $term
 bindsym $mod+Shift+c kill
 
 # Start your launcher
-bindsym $mod+r exec $menu
+bindsym $mod+r exec --no-startup-id $menu
 
 # Reload the configuration file
 bindsym $mod+Shift+r reload
