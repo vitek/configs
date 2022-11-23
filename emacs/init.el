@@ -400,7 +400,7 @@
 (use-package flyspell
   :hook (org-mode . flyspell-mode)
   :config
-  (defconst my-spell-dictionaries '("russian" "english"))
+  (defconst my-spell-dictionaries '("ru" "english"))
   (setq ispell-dictionary (car my-spell-dictionaries))
 
   :bind
