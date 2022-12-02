@@ -809,6 +809,7 @@
 (use-package vc-hooks
   :config
   ;; Only load vc-arc when available
+  (remove-hook 'find-file-hooks 'vc-find-file-hook)
   (when (require 'vc-arc nil t)
     (add-to-list 'vc-handled-backends 'arc)))
 
