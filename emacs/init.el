@@ -971,6 +971,11 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :config
   (setq wgrep-auto-save-buffer t))
 
+(use-package eglot
+  :defer t
+  :config
+  (setq eglot-extend-to-xref  t))
+
 (if window-system
     (progn
       (global-set-key "\C-z" 'ignore)
