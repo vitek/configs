@@ -139,7 +139,7 @@ install-awesome: install-x11-utils
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
 
-install-i3: install-xob install-i3status install-polybar install-x11-utils install-picom
+install-i3: install-xob install-i3status install-polybar install-x11-utils install-picom install-desktop-init
 	$(INSTALL) -d $(I3_DESTDIR)
 	$(INSTALL) -d $(I3_DESTDIR)/config.d
 	$(INSTALL) -d $(I3_DESTDIR)/hostname.d
@@ -175,6 +175,10 @@ install-sway: install-waybar install-wob install-desktopctl install-dunst instal
 	$(INSTALL) -m 0644 wayland/sway/hostname.d/*.conf $(DESTDIR)/.config/sway/hostname.d/
 	$(INSTALL) -m 0644 wayland/sway/config.d/*.conf $(DESTDIR)/.config/sway/config.d/
 	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
+
+install-desktop-init:
+	$(INSTALL) -d $(DESTDIR)/bin/
+	$(INSTALL) -m 0755 bin/desktop-init.sh $(DESTDIR)/bin/
 
 install-wob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
