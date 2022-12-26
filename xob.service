@@ -6,9 +6,13 @@ After=graphical-session.target
 ConditionEnvironment=DISPLAY
 #ConditionEnvironment=!WAYLAND_DISPLAY
 
+StartLimitBurst=3
+StartLimitIntervalSec=30
+
 [Service]
 StandardInput=socket
 ExecStart=/usr/bin/xob -c /etc/xob/styles.cfg
+Restart=on-failure
 
 [Install]
 WantedBy=graphical-session.target
