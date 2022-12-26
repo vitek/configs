@@ -74,6 +74,7 @@
     multi-vterm
 
     ;; misc
+    ace-jump-mode
     ace-window
     all-the-icons
     all-the-icons-ivy

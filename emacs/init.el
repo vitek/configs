@@ -698,6 +698,9 @@
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+(use-package ace-jump-mode
+  :bind ("C-." . ace-jump-mode))
+
 (use-package ace-window
   :config
   (setq aw-scope 'frame)
