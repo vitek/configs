@@ -18,6 +18,7 @@ exec --no-startup-id xset b off
 exec --no-startup-id systemctl --user start xob.socket
 exec --no-startup-id systemctl --user start blueman-applet
 exec --no-startup-id ~/bin/desktop-init.sh
+exec --no-startup-id xbindkeys
 
 # Theme setup
 set $gnome-interface org.gnome.desktop.interface

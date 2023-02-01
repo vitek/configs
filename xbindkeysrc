@@ -79,3 +79,18 @@
 ##################################
 # End of xbindkeys configuration #
 ##################################
+
+"zoom-mute"
+  XF86Go
+
+"zoom-mute || playerctl play-pause"
+  XF86AudioPlay
+
+"zoom-mute || playerctl play-pause"
+  XF86AudioPause
+
+"playerctl next"
+  XF86AudioNext
+
+"playerctl previous"
+  XF86AudioPrev

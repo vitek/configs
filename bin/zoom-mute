@@ -3,7 +3,7 @@
 ZOOM=$(xdotool search --limit 1 --name "Zoom Meeting")
 CURRENT=$(xdotool getwindowfocus)
 
-if [ "x$ZOOM" = "" ]; then
+if [ "x$ZOOM" = "x" ]; then
    echo "No zoom meeting window found"
    exit 1
 fi
@@ -11,4 +11,3 @@ fi
 xdotool windowactivate --sync ${ZOOM}
 xdotool key --clearmodifiers --window $ZOOM "alt+a"
 xdotool windowactivate --sync ${CURRENT}
-

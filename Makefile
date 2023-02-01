@@ -224,6 +224,7 @@ install-x11-utils:
 	$(INSTALL) -d $(DESTDIR)/bin
 	$(INSTALL) -m 0644 xbindkeysrc $(DESTDIR)/.xbindkeysrc
 	$(INSTALL) -m 0755 bin/scrot-area $(DESTDIR)/bin
+	$(INSTALL) -m 0755 bin/zoom-mute $(DESTDIR)/bin
 
 install-bashrc:
 	$(INSTALL) -m 0644 inputrc $(DESTDIR)/.inputrc
