@@ -14,7 +14,6 @@ exec --no-startup-id gnome-keyring-daemon
 exec --no-startup-id picom
 exec --no-startup-id nm-applet --indicator
 exec --no-startup-id /usr/libexec/gsd-xsettings
-exec --no-startup-id xset b off
 exec --no-startup-id systemctl --user start xob.socket
 exec --no-startup-id systemctl --user start blueman-applet
 exec --no-startup-id ~/bin/desktop-init.sh
