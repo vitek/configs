@@ -139,6 +139,9 @@ install-awesome: install-x11-utils
 			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
 	fi
 
+i3-reload: install-i3
+	i3-msg reload
+
 install-i3: install-xob install-i3status install-polybar install-x11-utils install-picom install-desktop-init
 	$(INSTALL) -d $(I3_DESTDIR)
 	$(INSTALL) -d $(I3_DESTDIR)/config.d
