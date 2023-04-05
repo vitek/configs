@@ -179,6 +179,15 @@
   (build-action 'all-the-icons
                 (all-the-icons-install-fonts t)))
 
+(defun derived-mode-parents (mode)
+  (and mode
+       (cons mode (derived-mode-parents
+                   (get mode 'derived-mode-parent)))))
+
+(defun highlight-prog ()
+  (cl-intersection (derived-mode-parents major-mode)
+                '(prog-mode text-mode cmake-mode)))
+
 ;; Color theme
 (load-theme 'zenburn t)
 ;; (use-package color-theme-modern
@@ -501,6 +510,11 @@
          (c-mode      . lsp-deferred)
          (go-mode     . lsp-deferred)))
 
+(use-package lsp-java
+  :config
+  (setq lsp-java-java-path "/home/vitja/arcadia/taxi/mj/services/udp-for-market/jdk/bin/java")
+  ;;(setenv "JAVA_HOME" "/home/vitja/arcadia/taxi/mj/services/udp-for-market/jdk")
+  :hook ((java-mode    . lsp-deferred)))
 
 (use-package yasnippet
   :config
@@ -885,15 +899,6 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
       ;;(save-some-buffers arg t)
       ;;(kill-emacs)
       )))
-
-(defun derived-mode-parents (mode)
-  (and mode
-       (cons mode (derived-mode-parents
-                   (get mode 'derived-mode-parent)))))
-
-(defun highlight-prog ()
-  (cl-intersection (derived-mode-parents major-mode)
-                '(prog-mode text-mode cmake-mode)))
 
 (use-package my
   :config
