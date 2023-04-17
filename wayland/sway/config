@@ -10,7 +10,8 @@ exec {
      systemctl --user import-environment \
          SWAYSOCK                        \
          WAYLAND_DISPLAY                 \
-         PATH
+         PATH                            \
+         XDG_CURRENT_DESKTOP=sway
 
      # Fix D-Bus activation
      dbus-update-activation-environment --systemd --all
@@ -25,6 +26,10 @@ exec {
 
      # per-window layout
      swaykbdd
+
+     systemctl --user start blueman-applet
+
+     ~/bin/desktop-init.sh
 }
 
 # Theme setup

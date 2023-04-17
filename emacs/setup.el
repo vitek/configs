@@ -32,6 +32,7 @@
     lsp-mode
     ;;lsp-treemacs
     lsp-ui
+    lsp-java
 
     yasnippet
 

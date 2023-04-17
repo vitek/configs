@@ -513,7 +513,8 @@
 (use-package lsp-java
   :config
   (setq lsp-java-java-path "/home/vitja/arcadia/taxi/mj/services/udp-for-market/jdk/bin/java")
-  ;;(setenv "JAVA_HOME" "/home/vitja/arcadia/taxi/mj/services/udp-for-market/jdk")
+  (setenv "JAVA_HOME" "/home/vitja/arcadia/taxi/mj/services/udp-for-market/jdk")
+  (setenv "CLASSPATH" "/home/vitja/arcadia/taxi/mj/services/udp-for-market/idea")
   :hook ((java-mode    . lsp-deferred)))
 
 (use-package yasnippet
