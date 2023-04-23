@@ -26,6 +26,7 @@ BIN_FILES =					\
 	bin/json-pp				\
 	bin/terminal				\
 	bin/run-emacsclient			\
+	bin/myemacs                             \
 	bin/xkb-layout				\
 	bin/xml-pp
 

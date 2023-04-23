@@ -126,6 +126,9 @@
       (message (format "Installing package: %s" package))
       (package-install package t))))
 
+
+(message "Running: %s" (emacs-version))
+
 (install-packages)
 (byte-compile-site-lisp)
 ;;; setup.el ends here

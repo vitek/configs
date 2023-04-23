@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -ex
+EMACSOPTS=""
+EMACSCLIENTOPTS=""
+
+if [ -z "$WAYLAND_DISPLAY" -a -z "$DISPLAY" ]; then
+    EMACSOPTS="$EMACSOPTS -nw"
+    EMACSCLIENTOPTS="$EMACSCLIENTOPTS -t"
+else
+    EMACSCLIENTOPTS="$EMACSCLIENTOPTS -r -n"
+fi
+
+# Try to launch emacsclient first
+if emacsclient $EMACSCLIENTOPTS "$@"; then
+    exit $?
+fi
+
+exec emacs $EMACSOPTS "$@"
