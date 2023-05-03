@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import argparse
+
+import i3ipc
+
+DPMS_BLACKLIST = [
+    {
+        'make': 'AOC',
+        'model': 'U27P2G6B',
+    },
+]
+
+
+def sway_dpms_on(sway, args):
+    sway.command('output * dpms on')
+
+
+def is_dpms_enabled_for(output):
+    for rule in DPMS_BLACKLIST:
+        for key, value in rule.items():
+            if getattr(output, key, None) != value:
+                break
+        else:
+            return False
+    return True
+
+
+def sway_dpms_off(sway, args):
+    outputs = sway.get_outputs()
+    for output in outputs:
+        if is_dpms_enabled_for(output):
+            sway.command(f'output {output.name} dpms off')
+
+
+def sway_dpms_main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(metavar='command', required=True)
+
+    command_parser = subparsers.add_parser(
+        'on',
+        description='Switch DPMS ON',
+    )
+    command_parser.set_defaults(handler=sway_dpms_on)
+
+    command_parser = subparsers.add_parser(
+        'off',
+        description='Switch DPMS OFF',
+    )
+    command_parser.set_defaults(handler=sway_dpms_off)
+
+    args = parser.parse_args()
+
+    sway = i3ipc.Connection()
+    args.handler(sway, args)
+
+
+if __name__ == '__main__':
+    sway_dpms_main()

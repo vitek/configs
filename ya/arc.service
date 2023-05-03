@@ -1,7 +1,7 @@
 [Unit]
 Description=Arcadia ARC FUSE service
 Documentation=https://wiki.yandex-team.ru/arcadia/arc/
-After=arc.service
+After=network-online.target
 
 [Service]
 Nice=10

@@ -32,6 +32,7 @@ BIN_FILES =					\
 
 SWAY_BIN_FILES =				\
 	wayland/grimshot			\
+	wayland/sway-dpms			\
 	wayland/sway-switch-layout		\
 	wayland/sway-lock.sh			\
 	wayland/sway-quake			\
