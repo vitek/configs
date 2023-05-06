@@ -5,6 +5,7 @@ import dataclasses
 import os
 import pathlib
 import subprocess
+import typing
 
 import pulsectl
 
@@ -18,6 +19,55 @@ WOB_COLORS = {
     'brightness': '#000000aa #FFFFFFaa #5555FFaa',
     'mic': '#000000aa #FFFFFFaa #ff5555aa',
 }
+
+@dataclasses.dataclass(frozen=True)
+class BrightnessState:
+    value: int
+    value_max: int
+
+
+@dataclasses.dataclass(frozen=True)
+class When:
+    def __bool__(self):
+        return True
+
+
+@dataclasses.dataclass(frozen=True)
+class WhenEnv(When):
+    variable: str
+    value: str
+
+    def __bool__(self):
+        return os.getenv(self.variable) == self.value
+
+
+@dataclasses.dataclass(frozen=True)
+class BackgroundRule:
+    path: pathlib.Path
+    mode: str = 'stretch'
+    when: typing.Optional[typing.List[When]] = None
+
+
+WHEN_SWAY = WhenEnv('XDG_SESSION_DESKTOP', 'sway')
+
+BG_RULES = [
+    BackgroundRule(
+        path=pathlib.Path('~/.config/sway/wallpaper.jpeg'),
+        when=[WHEN_SWAY],
+    ),
+    BackgroundRule(
+        path=pathlib.Path('~/.config/sway/wallpaper.jpg'),
+    ),
+    BackgroundRule(
+        path=pathlib.Path('~/.config/sway/wallpaper.png'),
+    ),
+    BackgroundRule(
+        path=pathlib.Path(
+            '/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png'
+        ),
+    )
+]
+
 
 def notify_osd_wob(value, role='__default__'):
     value = int(value)
@@ -76,35 +126,28 @@ def sound_cmd(*, role, delta=None):
         volume_notify(obj, role)
 
 
-def volume_up():
+def volume_up(args):
     sound_cmd(role='volume', delta=VOLUME_DELTA)
 
 
-def volume_down():
+def volume_down(args):
     sound_cmd(role='volume', delta=-VOLUME_DELTA)
 
 
-def volume_mute_toggle():
+def volume_mute_toggle(args):
     sound_cmd(role='volume', delta=None)
 
 
-def mic_up():
+def mic_up(args):
     sound_cmd(role='mic', delta=VOLUME_DELTA)
 
 
-def mic_down():
+def mic_down(args):
     sound_cmd(role='mic', delta=-VOLUME_DELTA)
 
 
-def mic_mute_toggle():
+def mic_mute_toggle(args):
     sound_cmd(role='mic', delta=None)
-
-
-
-@dataclasses.dataclass(frozen=True)
-class BrightnessState:
-    value: int
-    value_max: int
 
 
 def brightness_get() -> BrightnessState:
@@ -127,24 +170,37 @@ def brightness_save(state: BrightnessState):
         fp.write(f'{state.value}\n')
 
 
-def brightness_up():
+def brightness_up(args):
     subprocess.check_output(['brightnessctl', '-q', 'set', '+5%'])
     state = brightness_get()
     brightness_save(state)
     brightness_notify(state)
 
 
-def brightness_down():
+def brightness_down(args):
     subprocess.check_output(['brightnessctl', '-q', 'set', '5%-'])
     state = brightness_get()
     brightness_save(state)
     brightness_notify(state)
 
 
+def bg_image(args):
+    for rule in BG_RULES:
+        path = rule.path.expanduser()
+        if not path.exists():
+            continue
+        if rule.when and not all(rule.when):
+            break
+        print(path)
+        break
+
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(required=True)
 
+    ## Sound controls
+    # speaker
     command_parser = subparsers.add_parser('volume-up')
     command_parser.set_defaults(handler=volume_up)
 
@@ -154,6 +210,7 @@ def main():
     command_parser = subparsers.add_parser('volume-mute-toggle')
     command_parser.set_defaults(handler=volume_mute_toggle)
 
+    # mic
     command_parser = subparsers.add_parser('mic-up')
     command_parser.set_defaults(handler=mic_up)
 
@@ -163,14 +220,19 @@ def main():
     command_parser = subparsers.add_parser('mic-mute-toggle')
     command_parser.set_defaults(handler=mic_mute_toggle)
 
+    ## Brightness
     command_parser = subparsers.add_parser('brightness-up')
     command_parser.set_defaults(handler=brightness_up)
 
     command_parser = subparsers.add_parser('brightness-down')
     command_parser.set_defaults(handler=brightness_down)
 
+    ## Wallpaper
+    command_parser = subparsers.add_parser('bg-image')
+    command_parser.set_defaults(handler=bg_image)
+
     args = parser.parse_args()
-    args.handler()
+    args.handler(args)
 
 
 
