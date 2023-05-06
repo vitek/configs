@@ -14,10 +14,10 @@ BRIGHTNESS_STATE = pathlib.Path('~/.config/brightnessctl.state')
 
 WOB_COLORS = {
     # '#background_color', '#border_color', '#bar_color'
-    '__default__': '#000000aa #FFFFFFaa #FFFFFFaa',
-    'volume': '#000000aa #FFFFFFaa #55ff55aa',
-    'brightness': '#000000aa #FFFFFFaa #5555FFaa',
-    'mic': '#000000aa #FFFFFFaa #ff5555aa',
+    '__default__': '000000aa FFFFFFaa FFFFFFaa',
+    'volume': '000000aa FFFFFFaa 55ff55aa',
+    'brightness': '000000aa FFFFFFaa 5555FFaa',
+    'mic': '000000aa FFFFFFaa ff5555aa',
 }
 
 @dataclasses.dataclass(frozen=True)

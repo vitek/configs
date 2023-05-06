@@ -189,6 +189,8 @@ install-wob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
 	$(INSTALL) -m 0644 wayland/wob/wob.socket wayland/wob/wob.service \
 			$(SYSTEMD_USER_PATH)
+	$(INSTALL) -d $(DESTDIR)/.config/wob
+	$(INSTALL) -m 0644 wayland/wob/wob.ini $(DESTDIR)/.config/wob
 
 install-xob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)

@@ -8,6 +8,7 @@
 # autostart
 exec {
      systemctl --user import-environment \
+         DISPLAY                         \
          SWAYSOCK                        \
          WAYLAND_DISPLAY                 \
          PATH                            \
