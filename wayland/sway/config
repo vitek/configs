@@ -34,6 +34,40 @@ exec {
       ~/bin/desktop-init.sh
 }
 
+# exec {
+#      systemctl --user import-environment \
+#          DISPLAY                         \
+#          SWAYSOCK                        \
+#          WAYLAND_DISPLAY                 \
+#          PATH                            \
+#          XDG_CURRENT_DESKTOP=sway
+
+#      # Fix D-Bus activation
+#      dbus-update-activation-environment --systemd --all
+#      dbus-update-activation-environment --systemd PATH WAYLAND_DISPLAY DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
+
+#      #sway-session.sh --with-cleanup
+#      #wait-sni-ready && systemctl --user start sway-autostart.target
+
+#      ~/bin/desktop-init.sh
+# }
+# autostart
+     # systemctl --user import-environment \
+XO     #     DISPLAY                         \
+     #     SWAYSOCK                        \
+     #     WAYLAND_DISPLAY                 \
+     #     PATH                            \
+     #     XDG_CURRENT_DESKTOP=sway
+
+     # # Fix D-Bus activation
+     # dbus-update-activation-environment --systemd --all
+     # dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+     # wait-sni-ready && systemctl --user start sway-autostart.target
+     # wait-sni-ready && systemctl --user start blueman-applet
+
+}
+
 # Theme setup
 set {
     # Interfaces
@@ -78,18 +112,6 @@ set {
 
 #/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 }
-
-### Output configuration
-#
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg $bg_image stretch
-
-#
-# Example configuration:
-#
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
-#
-# You can get the names of your outputs by running: swaymsg -t get_outputs
 
 ### Key bindings
 #
@@ -290,29 +312,6 @@ bindsym --to-code {
     $mod+Control+Shift+Down resize grow height $resize_step2
     $mod+Control+Shift+Up resize shrink height $resize_step2
     $mod+Control+Shift+Right resize grow width $resize_step2
-}
-
-#
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
-# bar {
-#     position top
-
-#     # When the status_command prints a new line to stdout, swaybar updates.
-#     # The default just shows the current date and time.
-#     status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
-
-#     colors {
-#         statusline #ffffff
-#         background #323232
-#         inactive_workspace #32323200 #32323200 #5c5c5c
-#     }
-#     tray_output *
-# }
-bar {
-    position top
-    swaybar_command waybar
 }
 
 bindsym --to-code {

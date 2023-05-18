@@ -32,11 +32,22 @@ BIN_FILES =					\
 
 SWAY_BIN_FILES =				\
 	wayland/grimshot			\
+	wayland/sway-session.sh			\
+	wayland/wait-sni-ready			\
 	wayland/sway-dpms			\
 	wayland/sway-switch-layout		\
 	wayland/sway-lock.sh			\
+	wayland/sway-idle.sh			\
 	wayland/sway-quake			\
 	wayland/wf-recorder.sh
+
+SWAY_SYSTEMD_FILES =					\
+	wayland/systemd/sway-idle.service		\
+	wayland/systemd/sway-kbd.service		\
+	wayland/systemd/sway-nm-applet.service		\
+	wayland/systemd/sway-session.target		\
+	wayland/systemd/sway-xdg-autostart.target	\
+	wayland/systemd/sway-autostart.target
 
 SYSTEMD_UNITS = systemd/xkb-layout.service
 SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
@@ -172,7 +183,7 @@ install-waybar:
 	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
 	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
 
-install-sway: install-waybar install-wob install-desktopctl install-dunst install-kitty
+install-sway: install-waybar install-wob install-desktopctl install-dunst install-sway-session
 	$(INSTALL) -d $(DESTDIR)/.config/sway
 	$(INSTALL) -d $(DESTDIR)/.config/sway/config.d
 	$(INSTALL) -d $(DESTDIR)/.config/sway/hostname.d
@@ -180,6 +191,11 @@ install-sway: install-waybar install-wob install-desktopctl install-dunst instal
 	$(INSTALL) -m 0644 wayland/sway/hostname.d/*.conf $(DESTDIR)/.config/sway/hostname.d/
 	$(INSTALL) -m 0644 wayland/sway/config.d/*.conf $(DESTDIR)/.config/sway/config.d/
 	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
+
+install-sway-session:
+	$(INSTALL) -d $(SYSTEMD_USER_PATH)
+	$(INSTALL) -m 0644 $(SWAY_SYSTEMD_FILES) $(SYSTEMD_USER_PATH)
+	systemctl --user daemon-reload
 
 install-desktop-init:
 	$(INSTALL) -d $(DESTDIR)/bin/
@@ -196,10 +212,6 @@ install-xob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
 	$(INSTALL) -m 0644 xob.socket xob.service \
 			$(SYSTEMD_USER_PATH)
-
-install-kitty:
-	$(INSTALL) -d $(DESTDIR)/.config/kitty
-	$(INSTALL) -m 0644 kitty/kitty.conf $(DESTDIR)/.config/kitty
 
 reinstall-wob: install-wob
 	systemctl --user daemon-reload

@@ -1,0 +1,8 @@
+[Unit]
+Description=Sway nm-applet
+
+[Service]
+ExecStart=nm-applet --indicator
+
+[Install]
+WantedBy=sway-graphical-session.target

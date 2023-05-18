@@ -1,0 +1,8 @@
+[Unit]
+Description=Sway keyboard layout manager
+
+[Service]
+ExecStart=swaykbdd
+
+[Install]
+WantedBy=sway-graphical-session.target
