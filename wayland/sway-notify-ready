@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Notify systemd that sway is ready
+if [ -z "$$NOTIFY_SOCKET" ]; then
+   exit 0
+fi
+
+systemctl --user import-environment             \
+          SWAYSOCK                              \
+          DISPLAY                               \
+          I3SOCK                                \
+          WAYLAND_DISPLAY                       \
+          XCURSOR_SIZE                          \
+          XCURSOR_THEME
+
+
+exec systemd-notify --ready
