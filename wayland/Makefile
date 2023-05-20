@@ -22,6 +22,7 @@ SWAY_SYSTEMD_FILES =				\
 	systemd/sway-session-pre.target		\
 	systemd/sway-session.target		\
 	systemd/sway-xdg-autostart.target	\
+	systemd/sway-wait-sni-ready.service	\
 	systemd/wayland-session-pre.target	\
 	systemd/wayland-session.target
 

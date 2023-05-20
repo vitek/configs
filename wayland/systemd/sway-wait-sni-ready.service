@@ -1,0 +1,6 @@
+[Unit]
+Description=Wait for SNI to become ready
+
+[Service]
+Type=oneshot
+ExecStart=/home/vitja/bin/wait-sni-ready
