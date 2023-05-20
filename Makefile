@@ -1,9 +1,7 @@
-GCONFTOOL = gconftool-2
-INSTALL   = install
-PYTHON3   = $(firstword $(shell which python3.9 python3.8 python3.7 python3))
-EMACS     = emacs
+include Makefile.common
 
-DESTDIR   = $(HOME)
+GCONFTOOL = gconftool-2
+EMACS     = emacs
 
 I3_DESTDIR = $(DESTDIR)/.config/i3
 
@@ -30,27 +28,7 @@ BIN_FILES =					\
 	bin/xkb-layout				\
 	bin/xml-pp
 
-SWAY_BIN_FILES =				\
-	wayland/grimshot			\
-	wayland/sway-session.sh			\
-	wayland/wait-sni-ready			\
-	wayland/sway-dpms			\
-	wayland/sway-switch-layout		\
-	wayland/sway-lock.sh			\
-	wayland/sway-idle.sh			\
-	wayland/sway-quake			\
-	wayland/wf-recorder.sh
-
-SWAY_SYSTEMD_FILES =					\
-	wayland/systemd/sway-idle.service		\
-	wayland/systemd/sway-kbd.service		\
-	wayland/systemd/sway-nm-applet.service		\
-	wayland/systemd/sway-session.target		\
-	wayland/systemd/sway-xdg-autostart.target	\
-	wayland/systemd/sway-autostart.target
-
 SYSTEMD_UNITS = systemd/xkb-layout.service
-SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
 
 default:
 
@@ -178,35 +156,12 @@ install-polybar:
 	$(INSTALL) -d $(DESTDIR)/.config/polybar
 	$(INSTALL) -m 0644 polybar.ini $(DESTDIR)/.config/polybar/config.ini
 
-install-waybar:
-	$(INSTALL) -d $(DESTDIR)/.config/waybar
-	$(INSTALL) -m 0644 wayland/waybar/config $(DESTDIR)/.config/waybar/
-	$(INSTALL) -m 0644 wayland/waybar/style.css $(DESTDIR)/.config/waybar/
-
-install-sway: install-waybar install-wob install-desktopctl install-dunst install-sway-session
-	$(INSTALL) -d $(DESTDIR)/.config/sway
-	$(INSTALL) -d $(DESTDIR)/.config/sway/config.d
-	$(INSTALL) -d $(DESTDIR)/.config/sway/hostname.d
-	$(INSTALL) -m 0644 wayland/sway/config $(DESTDIR)/.config/sway/
-	$(INSTALL) -m 0644 wayland/sway/hostname.d/*.conf $(DESTDIR)/.config/sway/hostname.d/
-	$(INSTALL) -m 0644 wayland/sway/config.d/*.conf $(DESTDIR)/.config/sway/config.d/
-	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
-
-install-sway-session:
-	$(INSTALL) -d $(SYSTEMD_USER_PATH)
-	$(INSTALL) -m 0644 $(SWAY_SYSTEMD_FILES) $(SYSTEMD_USER_PATH)
-	systemctl --user daemon-reload
+install-sway: install-desktop-init
+	$(MAKE) -C wayland install-sway
 
 install-desktop-init:
 	$(INSTALL) -d $(DESTDIR)/bin/
 	$(INSTALL) -m 0755 bin/desktop-init.sh $(DESTDIR)/bin/
-
-install-wob:
-	$(INSTALL) -d $(SYSTEMD_USER_PATH)
-	$(INSTALL) -m 0644 wayland/wob/wob.socket wayland/wob/wob.service \
-			$(SYSTEMD_USER_PATH)
-	$(INSTALL) -d $(DESTDIR)/.config/wob
-	$(INSTALL) -m 0644 wayland/wob/wob.ini $(DESTDIR)/.config/wob
 
 install-xob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
@@ -216,14 +171,6 @@ install-xob:
 reinstall-wob: install-wob
 	systemctl --user daemon-reload
 	systemctl --user restart wob.service
-
-install-desktopctl:
-	$(INSTALL) -d $(DESTDIR)/bin
-	$(INSTALL) -m 0755 wayland/desktopctl $(DESTDIR)/bin
-
-install-dunst:
-	$(INSTALL) -d $(DESTDIR)/.config/dunst/
-	$(INSTALL) -m 0644 wayland/dunstrc $(DESTDIR)/.config/dunst/dunstrc
 
 install-qt:
 	$(INSTALL) -d $(DESTDIR)/.config/qt5ct

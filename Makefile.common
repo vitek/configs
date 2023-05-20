@@ -1,0 +1,4 @@
+INSTALL   = install
+DESTDIR   = $(HOME)
+SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
+PYTHON3   = $(firstword $(shell which python3.9 python3.8 python3.7 python3))
