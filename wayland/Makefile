@@ -14,6 +14,7 @@ SWAY_BIN_FILES =				\
 	wf-recorder.sh
 
 SWAY_SYSTEMD_FILES =				\
+	systemd/gnome-keyring-daemon.service	\
 	systemd/sway-autostart.target		\
 	systemd/sway-idle.service		\
 	systemd/sway-kbd.service		\
