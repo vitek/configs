@@ -6,31 +6,43 @@
 # Read `man 5 sway` for a complete reference.
 
 # autostart
+# Fix D-Bus activation
 exec {
-     systemctl --user import-environment \
-         DISPLAY                         \
-         SWAYSOCK                        \
-         WAYLAND_DISPLAY                 \
-         PATH                            \
-         XDG_CURRENT_DESKTOP=sway
-
-     # Fix D-Bus activation
      dbus-update-activation-environment --systemd --all
-     dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+     test -n "$$NOTIFY_SOCKET" && systemctl --user import-environment SWAYSOCK \
+       					 DISPLAY \
+					 I3SOCK \
+					 WAYLAND_DISPLAY \
+					 XCURSOR_SIZE \
+					 XCURSOR_THEME \
+                                         && systemd-notify --ready
+}
 
-     systemctl --user start emacs-29-vcs.service
+exec {
+#      systemctl --user import-environment \
+#          DISPLAY                         \
+#          SWAYSOCK                        \
+#          WAYLAND_DISPLAY                 \
+#          PATH                            \
+#          XDG_CURRENT_DESKTOP=sway
 
-     # GNOME Keyring and SSH agent
-     gnome-keyring-daemon
+#      # Fix D-Bus activation
+#      dbus-update-activation-environment --systemd --all
+#      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
-     nm-applet --indicator
+#      systemctl --user start emacs-29-vcs.service
 
-     # per-window layout
-     swaykbdd
+      # GNOME Keyring and SSH agent
+      gnome-keyring-daemon
 
-     systemctl --user start blueman-applet
+#      nm-applet --indicator
 
-     ~/bin/desktop-init.sh
+#      # per-window layout
+#      swaykbdd
+
+#      systemctl --user start blueman-applet
+
+      ~/bin/desktop-init.sh
 }
 
 # Theme setup

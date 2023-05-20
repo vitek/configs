@@ -2,6 +2,7 @@
 
 import argparse
 import dataclasses
+import functools
 import os
 import pathlib
 import subprocess
@@ -37,35 +38,48 @@ class WhenEnv(When):
     variable: str
     value: str
 
-    def __bool__(self):
+    @functools.cached_property
+    def _result_value(self):
         return os.getenv(self.variable) == self.value
+
+    def __bool__(self):
+        return self._result_value
 
 
 @dataclasses.dataclass(frozen=True)
 class BackgroundRule:
-    path: pathlib.Path
+    files: typing.List[pathlib.Path]
     mode: str = 'stretch'
     when: typing.Optional[typing.List[When]] = None
 
 
 WHEN_SWAY = WhenEnv('XDG_SESSION_DESKTOP', 'sway')
+WHEN_I3 = WhenEnv('XDG_SESSION_DESKTOP', 'i3')
 
 BG_RULES = [
     BackgroundRule(
-        path=pathlib.Path('~/.config/sway/wallpaper.jpeg'),
+        files=[
+            pathlib.Path('~/.config/sway/wallpaper.jpeg'),
+            pathlib.Path('~/.config/sway/wallpaper.jpg'),
+            pathlib.Path('~/.config/sway/wallpaper.png'),
+        ],
         when=[WHEN_SWAY],
     ),
     BackgroundRule(
-        path=pathlib.Path('~/.config/sway/wallpaper.jpg'),
+        files=[
+            pathlib.Path('~/.config/i3/wallpaper.jpeg'),
+            pathlib.Path('~/.config/i3/wallpaper.jpg'),
+            pathlib.Path('~/.config/i3/wallpaper.png'),
+        ],
+        when=[WHEN_I3],
     ),
     BackgroundRule(
-        path=pathlib.Path('~/.config/sway/wallpaper.png'),
+        files=[
+            pathlib.Path('~/.config/my-desktop/wallpaper.jpeg'),
+            pathlib.Path('~/.config/my-desktop/wallpaper.jpg'),
+            pathlib.Path('~/.config/my-desktop/wallpaper.png'),
+        ],
     ),
-    BackgroundRule(
-        path=pathlib.Path(
-            '/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png'
-        ),
-    )
 ]
 
 
@@ -186,13 +200,14 @@ def brightness_down(args):
 
 def bg_image(args):
     for rule in BG_RULES:
-        path = rule.path.expanduser()
-        if not path.exists():
-            continue
-        if rule.when and not all(rule.when):
-            break
-        print(path)
-        break
+        for path in rule.files:
+            path = path.expanduser()
+            if not path.exists():
+                continue
+            if rule.when and not all(rule.when):
+                break
+            print(path)
+            return
 
 
 def main():
@@ -233,8 +248,6 @@ def main():
 
     args = parser.parse_args()
     args.handler(args)
-
-
 
 if __name__ == '__main__':
     main()
