@@ -1,4 +1,10 @@
 INSTALL   = install
 DESTDIR   = $(HOME)
 SYSTEMD_USER_PATH = $(DESTDIR)/.config/systemd/user/
-PYTHON3   = $(firstword $(shell which python3.9 python3.8 python3.7 python3))
+PYTHON3   = $(firstword $(shell which python3.9 python3.8 python3.7 python3 2> /dev/null))
+
+ROOTDIR = $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+%.service: %.service.in
+	$(PYTHON3) $(ROOTDIR)/substitute.py -i $< -o $@ --\
+		"HOME=$(DESTDIR)" "PYTHON3=$(PYTHON3)"

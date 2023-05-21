@@ -5,6 +5,8 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+exec dbus-update-activation-environment --systemd --all
+
 # Theme setup
 set {
     # Interfaces

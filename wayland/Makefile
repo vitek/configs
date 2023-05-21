@@ -17,6 +17,7 @@ SWAY_SYSTEMD_FILES =				\
 	systemd/gnome-keyring-daemon.service	\
 	systemd/sway-autostart.target		\
 	systemd/sway-idle.service		\
+	systemd/sway-lock.service		\
 	systemd/sway-kbd.service		\
 	systemd/sway-nm-applet.service		\
 	systemd/sway.service			\
@@ -36,7 +37,7 @@ install-sway: install-waybar install-wob install-desktopctl install-dunst instal
 	$(INSTALL) -m 0644 sway/config.d/*.conf $(DESTDIR)/.config/sway/config.d/
 	$(INSTALL) -m 0755 $(SWAY_BIN_FILES) $(DESTDIR)/bin/
 
-install-sway-session:
+install-sway-session: $(SWAY_SYSTEMD_FILES)
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
 	$(INSTALL) -m 0644 $(SWAY_SYSTEMD_FILES) $(SYSTEMD_USER_PATH)
 	systemctl --user daemon-reload
@@ -60,3 +61,6 @@ install-desktopctl:
 install-dunst:
 	$(INSTALL) -d $(DESTDIR)/.config/dunst/
 	$(INSTALL) -m 0644 dunstrc $(DESTDIR)/.config/dunst/dunstrc
+
+clean:
+	rm -f systemd/sway-lock.service

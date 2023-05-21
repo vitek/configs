@@ -1,0 +1,6 @@
+[Unit]
+Description=Sway lock
+
+[Service]
+Type=oneshot
+ExecStart=@HOME@/bin/sway-lock.sh

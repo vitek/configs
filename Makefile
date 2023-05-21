@@ -304,8 +304,5 @@ ssh-deploy: configs.tar.gz
 		cat $< | ssh $$hostname tar -zxf - -C ~ || exit 1; \
 	done
 
-%.service: %.service.in
-	$(PYTHON3) substitute.py -i $< -o $@ --\
-		"HOME=$(DESTDIR)" "PYTHON3=$(PYTHON3)"
-
 clean: clean-arc
+	$(MAKE) -C wayland clean
