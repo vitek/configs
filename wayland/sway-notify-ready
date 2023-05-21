@@ -1,10 +1,6 @@
 #!/bin/sh
 
-# Notify systemd that sway is ready
-if [ -z "$$NOTIFY_SOCKET" ]; then
-   exit 0
-fi
-
+# Initialize environment
 systemctl --user import-environment             \
           SWAYSOCK                              \
           DISPLAY                               \
@@ -13,5 +9,11 @@ systemctl --user import-environment             \
           XCURSOR_SIZE                          \
           XCURSOR_THEME
 
+# Notify systemd that sway is ready
+if [ -z "$NOTIFY_SOCKET" ]; then
+    echo "No notify socket available, nothing to do"
+    exit 0
+fi
 
+echo "Going to notify systemd"
 exec systemd-notify --ready
