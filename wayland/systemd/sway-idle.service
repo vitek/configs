@@ -1,8 +1,0 @@
-[Unit]
-Description=Sway idle script
-
-[Service]
-ExecStart=/home/vitja/bin/sway-idle.sh
-
-[Install]
-WantedBy=sway-graphical-session.target

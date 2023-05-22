@@ -1,6 +1,6 @@
 #!/bin/sh
 
-LOCK_CMD="systemctl --user start sway-lock.service"
+LOCK_CMD="sway-lock.sh"
 
 exec swayidle "$@" -w                                           \
          lock         "$LOCK_CMD"                               \

@@ -16,8 +16,6 @@ SWAY_BIN_FILES =				\
 SWAY_SYSTEMD_FILES =				\
 	systemd/gnome-keyring-daemon.service	\
 	systemd/sway-autostart.target		\
-	systemd/sway-idle.service		\
-	systemd/sway-lock.service		\
 	systemd/sway-kbd.service		\
 	systemd/sway-nm-applet.service		\
 	systemd/sway.service			\
