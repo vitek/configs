@@ -959,6 +959,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
    ;; window control
    ([C-prior] . previous-buffer)
    ([C-next]  . next-buffer)
+   ([Back] . previous-buffer)
+   ([Forward]  . next-buffer)
    ;;("M-<f5>"  . modus-themes-toggle)
    )
   :config
