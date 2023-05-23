@@ -1,0 +1,11 @@
+#!/bin/sh
+
+run_menu() {
+    dmenu_path | dmenu -fn 'Noto Sans-12'
+}
+
+cmd=$(run_menu)
+
+if [ -n "$cmd" ]; then
+    exec $cmd
+fi

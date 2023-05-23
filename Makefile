@@ -3,7 +3,7 @@ include Makefile.common
 GCONFTOOL = gconftool-2
 EMACS     = emacs
 
-I3_DESTDIR = $(DESTDIR)/.config/i3
+I3_DESTDIR = $(CONFIGDIR)/i3
 
 AWESOME_FILES =					\
 	awesome/rc.lua				\
@@ -100,8 +100,8 @@ install-vim:
 
 install-misc: install-screen install-tmux
 	$(INSTALL) -m 0644 pylintrc $(DESTDIR)/.pylintrc
-	$(INSTALL) -d $(DESTDIR)/.config
-	$(INSTALL) -m 0644 flake8 $(DESTDIR)/.config/flake8
+	$(INSTALL) -d $(CONFIGDIR)
+	$(INSTALL) -m 0644 flake8 $(CONFIGDIR)/flake8
 
 install-screen:
 	$(INSTALL) -m 0644 screenrc $(DESTDIR)/.screenrc
@@ -115,19 +115,19 @@ install-gconf:
 	$(GCONFTOOL) --set /apps/gnome-terminal/profiles/Default/scrollbar_position --type string hidden
 
 install-awesome: install-x11-utils
-	$(INSTALL) -d $(DESTDIR)/.config/awesome
-	$(INSTALL) -m 0644 $(AWESOME_FILES) $(DESTDIR)/.config/awesome/
+	$(INSTALL) -d $(CONFIGDIR)/awesome
+	$(INSTALL) -m 0644 $(AWESOME_FILES) $(CONFIGDIR)/awesome/
 	$(INSTALL) -m 0644 awesome/gnomerc $(DESTDIR)/.gnomerc
-	$(INSTALL) -d $(DESTDIR)/.config/awesome/apw
+	$(INSTALL) -d $(CONFIGDIR)/awesome/apw
 	$(INSTALL) -m 0644 awesome/apw/widget.lua awesome/apw/pulseaudio.lua \
-		$(DESTDIR)/.config/awesome/apw
-	$(INSTALL) -d $(DESTDIR)/.config/awesome/scripts
-	@if [ -e $(DESTDIR)/.config/awesome/scripts/start.sh ]; then	\
+		$(CONFIGDIR)/awesome/apw
+	$(INSTALL) -d $(CONFIGDIR)/awesome/scripts
+	@if [ -e $(CONFIGDIR)/awesome/scripts/start.sh ]; then	\
 		echo "Awesome startup script already exists";		\
 	else								\
 		echo "Installing awesom startup script template";	\
 		$(INSTALL) -m 0755 awesome/scripts/start.sh		\
-			$(DESTDIR)/.config/awesome/scripts/start.sh;	\
+			$(CONFIGDIR)/awesome/scripts/start.sh;	\
 	fi
 
 i3-reload: install-i3
@@ -140,28 +140,28 @@ install-i3: install-xob install-i3status install-polybar install-x11-utils insta
 	$(INSTALL) -m 0644 i3/config $(I3_DESTDIR)
 	$(INSTALL) -m 0644 i3/hostname.d/*.conf $(I3_DESTDIR)/hostname.d/
 	$(INSTALL) -m 0644 i3/config.d/*.conf $(I3_DESTDIR)/config.d/
-	$(INSTALL) -m 0755 i3/xkb-layout.py $(DESTDIR)/bin/i3-xkb-layout
-	$(INSTALL) -m 0755 i3/i3-switch-layout $(DESTDIR)/bin/
-	$(INSTALL) -m 0755 i3/i3-lock $(DESTDIR)/bin/
+	$(INSTALL) -m 0755 i3/xkb-layout.py $(BINDIR)/i3-xkb-layout
+	$(INSTALL) -m 0755 i3/i3-switch-layout $(BINDIR)/
+	$(INSTALL) -m 0755 i3/i3-lock $(BINDIR)/
 
 install-i3status:
-	$(INSTALL) -d $(DESTDIR)/.config/i3status
-	$(INSTALL) -m 0644 i3/status/config $(DESTDIR)/.config/i3status/
+	$(INSTALL) -d $(CONFIGDIR)/i3status
+	$(INSTALL) -m 0644 i3/status/config $(CONFIGDIR)/i3status/
 
 install-picom:
-	$(INSTALL) -d $(DESTDIR)/.config/
-	$(INSTALL) -m 0644 picom.conf $(DESTDIR)/.config/picom.conf
+	$(INSTALL) -d $(CONFIGDIR)/
+	$(INSTALL) -m 0644 picom.conf $(CONFIGDIR)/picom.conf
 
 install-polybar:
-	$(INSTALL) -d $(DESTDIR)/.config/polybar
-	$(INSTALL) -m 0644 polybar.ini $(DESTDIR)/.config/polybar/config.ini
+	$(INSTALL) -d $(CONFIGDIR)/polybar
+	$(INSTALL) -m 0644 polybar.ini $(CONFIGDIR)/polybar/config.ini
 
 install-sway: install-desktop-init
 	$(MAKE) -C wayland install-sway
 
 install-desktop-init:
-	$(INSTALL) -d $(DESTDIR)/bin/
-	$(INSTALL) -m 0755 bin/desktop-init.sh $(DESTDIR)/bin/
+	$(INSTALL) -d $(BINDIR)/
+	$(INSTALL) -m 0755 bin/desktop-init.sh $(BINDIR)/
 
 install-xob:
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
@@ -173,8 +173,8 @@ reinstall-wob: install-wob
 	systemctl --user restart wob.service
 
 install-qt:
-	$(INSTALL) -d $(DESTDIR)/.config/qt5ct
-	$(INSTALL) -m 0644 qt/qt5ct.conf $(DESTDIR)/.config/qt5ct/
+	$(INSTALL) -d $(CONFIGDIR)/qt5ct
+	$(INSTALL) -m 0644 qt/qt5ct.conf $(CONFIGDIR)/qt5ct/
 	$(INSTALL) -d $(DESTDIR)/.icons/default/
 	$(INSTALL) -m 0644 icons/index.theme $(DESTDIR)/.icons/default/
 
@@ -183,15 +183,15 @@ restart-awesome: install-awesome
 	awesome --replace
 
 install-compton:
-	$(INSTALL) -d $(DESTDIR)/.config
-	$(INSTALL) -m 0644 awesome/compton.conf $(DESTDIR)/.config/
+	$(INSTALL) -d $(CONFIGDIR)
+	$(INSTALL) -m 0644 awesome/compton.conf $(CONFIGDIR)/
 
 install-x11-utils:
-	$(INSTALL) -d $(DESTDIR)/bin
+	$(INSTALL) -d $(BINDIR)
 	$(INSTALL) -m 0644 xbindkeysrc $(DESTDIR)/.xbindkeysrc
-	$(INSTALL) -m 0755 bin/scrot-area $(DESTDIR)/bin
-	$(INSTALL) -m 0755 bin/zoom-mute $(DESTDIR)/bin
-	$(INSTALL) -m 0755 bin/x11-display-ctl $(DESTDIR)/bin
+	$(INSTALL) -m 0755 bin/scrot-area $(BINDIR)
+	$(INSTALL) -m 0755 bin/zoom-mute $(BINDIR)
+	$(INSTALL) -m 0755 bin/x11-display-ctl $(BINDIR)
 
 install-bashrc:
 	$(INSTALL) -m 0644 inputrc $(DESTDIR)/.inputrc
@@ -202,8 +202,8 @@ install-bashrc:
 	$(INSTALL) -m 0644 bash.d/*.bash $(DESTDIR)/.bash.d
 
 install-bin:
-	$(INSTALL) -d $(DESTDIR)/bin
-	$(INSTALL) -m 0755 $(BIN_FILES) $(DESTDIR)/bin/
+	$(INSTALL) -d $(BINDIR)
+	$(INSTALL) -m 0755 $(BIN_FILES) $(BINDIR)/
 
 install-ubuntu-extra:
 	python installpkgs.py ubuntu-packages
@@ -242,10 +242,10 @@ install-systemd: install-bin install-systemd-units
 install-ya: install-arc
 
 install-arc: ya/arc ya/arc-bash-completion
-	$(INSTALL) -d $(DESTDIR)/bin
-	$(INSTALL) -m 0755 ya/arc $(DESTDIR)/bin
-	$(INSTALL) -d $(DESTDIR)/.config/systemd/user/
-	$(INSTALL) -m 0644 ya/arc.service $(DESTDIR)/.config/systemd/user/
+	$(INSTALL) -d $(BINDIR)
+	$(INSTALL) -m 0755 ya/arc $(BINDIR)
+	$(INSTALL) -d $(SYSTEMD_USER_PATH)
+	$(INSTALL) -m 0644 ya/arc.service $(SYSTEMD_USER_PATH)
 	$(INSTALL) -d $(DESTDIR)/.local/share/bash-completion/completions/
 	$(INSTALL) -m 0644 ya/arc-bash-completion $(DESTDIR)/.local/share/bash-completion/completions/arc
 	$(INSTALL) -d $(DESTDIR)/.bash.d
@@ -264,12 +264,12 @@ clean-arc:
 	rm -f ya/arc ya/arc-bash-completion
 
 install-schroot:
-	$(INSTALL) -d $(DESTDIR)/bin
-	$(INSTALL) -m 0755 ya/schroot-session-helper $(DESTDIR)/bin/
-	$(INSTALL) -m 0755 ya/schroot-session-end $(DESTDIR)/bin/
-	ln -sf schroot-session-helper $(DESTDIR)/bin/bionic
-	ln -sf schroot-session-helper $(DESTDIR)/bin/xenial
-	ln -sf schroot-session-helper $(DESTDIR)/bin/focal
+	$(INSTALL) -d $(BINDIR)
+	$(INSTALL) -m 0755 ya/schroot-session-helper $(BINDIR)/
+	$(INSTALL) -m 0755 ya/schroot-session-end $(BINDIR)/
+	ln -sf schroot-session-helper $(BINDIR)/bionic
+	ln -sf schroot-session-helper $(BINDIR)/xenial
+	ln -sf schroot-session-helper $(BINDIR)/focal
 	sudo $(INSTALL) -m 0755 ya/schroot-mount.sh /etc/schroot/setup.d/99mount-home
 
 .PHONY: diff
