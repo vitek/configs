@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="usb", ENV{PRODUCT}=="18d1/4ee2/414", RUN+="/bin/systemctl start mtp.service"
+ACTION=="remove", SUBSYSTEM=="usb", ENV{PRODUCT}=="18d1/4ee2/414", RUN+="/bin/systemctl stop mtp.service"

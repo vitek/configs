@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount MTP plyaer
+
+[Service]
+User=vitja
+ExecStart=/usr/bin/go-mtpfs /home/vitja/fiio
+ExecStop=fusermount -uz /home/vitja/fiio
+Type=simple
+
+[Install]
+WantedBy=default.target
