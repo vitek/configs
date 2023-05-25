@@ -38,7 +38,7 @@ install-sway: install-waybar install-wob install-desktopctl install-dunst instal
 
 install-sway-dpms:
 	$(INSTALL) -d $(BINDIR)
-	$(INSTALL) -m 0755 sway-dpms.sh $(BINDIR)/sway-dpms
+	$(INSTALL) -m 0755 sway-dpms $(BINDIR)/sway-dpms
 
 install-sway-session: $(SWAY_SYSTEMD_FILES)
 	$(INSTALL) -d $(SYSTEMD_USER_PATH)
