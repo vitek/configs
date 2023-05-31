@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+
+import pathlib
+import socket
+import subprocess
+
+"""
+mchome.local
+mchome-vpn
+"""
+
+ETC_HOSTS = pathlib.Path('/etc/hosts')
+
+
+MARK_BEGIN = '## HOSTD BEGIN'
+MARK_END = '## HOSTD END'
+
+
+class Section:
+    def __init__(self):
+        self.parts = []
+
+    def __str__(self):
+        return '\n'.join([MARK_BEGIN, *self.parts, MARK_END, ''])
+
+
+class EtcHosts:
+    def __init__(self, content, parts):
+        self.content = content
+        self.parts = tuple(parts)
+
+    def render(self):
+        return '\n'.join(str(part) for part in self.parts)
+
+
+def read_etc_hosts():
+    expectations = iter([MARK_BEGIN, MARK_END, None])
+    expected = next(expectations)
+
+    section = Section()
+    parts = []
+
+    content = ETC_HOSTS.read_text()
+    for line in content.splitlines():
+        if line == expected:
+            if expected == MARK_END:
+                parts.append(section)
+            expected = next(expectations)
+        elif expected == MARK_END:
+            section.parts.append(line)
+        else:
+            parts.append(line)
+    if expected:
+        parts.append(section)
+    return EtcHosts(content, parts), section
+
+
+def nmcli_active():
+    output = subprocess.check_output([
+        'nmcli', '-t', 'connection', 'show', '--active'], text=True
+    )
+    active = set()
+    for line in output.splitlines():
+        name, *_ = line.split(':')
+        active.add(name)
+    return active
+
+
+def update_hostd_section(section):
+    active_connections = nmcli_active()
+    if 'Ucom7514_5G' in active_connections:
+        hostname = 'mchome.local'
+    elif 'jam' in active_connections:
+        hostname = 'mchome-vpn'
+    else:
+        hostname = None
+    section.parts = []
+    if hostname:
+        try:
+            address = socket.gethostbyname(hostname)
+        except socket.gaierror:
+            return
+        section.parts.append(
+            f'{address} mchome'
+        )
+
+
+def main():
+    etc_hosts, section = read_etc_hosts()
+    update_hostd_section(section)
+    content = etc_hosts.render()
+    if content != etc_hosts.content:
+        ETC_HOSTS.write_text(content)
+        print(f'Wrote {ETC_HOSTS}...')
+
+
+if __name__ == '__main__':
+    main()
