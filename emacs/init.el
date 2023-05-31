@@ -136,7 +136,8 @@
 (custom-set-faces
  '(whitespace-trailing ((t (:background "Red"))) 'now)
  '(whitespace-tab ((t (:background "#433" :inverse-video nil))) 'now)
- '(whitespace-line ((t (:background "gray"))) 'now))
+ '(whitespace-line ((t (:background "gray"))) 'now)
+ '(aw-leading-char-face ((t (:height 1.0))) 'now))
 
 (defun set-executable (key choices)
   (let ((value (seq-find 'executable-find choices)))
@@ -189,7 +190,7 @@
                 '(prog-mode text-mode cmake-mode)))
 
 ;; Color theme
-(load-theme 'zenburn t)
+;;(load-theme 'zenburn t)
 ;; (use-package color-theme-modern
 ;;   :init
 ;;   ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -961,12 +962,23 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
    ([C-next]  . next-buffer)
    ([Back] . previous-buffer)
    ([Forward]  . next-buffer)
-   ;;("M-<f5>"  . modus-themes-toggle)
-   )
+   ("M-<f5>"  . modus-themes-toggle))
   :config
-  ;; (setq
-  ;;  modus-themes-mode-line '(borderless (padding . 1) (height . 0.9)))
-  ;; (load-theme 'modus-vivendi t)  ;; OR (load-theme 'modus-operandi)
+
+  (when window-system
+      (dolist (mode '(prog-mode-hook text-mode-hook cmake-mode-hook))
+        (add-hook mode #'hl-line-mode)))
+
+  (setq mode-line-position-column-line-format '(" %l:%c "))
+
+  (setq modus-themes-common-palette-overrides
+        `(
+          ;; From the section "Make the mode line borderless"
+          (border-mode-line-active unspecified)
+          (border-mode-line-inactive unspecified)))
+  (setq modus-themes-to-toggle '(modus-vivendi-tinted
+                                 modus-operandi-tinted))
+  (load-theme (car modus-themes-to-toggle) t)
 )
 
 (use-package goto-addr
@@ -987,6 +999,12 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :defer t
   :config
   (setq eglot-extend-to-xref  t))
+
+;; (use-package nano-modeline
+;;   :config
+;;   (setq nano-modeline-position 'bottom
+;;         nano-modeline-space-top 0.0
+;;         nano-modeline-space-bottom 0.0))
 
 (if window-system
     (progn

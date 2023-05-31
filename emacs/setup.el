@@ -85,6 +85,7 @@
     i3wm-config-mode
     ivy-pass
     keycast
+    ;; nano-modeline
     pass
     pdf-tools
     telega
