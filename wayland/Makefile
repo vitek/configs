@@ -2,15 +2,16 @@ include ../Makefile.common
 
 SWAY_BIN_FILES =				\
 	grimshot				\
-	sway-session.sh				\
-	wait-sni-ready				\
-	sway-switch-layout			\
-	sway-lock.sh				\
-	sway-idle.sh				\
-	sway-quake				\
-	sway-notify-ready			\
-	sway-user-service			\
 	launcher-menu				\
+	sway-emacs				\
+	sway-idle.sh				\
+	sway-lock.sh				\
+	sway-notify-ready			\
+	sway-quake				\
+	sway-session.sh				\
+	sway-switch-layout			\
+	sway-user-service			\
+	wait-sni-ready				\
 	wf-recorder.sh
 
 SWAY_SYSTEMD_FILES =				\

@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import subprocess
+import re
+
+import i3ipc
+
+
+def match_app_id(pattern):
+    def match(window):
+        if window.app_id:
+            return bool(pattern.match(window.app_id))
+    return match
+
+
+def match_visible(window):
+    return window.ipc_data['visible']
+
+
+
+EMACS_MATCH = [
+    (
+        match_app_id(re.compile(r'^emacs.*')),
+        match_visible,
+    ),
+]
+
+
+def match_rule(window, rule):
+    for matcher in rule:
+        if not matcher(window):
+            return False
+    return True
+
+
+def match_window(window, rules):
+    for rule in rules:
+        if match_rule(window, rule):
+            return True
+    return False
+
+
+def find_emacs(tree):
+    matched = []
+    for window in tree:
+        if match_window(window, EMACS_MATCH):
+            matched.append(window)
+    return matched
+
+
+def main():
+    sway = i3ipc.Connection()
+    tree = sway.get_tree()
+    emacs_windows = find_emacs(tree)
+    if not emacs_windows:
+        subprocess.run(['emacsclient', '-cn'])
+    else:
+        to_focus = emacs_windows[0]
+        if len(emacs_windows) > 1:
+            workspace = tree.find_focused().workspace()
+            for window in emacs_windows:
+                if window.workspace().id == workspace.id:
+                    to_focus = window
+                    break
+        to_focus.command('focus')
+
+
+if __name__ == '__main__':
+    main()
