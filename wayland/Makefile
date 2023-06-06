@@ -2,6 +2,7 @@ include ../Makefile.common
 
 SWAY_BIN_FILES =				\
 	grimshot				\
+	headsetctl				\
 	launcher-menu				\
 	sway-emacs				\
 	sway-idle.sh				\

@@ -1,0 +1,41 @@
+#!/bin/sh
+
+HEADSET_CONFIG="$HOME/.config/headset"
+
+help_config() {
+    echo "Please create $HEADSET_CONFIG config file. E.g.:"
+    echo
+    echo "cat > $HEADSET_CONFIG"
+    echo 'ADDRESS="..."'
+}
+
+if [ -f $HEADSET_CONFIG ]; then
+    . $HEADSET_CONFIG
+else
+    exec >&2
+    help_config
+    exit
+fi
+
+if [ -z "$ADDRESS" ]; then
+    exec >&2
+    echo "Error: no ADDRESS variable is set"
+    help_config
+    exit 1
+fi
+
+case "$1" in
+    status)
+        if bluetoothctl devices Connected | grep -q $ADDRESS; then
+            echo Connected
+        else
+            echo Not Connected
+        fi
+        ;;
+    connect)
+        exec bluetoothctl connect $ADDRESS
+        ;;
+    disconnect)
+        exec bluetoothctl disconnect $ADDRESS
+        ;;
+esac
