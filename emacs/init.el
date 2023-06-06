@@ -134,9 +134,9 @@
 (setq log-edit-hook (quote ()))
 
 (custom-set-faces
- '(whitespace-trailing ((t (:background "Red"))) 'now)
- '(whitespace-tab ((t (:background "#433" :inverse-video nil))) 'now)
- '(whitespace-line ((t (:background "gray"))) 'now)
+;; '(whitespace-trailing ((t (:background "Red"))) 'now)
+;; '(whitespace-tab ((t (:background "#433" :inverse-video nil))) 'now)
+;; '(whitespace-line ((t (:background "gray"))) 'now)
  '(aw-leading-char-face ((t (:height 1.0))) 'now))
 
 (defun set-executable (key choices)
@@ -156,7 +156,13 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("stable.melpa" . "https://stable.melpa.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+        ("melpa" . "https://melpa.org/packages/")
+        ( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/")))
+
+(setq package-archive-priorities
+      '(("stable.melpa" . 10)
+         ("gnu"          . 10)
+         ("melpa"        . 10)))
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -968,6 +974,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (when window-system
       (dolist (mode '(prog-mode-hook text-mode-hook cmake-mode-hook))
         (add-hook mode #'hl-line-mode)))
+
+  ;; (eq (frame-parameter nil 'fullscreen) 'fullboth)
 
   (setq mode-line-position-column-line-format '(" %l:%c "))
 

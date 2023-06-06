@@ -32,11 +32,11 @@
 (when (version<= "28" emacs-version)
   (setq package-native-compile t))
 
-;; Workaround for startup interface flickering
-(add-to-list 'default-frame-alist
-              '(background-color . "#3F3F3F"))
-(add-to-list 'default-frame-alist
-              '(foreground-color . "#DCDCCC"))
+;; ;; Workaround for startup interface flickering
+;; (add-to-list 'default-frame-alist
+;;               '(background-color . "#3F3F3F"))
+;; (add-to-list 'default-frame-alist
+;;               '(foreground-color . "#DCDCCC"))
 ;; (add-to-list 'default-frame-alist
 ;;              '(background-color . "#000000"))
 ;; (add-to-list 'default-frame-alist

@@ -6,11 +6,13 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("stable.melpa" . "https://stable.melpa.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
-;; (setq package-archive-priorities
-;;       '(("stable.melpa" . 10)
-;;         ("gnu"          . 5)
-;;         ("melpa"        . 0)))
+        ("melpa" . "https://melpa.org/packages/")
+        ( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/")))
+
+(setq package-archive-priorities
+      '(("stable.melpa" . 10)
+         ("gnu"          . 10)
+         ("melpa"        . 10)))
 
 (defvar bootstrap-packages
   '(delight
