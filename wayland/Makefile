@@ -1,7 +1,6 @@
 include ../Makefile.common
 
 SWAY_BIN_FILES =				\
-	grimshot				\
 	headsetctl				\
 	launcher-menu				\
 	sway-emacs				\
@@ -28,7 +27,9 @@ SWAY_SYSTEMD_FILES =				\
 	systemd/wayland-session-pre.target	\
 	systemd/wayland-session.target
 
-install-sway: install-waybar install-wob install-desktopctl install-dunst install-sway-session install-sway-dpms
+install-sway: install-waybar install-wob install-desktopctl \
+              install-dunst install-sway-session install-sway-dpms \
+              install-swappy
 	$(INSTALL) -d $(CONFIGDIR)/sway
 	$(INSTALL) -d $(CONFIGDIR)/sway/config.d
 	$(INSTALL) -d $(CONFIGDIR)/sway/hostname.d
@@ -66,6 +67,12 @@ install-desktopctl:
 install-dunst:
 	$(INSTALL) -d $(CONFIGDIR)/dunst/
 	$(INSTALL) -m 0644 dunstrc $(CONFIGDIR)/dunst/dunstrc
+
+install-swappy:
+	$(INSTALL) -d $(CONFIGDIR)/swappy
+	$(INSTALL) -m 0644 swappy $(CONFIGDIR)/swappy/config
+	$(INSTALL) -d $(BINDIR)
+	$(INSTALL) -m 0755 swappy-helper.sh $(BINDIR)/swappy-helper.sh
 
 clean:
 	rm -f systemd/sway-lock.service
