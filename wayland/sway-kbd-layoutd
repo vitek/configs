@@ -63,7 +63,6 @@ def sway_layout_daemon_main(sway, args):
             sway_layout_set(sway, layout)
 
     def on_input_event(sway, event):
-        print(event.ipc_data)
         if event.change == 'xkb_layout':
             tree = sway.get_tree()
             focused = tree.find_focused()
@@ -73,7 +72,6 @@ def sway_layout_daemon_main(sway, args):
                 layout_update(sway, focused)
 
     def on_window_focus(sway, event):
-        print(event.ipc_data)
         window_id = event.container.id
         context.last_window = window_id
         tree = sway.get_tree()
@@ -82,7 +80,6 @@ def sway_layout_daemon_main(sway, args):
             layout_update(sway, window)
 
     def on_window_close(sway, event):
-        print(event.ipc_data)
         window_id = event.container.id
         context.window_layout.pop(window_id, None)
         context.last_window = -1
