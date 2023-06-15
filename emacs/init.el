@@ -977,7 +977,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
   ;; (eq (frame-parameter nil 'fullscreen) 'fullboth)
 
-  (setq mode-line-position-column-line-format '(" %l:%c "))
+  (setq mode-line-position-column-line-format '(" %l:%c"))
 
   (setq modus-themes-common-palette-overrides
         `(
