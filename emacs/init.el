@@ -1008,6 +1008,10 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :config
   (setq eglot-extend-to-xref  t))
 
+(use-package telephone-line
+  :config
+  (telephone-line-mode 1))
+
 ;; (use-package nano-modeline
 ;;   :config
 ;;   (setq nano-modeline-position 'bottom

@@ -88,6 +88,7 @@
     ivy-pass
     keycast
     ;; nano-modeline
+    telephone-line
     pass
     pdf-tools
     telega
