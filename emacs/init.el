@@ -36,8 +36,10 @@
 ;; Interface decorations
 (menu-bar-mode -1)
 (when (fboundp 'scroll-bar-mode)
-      (scroll-bar-mode -1))
-(tool-bar-mode -1)
+  (scroll-bar-mode -1))
+
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
 
 ;; Cursor
 (blink-cursor-mode 0)
@@ -181,8 +183,8 @@
            (progn ,body)
            (with-temp-buffer (write-file build-timestamp))))))
   (make-directory build-timestamp-dir :parents)
-  (build-action 'vterm
-                (vterm-module-compile))
+  ;; (build-action 'vterm
+  ;;               (vterm-module-compile))
   (build-action 'all-the-icons
                 (all-the-icons-install-fonts t)))
 
@@ -979,14 +981,15 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
   (setq mode-line-position-column-line-format '(" %l:%c"))
 
-  (setq modus-themes-common-palette-overrides
-        `(
-          ;; From the section "Make the mode line borderless"
-          (border-mode-line-active unspecified)
-          (border-mode-line-inactive unspecified)))
-  (setq modus-themes-to-toggle '(modus-vivendi-tinted
-                                 modus-operandi-tinted))
-  (load-theme (car modus-themes-to-toggle) t)
+  (when window-system
+    (setq modus-themes-common-palette-overrides
+          `(
+            ;; From the section "Make the mode line borderless"
+            (border-mode-line-active unspecified)
+            (border-mode-line-inactive unspecified)))
+    (setq modus-themes-to-toggle '(modus-vivendi-tinted
+                                   modus-operandi-tinted))
+    (load-theme (car modus-themes-to-toggle) t))
 )
 
 (use-package goto-addr
