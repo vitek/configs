@@ -23,6 +23,7 @@ BIN_FILES =					\
 	bin/histogram				\
 	bin/json-pp				\
 	bin/terminal				\
+	bin/ssh-auth-sock-watcher		\
 	bin/run-emacsclient			\
 	bin/myemacs                             \
 	bin/xkb-layout				\

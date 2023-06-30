@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+
+import argparse
+import io
+import pathlib
+
+CONFIG_DIR = pathlib.Path('~/.config/ssh-agent-watcher')
+AGENTS_LIST_PATH = CONFIG_DIR / 'agents'
+SSH_AUTH_SOCK = pathlib.Path('~/.ssh/ssh-agent.sock')
+
+
+def is_agent_alive(path):
+    if path.is_socket():
+        return True
+    return False
+
+
+def read_alive_agents_list(path):
+    seen = set()
+    result = []
+    with path.open() as fp:
+        for line in fp:
+            agent_path = pathlib.Path(line.strip())
+            if agent_path in seen:
+                continue
+            if is_agent_alive(agent_path):
+                result.append(agent_path)
+            seen.add(agent_path)
+    return result
+
+
+def read_agents():
+    path = AGENTS_LIST_PATH.expanduser()
+    result = []
+    if path.exists():
+        return read_alive_agents_list(path)
+    return result
+
+
+def write_agents(agents_list):
+    tmp = io.StringIO()
+    for path in agents_list:
+        tmp.write(str(path))
+        tmp.write('\n')
+    config_path = AGENTS_LIST_PATH.expanduser()
+    parent_dir = config_path.parent
+    if not parent_dir.exists():
+        parent_dir.mkdir()
+    config_path.write_text(tmp.getvalue())
+
+
+def register_ssh_agent(args):
+    agents = read_agents()
+    if is_agent_alive(args.path):
+        if args.path not in agents:
+            agents.append(args.path)
+    else:
+        print(f'Is not alive ssh-agent socket {args.path}')
+    write_agents(agents)
+    update_symlink(agents)
+
+
+def update_ssh_auth_sock(args):
+    agents = read_agents()
+    write_agents(agents)
+    update_symlink(agents)
+
+
+def update_symlink(agents):
+    ssh_auth_sock = SSH_AUTH_SOCK.expanduser()
+    if ssh_auth_sock.is_symlink():
+        ssh_auth_sock.unlink()
+    if agents:
+        sock = agents[-1]
+        ssh_auth_sock.symlink_to(sock)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(metavar='command', required=True)
+    command_parser = subparsers.add_parser('register')
+    command_parser.add_argument('path', type=pathlib.Path)
+    command_parser.set_defaults(handler=register_ssh_agent)
+
+    command_parser = subparsers.add_parser('update')
+    command_parser.set_defaults(handler=update_ssh_auth_sock)
+
+    args = parser.parse_args()
+    args.handler(args)
+
+
+if __name__ == '__main__':
+    main()

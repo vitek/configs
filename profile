@@ -31,3 +31,13 @@ if [ "x$XDG_RUNTIME_DIR" != "x" ]; then
     fi
     export SSH_AUTH_SOCK
 fi
+
+# Keep a link to the latest ssh-agent socket
+if [ -n "$SSH_CONNECTION" -a -S "$SSH_AUTH_SOCK" ]; then
+    if [ -n "$TMUX" ]; then
+        SSH_AUTH_SOCK=$HOME/.ssh/ssh-agent.sock
+        ssh-auth-sock-watcher update
+    else
+        ssh-auth-sock-watcher register "$SSH_AUTH_SOCK"
+    fi
+fi
