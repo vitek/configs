@@ -220,10 +220,18 @@
 (use-package rg
   :commands (rg))
 
+(use-package yaml-xref
+  :config
+  (setq yaml-xref-exe (expand-file-name "scripts/yaml-xref" user-emacs-directory))
+  :hook
+  (yaml-mode . (lambda ()
+                 (add-hook 'xref-backend-functions #'yaml-xref-backend nil t))))
+
 (use-package yaml-mode
   :defer t
   :config
   (setq yaml-indent-offset 4))
+
 
 (use-package js
   :defer t

@@ -83,7 +83,9 @@ install-emacs-configs:
 	$(INSTALL) -m 0644 emacs/site-lisp/zoom-frm.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-fns.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/site-lisp/frame-cmds.el $(DESTDIR)/.emacs.d/site-lisp
+	$(INSTALL) -m 0644 emacs/site-lisp/yaml-xref.el $(DESTDIR)/.emacs.d/site-lisp
 	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
+	$(INSTALL) -m 0755 emacs/scripts/yaml-xref $(DESTDIR)/.emacs.d/scripts/yaml-xref
 	rm -f $(DESTDIR)/.emacs.d/site-lisp/git-grep.el* \
 		$(DESTDIR)/.emacs.d/site-lisp/google-c-style.el*
 
