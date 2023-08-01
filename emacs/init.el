@@ -448,17 +448,82 @@
   :config
   (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
-;; company
-(use-package company
-  :ensure t
-  :commands (global-company-mode company-mode company-complete-common)
+;; ;; company
+;; (use-package company
+;;   :ensure t
+;;   :commands (global-company-mode company-mode company-complete-common)
+;;   :config
+;;   (setq company-idle-delay 0.5)
+;;   (setq company-selection-wrap-around t)
+;;   (set-executable 'company-clang-executable
+;;                   '("clang-12" "clang-11" "clang-10" "clang-7"))
+;;   ;;(company-tng-configure-default)
+;;   )
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless))      ; Use orderless
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   orderless))))
+
+  (orderless-matching-styles
+   '(orderless-literal
+     orderless-prefixes
+     orderless-initialism
+     orderless-regexp
+     ;; orderless-flex                       ; Basically fuzzy finding
+     ;; orderless-strict-leading-initialism
+     ;; orderless-strict-initialism
+     ;; orderless-strict-full-initialism
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+   )))
+
+
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.25)
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-exclude-modes'.
+  :init
+  (global-corfu-mode)
+
   :config
-  (setq company-idle-delay 0.5)
-  (setq company-selection-wrap-around t)
-  (set-executable 'company-clang-executable
-                  '("clang-12" "clang-11" "clang-10" "clang-7"))
-  ;;(company-tng-configure-default)
-  )
+  (defun corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+    (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
+                (bound-and-true-p vertico--input))
+      (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+
+  ;; Setup lsp to use corfu for lsp completion
+  (defun kb/corfu-setup-lsp ()
+    "Use orderless completion style with lsp-capf instead of the
+default lsp-passthrough."
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))))
+
 
 ;; lsp-mode setup
 (use-package lsp-mode
@@ -931,34 +996,34 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (("<f9>"  . my-compile)
    ("<f12>" . my-grep)))
 
-(use-package telega
-  :defer t
-  :config
-  (setq telega-emoji-company-backend 'telega-company-emoji)
-  (setq telega-symbol-telegram "tg:")
-  (setq telega-symbol-mode "")
-  ;;(setq telega-symbol-reply "<-")
-  (setq telega-completing-read-function 'ivy-completing-read)
-  (setq telega-chat-input-complete-function 'counsel-company)
-  (add-to-list 'telega-symbols-emojify 'reply)
-  (defun my-telega-chat-mode ()
-    (set (make-local-variable 'company-backends)
-         (append (list telega-emoji-company-backend
-                       'telega-company-username
-                       'telega-company-hashtag)
-                 (when (telega-chat-bot-p telega-chatbuf--chat)
-                   '(telega-company-botcmd))))
-    (company-mode 1))
-  :bind-keymap
-  (("C-c e" . telega-prefix-map))
-  :bind
-  (:map telega-msg-button-map
-        ("к" . telega-msg-reply)
-        ("у" . telega-msg-edit))
-  :delight
-  (telega-chat-mode "Chat" "chat")
-  :hook
-  ((telega-chat-mode . my-telega-chat-mode)))
+;; (use-package telega
+;;   :defer t
+;;   :config
+;;   (setq telega-emoji-company-backend 'telega-company-emoji)
+;;   (setq telega-symbol-telegram "tg:")
+;;   (setq telega-symbol-mode "")
+;;   ;;(setq telega-symbol-reply "<-")
+;;   (setq telega-completing-read-function 'ivy-completing-read)
+;;   (setq telega-chat-input-complete-function 'counsel-company)
+;;   (add-to-list 'telega-symbols-emojify 'reply)
+;;   (defun my-telega-chat-mode ()
+;;     (set (make-local-variable 'company-backends)
+;;          (append (list telega-emoji-company-backend
+;;                        'telega-company-username
+;;                        'telega-company-hashtag)
+;;                  (when (telega-chat-bot-p telega-chatbuf--chat)
+;;                    '(telega-company-botcmd))))
+;;     (company-mode 1))
+;;   :bind-keymap
+;;   (("C-c e" . telega-prefix-map))
+;;   :bind
+;;   (:map telega-msg-button-map
+;;         ("к" . telega-msg-reply)
+;;         ("у" . telega-msg-edit))
+;;   :delight
+;;   (telega-chat-mode "Chat" "chat")
+;;   :hook
+;;   ((telega-chat-mode . my-telega-chat-mode)))
 
 (use-package which-key
   :delight (which-key-mode nil "whitespace")

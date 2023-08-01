@@ -28,8 +28,11 @@
     projectile
     rg
 
-    ;; lsp related
+    ;; completion
     company
+    corfu
+
+    ;; lsp related
     ;;company-lsp
     lsp-mode
     ;;lsp-treemacs
@@ -66,6 +69,7 @@
     ;; ivy
     amx
     counsel
+    orderless
     flx
     ivy
     ivy-hydra
@@ -94,6 +98,8 @@
     telega
     which-key
     zoom
+    vertico
+    marginalia
 
     ;; org-mode
     org-bullets
