@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
+import asyncio
 import re
 
-import i3ipc
+from i3ipc.aio import Connection
 import i3ipc.events
 
 DEFAULT_LAYOUT = 0
@@ -23,93 +24,97 @@ def is_blacklisted(window):
     return False
 
 
-def sway_layout_set(sway, layout):
-    sway.command(f'input "*" xkb_switch_layout {layout}')
+async def i3_layout_set(i3, layout):
+    await i3.command(f'input "*" xkb_switch_layout {layout}')
 
 
-def sway_layout_default(sway):
-    sway_layout_set(sway, 0)
+async def i3_layout_default(i3):
+    await i3_layout_set(i3, 0)
 
 
-def sway_layout_next(sway):
-    sway_layout_set(sway, 'next')
+async def i3_layout_next(i3):
+    await i3_layout_set(i3, 'next')
 
 
-def sway_layout_main(sway, args):
-    tree = sway.get_tree()
+async def i3_layout_main(i3, args):
+    tree = await i3.get_tree()
     focused = tree.find_focused()
     if focused:
         if is_blacklisted(focused):
-            sway_layout_default(sway)
+            await i3_layout_default(i3)
         else:
-            sway_layout_next(sway)
+            await i3_layout_next(i3)
 
 
-def sway_layout_daemon_main(sway, args):
+async def i3_layout_daemon_main(i3, args):
     class context:
         current_layout = -1
         last_window = -1
         window_layout = {}
 
-    def get_desired_layout(window):
+    async def get_desired_layout(window):
         desired = context.window_layout.get(window.id, DEFAULT_LAYOUT)
         if desired != 0 and is_blacklisted(window):
             desired = 0
         return desired
 
-    def layout_update(sway, window):
-        layout = get_desired_layout(window)
+    async def layout_update(i3, window):
+        layout = await get_desired_layout(window)
         if layout != context.window_layout:
-            sway_layout_set(sway, layout)
+            await i3_layout_set(i3, layout)
 
-    def on_input_event(sway, event):
+    async def on_input_event(i3, event):
         if event.change == 'xkb_layout':
-            tree = sway.get_tree()
+            tree = await i3.get_tree()
             focused = tree.find_focused()
             context.current_layout = event.input.xkb_active_layout_index
             if focused:
                 context.window_layout[focused.id] = context.current_layout
-                layout_update(sway, focused)
+                await layout_update(i3, focused)
 
-    def on_window_focus(sway, event):
+    async def on_window_focus(i3, event):
         window_id = event.container.id
         context.last_window = window_id
-        tree = sway.get_tree()
+        tree = await i3.get_tree()
         window = tree.find_by_id(window_id)
         if window:
-            layout_update(sway, window)
+            await layout_update(i3, window)
 
-    def on_window_close(sway, event):
+    async def on_window_close(i3, event):
         window_id = event.container.id
         context.window_layout.pop(window_id, None)
         context.last_window = -1
 
-    sway.on(i3ipc.events.Event.INPUT, on_input_event)
-    sway.on(i3ipc.events.Event.WINDOW_FOCUS, on_window_focus)
-    sway.on(i3ipc.events.Event.WINDOW_CLOSE, on_window_close)
-    sway.main()
+    i3.on(i3ipc.events.Event.INPUT, on_input_event)
+    i3.on(i3ipc.events.Event.WINDOW_FOCUS, on_window_focus)
+    i3.on(i3ipc.events.Event.WINDOW_CLOSE, on_window_close)
+    await i3.main()
+
+
+async def amain(args):
+    i3 = await Connection(auto_reconnect=True).connect()
+    await args.handler(i3, args)
 
 
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(metavar='command')
-    parser.set_defaults(handler=sway_layout_main)
+    parser.set_defaults(handler=i3_layout_main)
 
     command_parser = subparsers.add_parser(
         'daemon',
         description='Per-window layout daemon',
     )
-    command_parser.set_defaults(handler=sway_layout_daemon_main)
+    command_parser.set_defaults(handler=i3_layout_daemon_main)
 
     command_parser = subparsers.add_parser(
         'next',
-        description='Cycle sway layout (default)',
+        description='Cycle i3 layout (default)',
     )
-    command_parser.set_defaults(handler=sway_layout_main)
-
+    command_parser.set_defaults(handler=i3_layout_main)
     args = parser.parse_args()
-    sway = i3ipc.Connection()
-    args.handler(sway, args)
+
+    asyncio.get_event_loop().run_until_complete(amain(args))
 
 
 if __name__ == '__main__':
