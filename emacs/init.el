@@ -664,6 +664,7 @@ default lsp-passthrough."
   (setq ivy-count-format "%d/%d ")
   (setq ivy-re-builders-alist
         '(;;(counsel-find-file . ivy--regex-plus)
+          (counsel-rg . ivy--regex-plus)
           (t . ivy--regex-fuzzy)))
   ;; (setq ivy-initial-inputs-alist
   ;;       `((counsel-find-file . "^")
