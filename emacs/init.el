@@ -291,24 +291,6 @@
   (setq whitespace-style '(face tabs)
         whitespace-line-column 79)
 
-  (defun my-whitespace-column-regexp()
-    (let ((line-column (or whitespace-line-column fill-column)))
-      (format
-       "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.\\).*$"
-       tab-width
-       (1- tab-width)
-       (/ line-column tab-width)
-       (let ((rem (% line-column tab-width)))
-         (if (zerop rem)
-             ""
-           (format ".\\{%d\\}" rem))))))
-
-  (defun my-highlight-column ()
-    (font-lock-add-keywords
-     nil
-     `((,(my-whitespace-column-regexp) 2 whitespace-line prepend))
-     t))
-
   ;; Highlight whitespaces and long strings
   (defun my-highlight-whitespaces ()
     (when (highlight-prog)
@@ -317,8 +299,6 @@
         (whitespace-mode 1)
         (display-fill-column-indicator-mode 1)
         (setq-local show-trailing-whitespace t)
-        ;; Show single column marker
-        ;;(my-highlight-column)
         ))))
   :hook
   ((font-lock-mode . my-highlight-whitespaces)))
