@@ -239,6 +239,7 @@
   (setq js-indent-level 2))
 
 (use-package find-file-in-project :defer t)
+
 (use-package mc-move
   :config
   (global-mc-move-mode)
@@ -638,13 +639,22 @@ default lsp-passthrough."
   :defer t
   :delight
   :config
+
+  (defun my/ivy-regex (pattern)
+    (if (and (> (length pattern) 0)
+             (= (aref pattern 0) ?~))
+        (ivy--regex-fuzzy (substring pattern 1))
+      (ivy--regex pattern)))
+
   (ivy-mode 1)
+
   (setq enable-recursive-minibuffers t)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "%d/%d ")
   (setq ivy-re-builders-alist
         '(;;(counsel-find-file . ivy--regex-plus)
-          (counsel-rg . ivy--regex-plus)
+          (counsel-rg . my/ivy-regex)
+          (counsel-git-grep . my/ivy-regex)
           (t . ivy--regex-fuzzy)))
   ;; (setq ivy-initial-inputs-alist
   ;;       `((counsel-find-file . "^")
