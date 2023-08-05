@@ -655,6 +655,7 @@ default lsp-passthrough."
         '(;;(counsel-find-file . ivy--regex-plus)
           (counsel-rg . my/ivy-regex)
           (counsel-git-grep . my/ivy-regex)
+          (swiper-isearch . my/ivy-regex)
           (t . ivy--regex-fuzzy)))
   ;; (setq ivy-initial-inputs-alist
   ;;       `((counsel-find-file . "^")
@@ -666,6 +667,14 @@ default lsp-passthrough."
   ;; Do not show "./" and "../" in the `counsel-find-file' completion list
   (setq ivy-extra-directories nil)    ;Default value: ("../" "./")
   )
+
+(use-package swiper
+  :bind (("C-s" . swiper-isearch)
+         ("C-r" . swiper-isearch-backward)
+         :map swiper-map
+         ("M-s" . swiper-isearch-toggle)
+         :map isearch-mode-map
+         ("M-s" . swiper-isearch-toggle)))
 
 (use-package ivy-hydra
   :defer t)
