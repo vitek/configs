@@ -95,7 +95,6 @@
     telephone-line
     pass
     pdf-tools
-    telega
     which-key
     zoom
     vertico

@@ -987,35 +987,6 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (("<f9>"  . my-compile)
    ("<f12>" . my-grep)))
 
-;; (use-package telega
-;;   :defer t
-;;   :config
-;;   (setq telega-emoji-company-backend 'telega-company-emoji)
-;;   (setq telega-symbol-telegram "tg:")
-;;   (setq telega-symbol-mode "")
-;;   ;;(setq telega-symbol-reply "<-")
-;;   (setq telega-completing-read-function 'ivy-completing-read)
-;;   (setq telega-chat-input-complete-function 'counsel-company)
-;;   (add-to-list 'telega-symbols-emojify 'reply)
-;;   (defun my-telega-chat-mode ()
-;;     (set (make-local-variable 'company-backends)
-;;          (append (list telega-emoji-company-backend
-;;                        'telega-company-username
-;;                        'telega-company-hashtag)
-;;                  (when (telega-chat-bot-p telega-chatbuf--chat)
-;;                    '(telega-company-botcmd))))
-;;     (company-mode 1))
-;;   :bind-keymap
-;;   (("C-c e" . telega-prefix-map))
-;;   :bind
-;;   (:map telega-msg-button-map
-;;         ("к" . telega-msg-reply)
-;;         ("у" . telega-msg-edit))
-;;   :delight
-;;   (telega-chat-mode "Chat" "chat")
-;;   :hook
-;;   ((telega-chat-mode . my-telega-chat-mode)))
-
 (use-package which-key
   :delight (which-key-mode nil "whitespace")
   :config
