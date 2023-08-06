@@ -18,6 +18,7 @@ SITE_LISP_FILES =				\
 	site-lisp/my.el				\
 	site-lisp/tools.el			\
 	site-lisp/vitja-ivy.el			\
+	site-lisp/vitja-vertico.el		\
 	site-lisp/yaml-xref.el			\
 	site-lisp/zoom-frm.el
 
