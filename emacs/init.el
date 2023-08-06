@@ -424,23 +424,6 @@
   :after flyspell
   :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
 
-(use-package flyspell-correct-ivy
-  :after flyspell-correct
-  :config
-  (setq flyspell-correct-interface #'flyspell-correct-ivy))
-
-;; ;; company
-;; (use-package company
-;;   :ensure t
-;;   :commands (global-company-mode company-mode company-complete-common)
-;;   :config
-;;   (setq company-idle-delay 0.5)
-;;   (setq company-selection-wrap-around t)
-;;   (set-executable 'company-clang-executable
-;;                   '("clang-12" "clang-11" "clang-10" "clang-7"))
-;;   ;;(company-tng-configure-default)
-;;   )
-
 (use-package orderless
   :custom
   (completion-styles '(orderless))      ; Use orderless
@@ -626,142 +609,7 @@ default lsp-passthrough."
   :hook
   ((dired-mode . my-dired-mode-hook)))
 
-;; ;; ido-mode
-;; (use-package ido
-;;   :config
-;;   (setq ido-enable-flex-matching t
-;;         ido-default-buffer-method 'selected-window
-;;         ido-use-virtual-buffers t)
-;;   (ido-mode 1))
-
-;; ivy
-(use-package ivy
-  :defer t
-  :delight
-  :config
-
-  (defun my/ivy-regex (pattern)
-    (if (and (> (length pattern) 0)
-             (= (aref pattern 0) ?~))
-        (ivy--regex-fuzzy (substring pattern 1))
-      (ivy--regex pattern)))
-
-  (ivy-mode 1)
-
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "%d/%d ")
-  (setq ivy-re-builders-alist
-        '(;;(counsel-find-file . ivy--regex-plus)
-          (counsel-rg . my/ivy-regex)
-          (counsel-git-grep . my/ivy-regex)
-          (swiper-isearch . my/ivy-regex)
-          (t . ivy--regex-fuzzy)))
-  ;; (setq ivy-initial-inputs-alist
-  ;;       `((counsel-find-file . "^")
-  ;;         ,@ivy-initial-inputs-alist))
-  (setq ivy-display-style 'fancy)
-  (setq ivy-use-selectable-prompt t)
-  (setq ivy--recompute-index-inhibit t)
-
-  ;; Do not show "./" and "../" in the `counsel-find-file' completion list
-  (setq ivy-extra-directories nil)    ;Default value: ("../" "./")
-  )
-
-(use-package swiper
-  :bind (("C-s" . swiper-isearch)
-         ("C-r" . swiper-isearch-backward)
-         :map swiper-map
-         ("M-s" . swiper-isearch-toggle)
-         :map isearch-mode-map
-         ("M-s" . swiper-isearch-toggle)))
-
-(use-package ivy-hydra
-  :defer t)
-
-;; See https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-lisp/prot-ivy-deprecated-conf.el
-(use-package counsel
-  :config
-  ;;(global-set-key (kbd "M-y") 'counsel-yank-pop)
-
-  ;; see https://github.com/abo-abo/swiper/issues/1333#issuecomment-436960474
-  (defun counsel-find-file-fallback-command ()
-    "Fallback to non-counsel version of current command."
-    (interactive)
-    (when (bound-and-true-p ivy-mode)
-      (ivy-mode -1)
-      (add-hook 'minibuffer-setup-hook
-                'counsel-find-file-fallback-command--enable-ivy))
-    (ivy-set-action
-     (lambda (current-path)
-       (let ((old-default-directory default-directory))
-         (let ((default-directory current-path))
-           (call-interactively 'find-file))
-         (setq default-directory old-default-directory))))
-    (ivy-immediate-done))
-
-  (defun counsel-find-file-fallback-command--enable-ivy ()
-    (remove-hook 'minibuffer-setup-hook
-                 'counsel-find-file-fallback-command--enable-ivy)
-  (ivy-mode t))
-  :after ivy
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x b" . ivy-switch-buffer)
-         ("C-x d" . counsel-dired)
-         ("C-x C-r" . counsel-recentf)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ;;("M-s r" . counsel-rg)
-         ;;("M-s g" . counsel-git-grep)
-         ;;("M-s l" . counsel-find-library)
-         ;;("M-s z" . prot/counsel-fzf-rg-files)
-         ;;:map ivy-minibuffer-map
-         ;;("C-r" . counsel-minibuffer-history)
-         ;;("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
-         ;;("C-SPC" . ivy-restrict-to-matches)))
-         :map counsel-find-file-map
-         ("C-f" . counsel-find-file-fallback-command)))
-
-(use-package all-the-icons-ivy-rich
-  :ensure t
-  :init (all-the-icons-ivy-rich-mode 1))
-
-(use-package ivy-rich
-  :ensure t
-  :init
-  (setq ivy-rich-path-style 'abbreviate)
-
-  (setcdr (assq t ivy-format-functions-alist)
-          #'ivy-format-function-line)
-  (ivy-rich-mode 1))
-
-(use-package ivy-pass
-  :ensure t
-  :bind
-  ("C-c C-p" . ivy-pass))
-
-;; (use-package ivy-posframe
-;;   :ensure t
-;;   :delight
-;;   :config
-;;   (setq posframe-mouse-banish nil)
-;;   ;; (setq ivy-posframe-parameters
-;;   ;;       '((left-fringe . 2)
-;;   ;;         (right-fringe . 2)
-;;   ;;         (internal-border-width . 2)
-;;   ;;         ;; (font . "Iosevka-10.75:hintstyle=hintfull")
-;;   ;;         ))
-;;   ;; (setq ivy-posframe-height-alist
-;;   ;;       '((swiper . 15)
-;;   ;;         (swiper-isearch . 15)
-;;   ;;         (t . 10)))
-;;   ;; (setq ivy-posframe-display-functions-alist
-;;   ;;       '((complete-symbol . ivy-posframe-display-at-point)
-;;   ;;         (swiper . nil)
-;;   ;;         (swiper-isearch . nil)
-;;   ;;         (t . ivy-posframe-display-at-frame-center)))
-;;   :hook (after-init . ivy-posframe-mode))
+(require 'vitja-ivy)
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
@@ -1058,12 +906,6 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 (use-package telephone-line
   :config
   (telephone-line-mode 1))
-
-;; (use-package nano-modeline
-;;   :config
-;;   (setq nano-modeline-position 'bottom
-;;         nano-modeline-space-top 0.0
-;;         nano-modeline-space-bottom 0.0))
 
 (if window-system
     (progn
