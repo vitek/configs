@@ -1,7 +1,6 @@
 include Makefile.common
 
 GCONFTOOL = gconftool-2
-EMACS     = emacs
 
 I3_DESTDIR = $(CONFIGDIR)/i3
 
@@ -70,33 +69,11 @@ install-bzr:
 install-xresources:
 	$(INSTALL) -m 0644 Xresources $(DESTDIR)/.Xresources
 
-install-emacs-configs:
-	$(INSTALL) -d $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -d $(DESTDIR)/.emacs.d/scripts
-	rm -f  $(DESTDIR)/.emacs
-	$(INSTALL) -m 0644 emacs/init.el $(DESTDIR)/.emacs.d/init.el
-	$(INSTALL) -m 0644 emacs/early-init.el $(DESTDIR)/.emacs.d/early-init.el
-	$(INSTALL) -m 0644 emacs/site-lisp/mc-move.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/tools.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/my.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/manual-indent.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/zoom-frm.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/frame-fns.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/frame-cmds.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/site-lisp/yaml-xref.el $(DESTDIR)/.emacs.d/site-lisp
-	$(INSTALL) -m 0644 emacs/scripts/pyimpsort.py $(DESTDIR)/.emacs.d/scripts/pyimpsort.py
-	$(INSTALL) -m 0755 emacs/scripts/yaml-xref $(DESTDIR)/.emacs.d/scripts/yaml-xref
-	rm -f $(DESTDIR)/.emacs.d/site-lisp/git-grep.el* \
-		$(DESTDIR)/.emacs.d/site-lisp/google-c-style.el*
-
-install-emacs: install-xresources install-emacs-configs
-	$(EMACS) --batch --script emacs/setup.el $(DESTDIR)/.emacs.d
+install-emacs: install-xresources
+	$(MAKE) -C emacs install-emacs
 
 install-emacs-norefresh: export EMACS_PACKAGES_REFRESH_SKIP=1
 install-emacs-norefresh: install-emacs
-
-test-emacs:
-	cd emacs/site-lisp && $(EMACS) -batch -f package-initialize -L . -f buttercup-run-discover
 
 install-vim:
 	$(INSTALL) -m 0644 vim/vimrc $(DESTDIR)/.vimrc
