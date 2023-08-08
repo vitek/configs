@@ -60,7 +60,9 @@
  use-dialog-box nil
  use-file-dialog nil
 
+ ;; Visual bell
  visible-bell t
+ ring-bell-function 'ignore
 
  jit-lock-defer-time 0.01
 
