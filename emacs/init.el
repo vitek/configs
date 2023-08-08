@@ -611,7 +611,14 @@ default lsp-passthrough."
   :hook
   ((dired-mode . my-dired-mode-hook)))
 
-(require 'vitja-ivy)
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(if (string= (getenv "EMACS_USE_VERTICO") "1")
+    (require 'vitja-vertico)
+    (require 'vitja-ivy))
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
