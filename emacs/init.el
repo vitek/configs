@@ -447,49 +447,60 @@
    )))
 
 
-(use-package corfu
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  ;; (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.25)
-
-  ;; Enable Corfu only for certain modes.
-  ;; :hook ((prog-mode . corfu-mode)
-  ;;        (shell-mode . corfu-mode)
-  ;;        (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.
-  ;; This is recommended since Dabbrev can be used globally (M-/).
-  ;; See also `corfu-exclude-modes'.
-  :init
-  (global-corfu-mode)
-
+;; company
+(use-package company
+  :ensure t
+  :commands (global-company-mode company-mode company-complete-common)
   :config
-  (defun corfu-enable-always-in-minibuffer ()
-    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-    (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
-                (bound-and-true-p vertico--input))
-      (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
-      (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+  (setq company-idle-delay 0.5)
+  (setq company-selection-wrap-around t)
+  (set-executable 'company-clang-executable
+                  '("clang-12" "clang-11" "clang-10" "clang-7"))
+  ;;(company-tng-configure-default)
+  )
 
-  ;; Setup lsp to use corfu for lsp completion
-  (defun kb/corfu-setup-lsp ()
-    "Use orderless completion style with lsp-capf instead of the
-default lsp-passthrough."
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless))))
+;; (use-package corfu
+;;   ;; Optional customizations
+;;   :custom
+;;   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+;;   (corfu-auto t)                 ;; Enable auto completion
+;;   ;; (corfu-separator ?\s)          ;; Orderless field separator
+;;   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+;;   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+;;   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+;;   ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+;;   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+;;   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
+;;   (corfu-auto-prefix 2)
+;;   (corfu-auto-delay 0.25)
+
+;;   ;; Enable Corfu only for certain modes.
+;;   ;; :hook ((prog-mode . corfu-mode)
+;;   ;;        (shell-mode . corfu-mode)
+;;   ;;        (eshell-mode . corfu-mode))
+
+;;   ;; Recommended: Enable Corfu globally.
+;;   ;; This is recommended since Dabbrev can be used globally (M-/).
+;;   ;; See also `corfu-exclude-modes'.
+;;   :init
+;;   (global-corfu-mode)
+
+;;   :config
+;;   (defun corfu-enable-always-in-minibuffer ()
+;;     "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+;;     (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
+;;                 (bound-and-true-p vertico--input))
+;;       (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+;;       (corfu-mode 1)))
+;;   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+
+;;   ;; Setup lsp to use corfu for lsp completion
+;;   (defun kb/corfu-setup-lsp ()
+;;     "Use orderless completion style with lsp-capf instead of the
+;; default lsp-passthrough."
+;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+;;           '(orderless))))
 
 ;; lsp-mode setup
 (use-package lsp-mode
