@@ -82,9 +82,10 @@
          ("C-x C-r" . counsel-recentf)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
-         ;;("M-s r" . counsel-rg)
-         ;;("M-s g" . counsel-git-grep)
-         ;;("M-s l" . counsel-find-library)
+         ("M-g i" . counsel-imenu)
+         ("M-s r" . counsel-rg)
+         ("M-s g" . counsel-git-grep)
+         ("M-s l" . counsel-find-library)
          ;;("M-s z" . prot/counsel-fzf-rg-files)
          ;;:map ivy-minibuffer-map
          ;;("C-r" . counsel-minibuffer-history)
