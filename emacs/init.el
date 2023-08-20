@@ -510,6 +510,9 @@
   :custom
   (lsp-completion-provider :none) ;; we use Corfu!
 
+  :bind-keymap
+  ("C-c l" . lsp-command-map)
+
   :config
 
   (defun my-lsp-force-reconnect ()
