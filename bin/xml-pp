@@ -14,13 +14,13 @@ def xml_pp_main():
     if not args.input or args.input == '-':
         data = sys.stdin.read()
     else:
-        with open(args.input) as fp:
+        with open(args.input, 'rb') as fp:
             data = fp.read()
 
     parser = etree.XMLParser(remove_blank_text=True)
     doc = etree.fromstring(data, parser)
     sys.stdout.write(
-        etree.tostring(doc, encoding='utf-8', pretty_print=True)
+        etree.tostring(doc, encoding='unicode', pretty_print=True)
     )
 
 
