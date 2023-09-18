@@ -2,16 +2,27 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package all-the-icons-completion
-  :after (marginalia all-the-icons)
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
-  (all-the-icons-completion-mode))
+;; (use-package all-the-icons)
+
+;; (use-package all-the-icons-completion
+;;   :after (marginalia all-the-icons)
+;;   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+;;   :init
+;;   (all-the-icons-completion-mode))
+
+;; (use-package nerd-icons-completion
+;;   :after marginalia
+;;   :config
+;;   (nerd-icons-completion-mode)
+;;   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
 
 (use-package marginalia
   :custom
   (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
+  (marginalia-align 'center)
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
 
@@ -49,7 +60,8 @@
   :bind (:map vertico-map
               ("RET" . vertico-directory-enter)
               ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
+              ("M-DEL" . vertico-directory-delete-word)
+              ("C-j" . vertico-directory-enter))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -83,6 +95,69 @@
   :ensure t ; only need to install it, embark loads it after consult if found
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package consult
+  :config
+
+  (defun my/consult-line-forward ()
+    "Search for a matching line forward."
+    (interactive)
+    (consult-line))
+
+  (defun my/consult-line-backward ()
+    "Search for a matching line backward."
+    (interactive)
+    (advice-add 'consult--line-candidates :filter-return 'reverse)
+    (vertico-reverse-mode +1)
+    (unwind-protect (consult-line)
+      (vertico-reverse-mode -1)
+      (advice-remove 'consult--line-candidates 'reverse)))
+
+  (with-eval-after-load 'consult
+    (consult-customize my/consult-line-backward
+                       :prompt "Go to line backward: ")
+    (consult-customize my/consult-line-forward
+                       :prompt "Go to line forward: "))
+
+  (defun my/consult-ripgrep-change-directory ()
+    (interactive)
+    (run-at-time 0 nil
+                 #'consult-ripgrep
+                 '(4)
+                 (ignore-errors
+                   (buffer-substring-no-properties
+                    (1+ (minibuffer-prompt-end)) (point-max))))
+    (minibuffer-quit-recursive-edit))
+
+  (consult-customize
+   consult-ripgrep
+   :keymap (let ((map (make-sparse-keymap)))
+             (define-key map (kbd "C-x d") #'my/consult-ripgrep-change-directory)
+             map))
+  (defun my/consult-ripgrep ()
+    (interactive)
+    (call-interactively 'consult-ripgrep default-directory))
+
+  :bind (
+         ("C-x b" . consult-buffer)
+         ("C-x C-r" . consult-recent-file)
+         ;;("C-h f" . counsel-describe-function)
+         ;;("C-h v" . counsel-describe-variable)
+         ("M-g i" . consult-imenu)
+         ("M-s r" . consult-ripgrep)
+         ("M-s g" . consult-git-grep)
+         ("M-s f" . consult-find)
+         ("M-s l" . consult-line)
+         ;;("C-y" . consult-yank-from-kill-ring)
+         ;;("M-s z" . prot/counsel-fzf-rg-files)
+         ;;:map ivy-minibuffer-map
+         ;;("C-r" . counsel-minibuffer-history)
+         ;;("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
+         ;;("C-SPC" . ivy-restrict-to-matches)))
+         ;;("C-s" . my/consult-line-forward)
+         ;;("C-r" . my/consult-line-backward)
+         ("M-g g" . consult-goto-line)))
+
 
 (provide 'vitja-vertico)
 ;;; vitja-vertico.el ends here

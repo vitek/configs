@@ -103,8 +103,19 @@
 (setq font-lock-maximum-decoration t)
 (global-font-lock-mode t)
 (show-paren-mode t)
-(global-auto-revert-mode t)
 (save-place-mode t)
+
+;; Automatically reread from disk if the underlying file changes
+(setq auto-revert-interval 3)
+(setq auto-revert-check-vc-info t)
+(global-auto-revert-mode t)
+
+;; Fix archaic defaults
+(setq sentence-end-double-space nil)
+
+;; Make right-click do something sensible
+(when (display-graphic-p)
+  (context-menu-mode))
 
 (setq c-basic-offset 4)
 (c-set-offset 'arglist-intro '+)
@@ -307,6 +318,7 @@
   ((font-lock-mode . my-highlight-whitespaces)))
 
 (use-package recentf
+  :demand t
   :bind (("C-x C-r" . recentf-open-files))
   :config
   (setq recentf-max-menu-items 100)

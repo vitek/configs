@@ -86,6 +86,7 @@
     all-the-icons
     all-the-icons-ivy
     all-the-icons-ivy-rich
+    all-the-icons-completion
     flyspell-correct-ivy
     gif-screencast
     i3wm-config-mode
@@ -97,8 +98,13 @@
     pdf-tools
     which-key
     zoom
-    vertico
+
+    ;; vertico
+    consult
+    embark
+    embark-consult
     marginalia
+    vertico
 
     ;; org-mode
     org-bullets
