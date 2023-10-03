@@ -106,8 +106,8 @@
 (save-place-mode t)
 
 ;; Automatically reread from disk if the underlying file changes
-(setq auto-revert-interval 3)
-(setq auto-revert-check-vc-info t)
+(setq auto-revert-interval 5)
+(setq auto-revert-check-vc-info nil)
 (global-auto-revert-mode t)
 
 ;; Fix archaic defaults
