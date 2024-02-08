@@ -3,5 +3,5 @@ Description=XDG autostart for Sway session
 Documentation=man:systemd.special(7) man:systemd-xdg-autostart-generator(8)
 Documentation=https://github.com/alebastr/sway-systemd
 BindsTo=sway-xdg-autostart.target
-Requires=gnome-keyring-daemon.socket wob.socket sway-nm-applet.service dunst.service blueman-applet.service emacs-29-vcs.service sway-kbd.service
+Requires=gnome-keyring-daemon.socket wob.socket sway-nm-applet.service dunst.service blueman-applet.service sway-kbd.service
 After=sway-wait-sni-ready.service

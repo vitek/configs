@@ -66,9 +66,16 @@ def nmcli_active():
     return active
 
 
+def home_connection(active_connections):
+    for connection in active_connections:
+        if connection.startswith('mchome'):
+            return True
+    return False
+
+
 def update_hostd_section(section):
     active_connections = nmcli_active()
-    if 'Ucom7514_5G' in active_connections:
+    if home_connection(active_connections):
         hostname = 'mchome.local'
     elif 'jam' in active_connections:
         hostname = 'mchome-vpn'
