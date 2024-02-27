@@ -2,13 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-;; (use-package all-the-icons)
+(use-package all-the-icons)
 
-;; (use-package all-the-icons-completion
-;;   :after (marginalia all-the-icons)
-;;   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-;;   :init
-;;   (all-the-icons-completion-mode))
+(use-package all-the-icons-completion
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
 
 ;; (use-package nerd-icons-completion
 ;;   :after marginalia
@@ -52,6 +52,11 @@
   ;; (setq vertico-cycle t)
   )
 
+(defun my/vertico-directory-tilde()
+  (interactive)
+  (delete-minibuffer-contents)
+  (insert "~/"))
+
 ;; Configure directory extension.
 (use-package vertico-directory
   :after vertico
@@ -61,7 +66,8 @@
               ("RET" . vertico-directory-enter)
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word)
-              ("C-j" . vertico-directory-enter))
+              ("C-j" . vertico-directory-enter)
+              ("~" . my/vertico-directory-tilde))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -99,52 +105,54 @@
 (use-package consult
   :config
 
-  (defun my/consult-line-forward ()
-    "Search for a matching line forward."
-    (interactive)
-    (consult-line))
+  (defun my/consult-command (command &rest args)
+    (setq this-command command)
+    (apply command args))
 
-  (defun my/consult-line-backward ()
-    "Search for a matching line backward."
-    (interactive)
-    (advice-add 'consult--line-candidates :filter-return 'reverse)
-    (vertico-reverse-mode +1)
-    (unwind-protect (consult-line)
-      (vertico-reverse-mode -1)
-      (advice-remove 'consult--line-candidates 'reverse)))
+  (defun my/consult-ripgrep-restart (dir-func)
+    (let
+        ((saved-default-directory default-directory)
+         (input (ignore-errors
+                  (buffer-substring-no-properties
+                   (1+ (minibuffer-prompt-end)) (point-max)))))
+      (run-at-time 0 nil
+                   (lambda ()
+                     (let* ((default-directory saved-default-directory)
+                            (default-directory (funcall dir-func)))
+                       (my/consult-command
+                        'consult-ripgrep default-directory input)))))
+    (minibuffer-quit-recursive-edit))
 
-  (with-eval-after-load 'consult
-    (consult-customize my/consult-line-backward
-                       :prompt "Go to line backward: ")
-    (consult-customize my/consult-line-forward
-                       :prompt "Go to line forward: "))
+  (defun my/consult-ripgrep-up-directory ()
+    (interactive)
+    (let ((parent-dir (file-name-directory
+                       (directory-file-name default-directory))))
+      (when parent-dir
+        (my/consult-ripgrep-restart
+         (lambda () parent-dir)))))
 
   (defun my/consult-ripgrep-change-directory ()
     (interactive)
-    (run-at-time 0 nil
-                 #'consult-ripgrep
-                 '(4)
-                 (ignore-errors
-                   (buffer-substring-no-properties
-                    (1+ (minibuffer-prompt-end)) (point-max))))
-    (minibuffer-quit-recursive-edit))
+    (my/consult-ripgrep-restart
+     (lambda () (nth 2 (consult--directory-prompt "grep" '(4))))))
 
   (consult-customize
    consult-ripgrep
    :keymap (let ((map (make-sparse-keymap)))
-             (define-key map (kbd "C-x d") #'my/consult-ripgrep-change-directory)
+             (define-key map (kbd "M-d") #'my/consult-ripgrep-change-directory)
+             (define-key map (kbd "M-l") #'my/consult-ripgrep-up-directory)
              map))
   (defun my/consult-ripgrep ()
     (interactive)
-    (call-interactively 'consult-ripgrep default-directory))
+    (my/consult-command 'consult-ripgrep default-directory))
 
   :bind (
          ("C-x b" . consult-buffer)
          ("C-x C-r" . consult-recent-file)
-         ;;("C-h f" . counsel-describe-function)
-         ;;("C-h v" . counsel-describe-variable)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
          ("M-g i" . consult-imenu)
-         ("M-s r" . consult-ripgrep)
+         ("M-s r" . my/consult-ripgrep)
          ("M-s g" . consult-git-grep)
          ("M-s f" . consult-find)
          ("M-s l" . consult-line)
