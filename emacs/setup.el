@@ -98,6 +98,7 @@
     pdf-tools
     which-key
     zoom
+    wgrep
 
     ;; vertico
     consult
