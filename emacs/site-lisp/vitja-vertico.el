@@ -67,6 +67,7 @@
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word)
               ("C-j" . vertico-directory-enter)
+              ("/" . vertico-insert)
               ("~" . my/vertico-directory-tilde))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
