@@ -646,9 +646,9 @@
   :init
   (savehist-mode))
 
-(if (string= (getenv "EMACS_USE_VERTICO") "1")
-    (require 'vitja-vertico)
-    (require 'vitja-ivy))
+(if (string= (getenv "EMACS_USE_IVY") "1")
+    (require 'vitja-ivy)
+    (require 'vitja-vertico))
 
 ;; https://github.com/emacsmirror/zoom-frm
 (use-package zoom-frm
