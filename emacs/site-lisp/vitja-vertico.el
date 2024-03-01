@@ -30,7 +30,7 @@
 (use-package vertico
   :custom
   (vertico-count 13)                    ; Number of candidates to display
-  (vertico-resize t)
+  (vertico-resize 'grow-only)
   (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
 
   :hook
@@ -75,6 +75,7 @@
   :ensure t
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
+   ("M-q" . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
