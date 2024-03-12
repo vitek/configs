@@ -67,7 +67,6 @@
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word)
               ("C-j" . vertico-directory-enter)
-              ("/" . vertico-insert)
               ("~" . my/vertico-directory-tilde))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
@@ -158,7 +157,8 @@
          ("M-s g" . consult-git-grep)
          ("M-s f" . consult-find)
          ("M-s l" . consult-line)
-         ;;("C-y" . consult-yank-from-kill-ring)
+         ("C-y" . consult-yank-from-kill-ring)
+         ("M-y" . consult-yank-pop)
          ;;("M-s z" . prot/counsel-fzf-rg-files)
          ;;:map ivy-minibuffer-map
          ;;("C-r" . counsel-minibuffer-history)
