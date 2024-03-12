@@ -75,7 +75,7 @@
   :ensure t
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
-   ("M-q" . embark-act)         ;; pick some comfortable binding
+   ("M-`" . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
