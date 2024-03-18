@@ -175,6 +175,8 @@
          ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
          ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch         ;; Minibuffer history
          :map minibuffer-local-map
+         ("C-y" . yank)
+         ("M-y" . yank-pop)
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
          ("M-r" . consult-history)))
 
