@@ -12,6 +12,7 @@ SWAY_BIN_FILES =				\
 	sway-switch-layout			\
 	sway-user-service			\
 	wait-sni-ready				\
+	wlsunset.sh				\
 	wf-recorder.sh
 
 SWAY_SYSTEMD_FILES =				\
