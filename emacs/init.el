@@ -912,7 +912,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
   (setq mode-line-position-column-line-format '(" %l:%c"))
 
-  (when window-system
+  (when t ;; window-system
     (setq modus-themes-common-palette-overrides
           `(
             ;; From the section "Make the mode line borderless"
