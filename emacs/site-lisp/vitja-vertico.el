@@ -66,7 +66,7 @@
               ("RET" . vertico-directory-enter)
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word)
-              ("C-j" . (lambda() (interactive) (vertico-exit t))
+              ("C-j" . (lambda() (interactive) (vertico-exit t)))
               ("~" . my/vertico-directory-tilde))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))

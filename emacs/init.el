@@ -170,14 +170,16 @@
 ;; Configure package
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("stable.melpa" . "https://stable.melpa.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/")))
 
 (setq package-archive-priorities
       '(("stable.melpa" . 10)
-         ("gnu"          . 10)
-         ("melpa"        . 10)))
+        ("gnu"          . 10)
+        ("nognu"        . 5)
+        ("melpa"        . 10)))
 
 (when (< emacs-major-version 27)
   (package-initialize))
@@ -499,6 +501,8 @@
   ;; See also `corfu-exclude-modes'.
   :init
   (global-corfu-mode)
+  (unless (display-graphic-p)
+    (corfu-terminal-mode))
 
   :config
   (defun corfu-enable-always-in-minibuffer ()

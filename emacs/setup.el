@@ -3,16 +3,19 @@
 (require 'bytecomp)
 (require 'package)
 
+;; Configure package
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("stable.melpa" . "https://stable.melpa.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/")))
 
 (setq package-archive-priorities
       '(("stable.melpa" . 10)
-         ("gnu"          . 10)
-         ("melpa"        . 10)))
+        ("gnu"          . 10)
+        ("nognu"        . 5)
+        ("melpa"        . 10)))
 
 (defvar bootstrap-packages
   '(delight
@@ -31,6 +34,7 @@
     ;; completion
     company
     corfu
+    corfu-terminal
 
     ;; lsp related
     ;;company-lsp
