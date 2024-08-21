@@ -32,6 +32,8 @@
 (when (version<= "28" emacs-version)
   (setq package-native-compile t))
 
+(setenv "LSP_USE_PLISTS" "true")
+
 ;; ;; Workaround for startup interface flickering
 ;; (add-to-list 'default-frame-alist
 ;;               '(background-color . "#3F3F3F"))

@@ -17,6 +17,8 @@
         ("nognu"        . 5)
         ("melpa"        . 10)))
 
+(setenv "LSP_USE_PLISTS" "true")
+
 (defvar bootstrap-packages
   '(delight
     use-package

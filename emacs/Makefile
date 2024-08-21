@@ -13,6 +13,7 @@ EL_FILES =					\
 SITE_LISP_FILES =				\
 	site-lisp/frame-cmds.el			\
 	site-lisp/frame-fns.el			\
+	site-lisp/lsp-booster.el		\
 	site-lisp/manual-indent.el		\
 	site-lisp/mc-move.el			\
 	site-lisp/my.el				\
