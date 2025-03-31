@@ -21,7 +21,7 @@ fi
 
 PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
-if [ "x$XDG_RUNTIME_DIR" != "x" ]; then
+if [ "x$XDG_RUNTIME_DIR" != "x" -a -e "/etc/gentoo-release" ]; then
     export EMACS_SOCKET_NAME=$XDG_RUNTIME_DIR/emacs/server
 
     if [ -x /usr/local/bin/skotty ]; then

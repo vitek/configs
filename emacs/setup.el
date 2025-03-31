@@ -28,7 +28,6 @@
     find-file-in-project
     git-grep
     gnu-elpa-keyring-update
-    helm
     magit
     projectile
     rg
@@ -95,6 +94,7 @@
     embark-consult
     marginalia
     vertico
+    orderless
 
     ;; org-mode
     org-bullets
