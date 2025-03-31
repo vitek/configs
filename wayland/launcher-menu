@@ -1,11 +1,19 @@
 #!/bin/sh
 
-run_menu() {
-    dmenu_path | dmenu -fn 'Noto Sans-12'
+exec_dmenu() {
+    if which dmenu; then
+        local cmd=$(dmenu_path | dmenu -fn 'Noto Sans-12')
+        if [ -n "$cmd" ]; then
+            exec $cmd
+        fi
+        return 0
+    fi
 }
 
-cmd=$(run_menu)
+exec_wmenu() {
+    if which wmenu-run; then
+        exec wmenu-run -f 'Noto Sans 12'
+    fi
+}
 
-if [ -n "$cmd" ]; then
-    exec $cmd
-fi
+exec_wmenu || exec_dmenu

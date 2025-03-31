@@ -34,16 +34,13 @@
     rg
 
     ;; completion
-    company
     corfu
     corfu-terminal
 
     ;; lsp related
     ;;company-lsp
     lsp-mode
-    ;;lsp-treemacs
     lsp-ui
-    lsp-java
 
     yasnippet
 
@@ -72,36 +69,22 @@
     protobuf-mode
     yaml-mode
 
-    ;; ivy
-    amx
-    counsel
-    orderless
-    flx
-    ivy
-    ivy-hydra
-    ivy-posframe
-    ivy-rich
-
+    ;; ;; vterm
     ;; vterm
-    vterm
-    multi-vterm
+    ;; multi-vterm
 
     ;; misc
     ace-jump-mode
     ace-window
     all-the-icons
-    all-the-icons-ivy
-    all-the-icons-ivy-rich
     all-the-icons-completion
-    flyspell-correct-ivy
     gif-screencast
     i3wm-config-mode
-    ivy-pass
     keycast
     ;; nano-modeline
     telephone-line
     pass
-    pdf-tools
+    ;;pdf-tools
     which-key
     zoom
     wgrep
@@ -117,11 +100,6 @@
     org-bullets
 
     ;; themes
-    color-theme-modern
-    monokai-theme
-    nova-theme
-    solarized-theme
-    zenburn-theme
     modus-themes
 ))
 

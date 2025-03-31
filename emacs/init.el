@@ -184,25 +184,6 @@
 (when (< emacs-major-version 27)
   (package-initialize))
 
-;; Install binary dependencies
-(let ((build-timestamp-dir
-       (expand-file-name ".build-deps/" user-emacs-directory))
-      (do-build-deps :ask))
-  (defmacro build-action (name body)
-    `(let ((build-timestamp (concat build-timestamp-dir (symbol-name ,name))))
-       (when (not (file-exists-p build-timestamp))
-         (when (if (eq do-build-deps :ask)
-                   (setq do-build-deps (yes-or-no-p "Build dependencies? "))
-                 do-build-deps)
-           (message (format "Performing build action [%s]..." ,name))
-           (progn ,body)
-           (with-temp-buffer (write-file build-timestamp))))))
-  (make-directory build-timestamp-dir :parents)
-  ;; (build-action 'vterm
-  ;;               (vterm-module-compile))
-  (build-action 'all-the-icons
-                (all-the-icons-install-fonts t)))
-
 (defun derived-mode-parents (mode)
   (and mode
        (cons mode (derived-mode-parents
@@ -353,8 +334,10 @@
   :delight (python-mode "py" "python-mode")
   :hook
   (python-mode . (lambda ()
-                   (setq-local fill-column 79)))
+                   (setq-local fill-column 119)))
   :bind (:map python-mode-map
+              ("C-c b" . ipdb-insert-set-trace))
+  :bind (:map python-ts-mode-map
               ("C-c b" . ipdb-insert-set-trace)))
 
 (use-package elpy
@@ -364,6 +347,12 @@
   (delete 'elpy-module-django elpy-modules)
   :hook
   (python-mode . elpy-enable))
+
+;; (use-package eglot
+;;   :config
+;;   (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
+;;   :hook
+;;   ((python-mode . eglot-ensure)))
 
 (use-package python-black
   :after python
@@ -551,8 +540,8 @@
                                   "--header-insertion=never"))
 
   ;; pyls
-  (set-executable 'vitja-lsp-pyls-server-command
-                  '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
+  ;; (set-executable 'vitja-lsp-pyls-server-command
+  ;;                 '("/usr/lib/yandex/taxi-py3-2/bin/pyls" "pyls"))
   ;;(setq lsp-pyls-server-command vitja-lsp-pyls-server-command)
   (setq xref-prompt-for-identifier nil)
   (setq lsp-enable-links nil)

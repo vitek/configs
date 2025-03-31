@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+
+(defun my/remove-empty-strings (seq)
+  (seq-filter (lambda (item) (not (string-empty-p item))) seq))
+
+
 (use-package all-the-icons)
 
 (use-package all-the-icons-completion
@@ -137,6 +142,40 @@
     (my/consult-ripgrep-restart
      (lambda () (nth 2 (consult--directory-prompt "grep" '(4))))))
 
+  (defun my/find-other-file ()
+    (interactive)
+    (ff-find-other-file nil t))
+
+  (defun consult--read-from-kill-ring ()
+    "Open kill ring menu and return selected string."
+    ;; `current-kill' updates `kill-ring' with interprogram paste, see
+    ;; gh:minad/consult#443.
+    (current-kill 0)
+    ;; Do not specify a :lookup function in order to preserve completion-styles
+    ;; highlighting of the current candidate. We have to perform a final lookup to
+    ;; obtain the original candidate which may be propertized with yank-specific
+    ;; properties, like 'yank-handler.
+    (consult--lookup-member
+     (consult--read
+      (my/remove-empty-strings
+       (consult--remove-dups
+        (or (if yank-from-kill-ring-rotate
+                (append kill-ring-yank-pointer
+                        (butlast kill-ring (length kill-ring-yank-pointer)))
+              kill-ring)
+            (user-error "Kill ring is empty"))))
+      :prompt "Yank from kill-ring: "
+      :history t ;; disable history
+      :sort nil
+      :category 'kill-ring
+      :require-match t
+      :state
+      (consult--insertion-preview
+       (point)
+       ;; If previous command is yank, hide previously yanked string
+       (or (and (eq last-command 'yank) (mark t)) (point))))
+     kill-ring))
+  
   (consult-customize
    consult-ripgrep
    :keymap (let ((map (make-sparse-keymap)))
@@ -157,6 +196,7 @@
          ("M-s g" . consult-git-grep)
          ("M-s f" . consult-find)
          ("M-s l" . consult-line)
+         ("M-s H" . my/find-other-file)
          ("C-y" . consult-yank-from-kill-ring)
          ("M-y" . consult-yank-pop)
          ;;("M-s z" . prot/counsel-fzf-rg-files)
