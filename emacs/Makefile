@@ -4,7 +4,7 @@ EMACS          = emacs
 
 DEST_EMACSDIR  = $(DESTDIR)/.emacs.d
 DEST_SITE_LISP = $(DEST_EMACSDIR)/site-lisp
-DEST_SCRIPTS   = $(DEST_EMACSDIR)/.emacs.d/scripts
+DEST_SCRIPTS   = $(DEST_EMACSDIR)/scripts
 
 EL_FILES =					\
 	init.el					\
