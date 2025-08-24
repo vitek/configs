@@ -4,6 +4,8 @@
 org.gnome.Mutter.DisplayConfig /org/gnome/Mutter/DisplayConfig org.gnome.Mutter.DisplayConfig PowerSaveMode
 """
 import os
+import time
+
 import pydbus
 from gi.repository import GLib
 
@@ -14,7 +16,9 @@ def on_properties_changed(interface_name, changed_properties, invalidated_proper
     print('PowerSaveMode', mode)
     if mode == 0:
         print('... WakingUp')
-        os.system('wakeonlan 64:cb:e9:50:b1:7c')
+        for i in range(10):
+            os.system('wakeonlan 64:cb:e9:50:b1:7c')
+            time.sleep(.1)
 
 # Connect to the system bus (or SessionBus() if needed)
 bus = pydbus.SessionBus()

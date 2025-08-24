@@ -1,9 +1,12 @@
 [Unit]
 Description=waketv
+Requisite=gnome-session-initialized.target
+After=gnome-session-initialized.target
+PartOf=gnome-session-initialized.target
+Before=gnome-session.target
 
 [Service]
 ExecStart=/home/vitja/bin/waketv
 
 [Install]
 WantedBy=default.target
-
