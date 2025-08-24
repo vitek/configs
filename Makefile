@@ -24,11 +24,17 @@ BIN_FILES =					\
 	bin/terminal				\
 	bin/ssh-auth-sock-watcher		\
 	bin/run-emacsclient			\
-	bin/myemacs                             \
+	bin/myemacs				\
 	bin/xkb-layout				\
-	bin/xml-pp
+	bin/xml-pp				\
+	bin/waketv				\
+	bin/socks
 
-SYSTEMD_UNITS = systemd/xkb-layout.service
+SYSTEMD_UNITS =					\
+	systemd/my-socks.service		\
+	systemd/waketv.service
+
+#systemd/xkb-layout.service
 
 default:
 

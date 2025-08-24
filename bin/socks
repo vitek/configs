@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "chromium --proxy-server=socks5://localhost:1337"
+
+
+HOST=vitja-vpn
+
+if [ "x$1" != "x" ]; then
+    HOST="$1"
+fi
+
+while true; do
+    ssh -N -D 1337 "$HOST"
+done
+

@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+"""
+org.gnome.Mutter.DisplayConfig /org/gnome/Mutter/DisplayConfig org.gnome.Mutter.DisplayConfig PowerSaveMode
+"""
+import os
+import pydbus
+from gi.repository import GLib
+
+def on_properties_changed(interface_name, changed_properties, invalidated_properties):
+    if 'PowerSaveMode' not in changed_properties:
+        return
+    mode = changed_properties['PowerSaveMode']
+    print('PowerSaveMode', mode)
+    if mode == 0:
+        print('... WakingUp')
+        os.system('wakeonlan 64:cb:e9:50:b1:7c')
+
+# Connect to the system bus (or SessionBus() if needed)
+bus = pydbus.SessionBus()
+
+# Get the D-Bus object you want to monitor (replace with your target object)
+# For example, to monitor a Bluetooth adapter:
+obj = bus.get('org.gnome.Mutter.DisplayConfig', '/org/gnome/Mutter/DisplayConfig')
+
+# Connect the callback to the PropertiesChanged signal
+obj.PropertiesChanged.connect(on_properties_changed)
+
+print("Monitoring D-Bus properties... Press Ctrl+C to stop.")
+
+# Run the GLib main loop
+loop = GLib.MainLoop()
+try:
+    loop.run()
+except KeyboardInterrupt:
+    print("Monitoring stopped.")
+    loop.quit()

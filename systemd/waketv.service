@@ -1,0 +1,9 @@
+[Unit]
+Description=waketv
+
+[Service]
+ExecStart=/home/vitja/bin/waketv
+
+[Install]
+WantedBy=default.target
+

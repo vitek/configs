@@ -1,0 +1,9 @@
+[Unit]
+Description=My socks proxy
+
+[Service]
+ExecStart=/home/vitja/bin/socks
+
+[Install]
+WantedBy=default.target
+
