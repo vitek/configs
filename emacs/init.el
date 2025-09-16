@@ -723,6 +723,8 @@
     (let (org-log-done org-log-states)   ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
+  (setq org-latex-compiler "xelatex")
+
   (setq org-todo-keywords
         '((sequence
            "TODO(t)" "INPROGRESS(p)" "HOLD(h)" "|"
