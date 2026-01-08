@@ -292,3 +292,6 @@ ssh-deploy: configs.tar.gz
 
 clean: clean-arc
 	$(MAKE) -C wayland clean
+
+install-usb-wakeup:
+	install -m 0755 systemd/disable-usb-wakeup.sh /lib/systemd/system-sleep/

@@ -2,10 +2,9 @@
 
 if swaymsg -t get_tree |
         jq -e \
-           '.. |
-            select(.type? and .app_id?) |
-            select(.focused==true) |
-            select(.app_id|test("^emacs.*"))' > /dev/null; then
+           '.. | select(.type? and .focused==true) |
+                 select((.app_id // .window_properties.class? // "") |
+                     test("^emacs.*";"i"))' > /dev/null; then
     exec swaymsg 'input "*" xkb_switch_layout 0'
 else
     exec swaymsg 'input "*" xkb_switch_layout next'
