@@ -944,6 +944,8 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   :config
   (telephone-line-mode 1))
 
+(add-to-list 'auto-mode-alist '("\\.mdc\\'" . markdown-mode))
+
 (if window-system
     (progn
       (global-set-key "\C-z" 'ignore)
