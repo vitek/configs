@@ -108,6 +108,10 @@
 ;; Automatically reread from disk if the underlying file changes
 (setq auto-revert-interval 5)
 (setq auto-revert-check-vc-info nil)
+;; Rely on time-based polling instead of file notifications: inotify events are
+;; not delivered on FUSE/network filesystems (e.g. arc/arcadia), which left
+;; buffers stale because Emacs stops polling once a notify watch is registered.
+(setq auto-revert-use-notify nil)
 (global-auto-revert-mode t)
 
 ;; Fix archaic defaults
@@ -142,6 +146,11 @@
       kept-old-versions 5    ; and how many of the old
       )
 (setq create-lockfiles nil)
+
+;; Auto-save files (#file#) — keep them out of working dirs too
+(let ((auto-save-dir (expand-file-name "~/.emacs.d/auto-save/")))
+  (make-directory auto-save-dir t)
+  (setq auto-save-file-name-transforms `((".*" ,auto-save-dir t))))
 
 ;; https://www.reddit.com/r/emacs/comments/y92y4b
 (setq remote-file-name-inhibit-locks t)
