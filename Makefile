@@ -22,6 +22,8 @@ BIN_FILES =					\
 	bin/histogram				\
 	bin/json-pp				\
 	bin/terminal				\
+	bin/terminal-tab			\
+	bin/kitty-tab				\
 	bin/ssh-auth-sock-watcher		\
 	bin/run-emacsclient			\
 	bin/myemacs				\

@@ -1,0 +1,27 @@
+#!/bin/sh
+# -*- mode: shell-script; -*-
+#
+# Open a new tab in the running single-instance kitty (analog of
+# `gnome-terminal --tab`). Falls back to a new kitty window if the instance is
+# not reachable.
+#   kitty-tab [cmd...]
+
+# Find kitty's remote-control socket. Inside a kitty window $KITTY_LISTEN_ON is
+# already set; otherwise (e.g. from a sway keybind) discover it. In
+# single-instance mode kitty appends its pid to listen_on, so the socket is
+# named @kitty-<pid> (the @kitty-ipc-<uid> coordinator socket is skipped).
+kitty_sock() {
+    if [ -n "$KITTY_LISTEN_ON" ]; then
+        printf '%s\n' "$KITTY_LISTEN_ON"
+        return
+    fi
+    sock=$(ss -xl 2>/dev/null | grep -oE '@kitty-[0-9]+' | head -1)
+    [ -n "$sock" ] && printf 'unix:%s\n' "$sock"
+}
+
+sock=$(kitty_sock)
+if [ -n "$sock" ] && \
+   kitty @ --to "$sock" launch --type=tab --cwd=current "$@" > /dev/null 2>&1; then
+    exit 0
+fi
+exec kitty -1 "$@"

@@ -1,0 +1,15 @@
+#!/bin/sh
+# -*- mode: shell-script; -*-
+#
+# Open a new tab in the preferred terminal (see ~/.config/terminal). Companion
+# to `terminal`, which opens a new window.
+#   terminal-tab [cmd...]
+
+case $(cat ~/.config/terminal 2> /dev/null) in
+    kitty)
+        exec kitty-tab "$@"
+        ;;
+    gnome-terminal|*)
+        exec gnome-terminal --tab "$@"
+        ;;
+esac
