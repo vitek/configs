@@ -53,6 +53,7 @@ install-all: 					\
 	install-emacs				\
 	install-git				\
 	install-hg				\
+	install-kitty				\
 	install-misc				\
 	install-sway				\
 	install-vc				\
@@ -94,6 +95,11 @@ install-screen:
 
 install-tmux:
 	$(INSTALL) -m 0644 tmux.conf $(DESTDIR)/.tmux.conf
+
+install-kitty:
+	$(INSTALL) -d $(CONFIGDIR)/kitty
+	$(INSTALL) -m 0644 kitty/kitty.conf $(CONFIGDIR)/kitty/kitty.conf
+	$(INSTALL) -m 0644 kitty/watcher.py $(CONFIGDIR)/kitty/watcher.py
 
 install-gconf:
 	$(GCONFTOOL) --set /desktop/gnome/interface/cursor_blink --type boolean 0
