@@ -18,7 +18,7 @@ set {
 }
 
 exec_always {
-     gsettings set $gnome-interface cursor-theme        'DMZ-White'
+     gsettings set $gnome-interface cursor-theme        'Adwaita'
      gsettings set $gnome-interface cursor-size         24
 #     gsettings set $gnome-interface document-font-name  $gtk_font
 #     gsettings set $gnome-interface font-name           $gtk_font
@@ -29,6 +29,9 @@ exec_always {
 #     gsettings set $gnome-interface text-scaling-factor 1.0
 #     gsettings set $gnome-sound     theme-name          'deepin'
 }
+
+# Cursor theme for all wayland clients (exports XCURSOR_THEME/XCURSOR_SIZE)
+seat * xcursor_theme Adwaita 24
 
 ### Variables
 #
